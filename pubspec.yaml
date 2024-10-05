@@ -1,0 +1,31 @@
+name: dailystep
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 0.0.1+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  http: ^1.2.2
+  dio: ^5.7.0
+  table_calendar: ^3.1.2
+  go_router: ^14.3.0
+  flutter_localization: ^0.2.2
+  flutter_secure_storage: ^9.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
