@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_size_text_pk:
+    dependency: transitive
+    description:
+      name: auto_size_text_pk
+      sha256: ced55de5336fa7f438c1f5a9aa234e25d7a120c1d40d376a7cdc2af28cdb6995
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -94,14 +102,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_lints:
-    dependency: "direct dev"
-    description:
-      name: flutter_lints
-      sha256: "3f41d009ba7172d5ff9be5f6e6e6abb4300e263aab8866d2a0842ed2a70f8f0c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   flutter_localization:
     dependency: "direct main"
     description:
@@ -246,7 +246,7 @@ packages:
     source: hosted
     version: "3.0.1"
   lints:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: lints
       sha256: "976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235"
@@ -285,6 +285,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  nav:
+    dependency: "direct main"
+    description:
+      name: nav
+      sha256: "8a03ee87cb24357307071d8a6183bfb59bc1489cec879bcf52184935041cb618"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.3"
   path:
     dependency: transitive
     description:
@@ -514,6 +522,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  velocity_x:
+    dependency: "direct main"
+    description:
+      name: velocity_x
+      sha256: "99b910c80cc2010b184ef921f0af6894a8d632e13169cf77e6f6cb5a7f310698"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   vm_service:
     dependency: transitive
     description:
@@ -522,6 +538,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.2.5"
+  vxstate:
+    dependency: transitive
+    description:
+      name: vxstate
+      sha256: ed5a880018191c5cfed8528bd77f2a942b04847168ca12636a306c323d311086
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   web:
     dependency: transitive
     description:

@@ -1,10 +1,11 @@
+import 'package:dailystep/config/auth.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-
-  const LoginScreen({super.key});
+  final DailyStepAuth auth;
+  const LoginScreen({super.key, required this.auth});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

@@ -12,6 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+
+  #util
+  velocity_x: ^4.2.1
+
+  nav: ^1.4.3
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
   http: ^1.2.2
