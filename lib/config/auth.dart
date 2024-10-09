@@ -20,7 +20,19 @@ class DailyStepAuth extends ChangeNotifier {
   }
 
   /// Signs in a user.
-  Future<bool> signIn() async {
+  Future<bool> googleSignIn() async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    _signedIn = true;
+    notifyListeners();
+    return _signedIn;
+  }
+  Future<bool> appleSignIn() async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    _signedIn = true;
+    notifyListeners();
+    return _signedIn;
+  }
+  Future<bool> cacaoSignIn() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = true;
     notifyListeners();

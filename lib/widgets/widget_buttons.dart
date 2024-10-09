@@ -16,7 +16,7 @@ class WCtaFloatingButton extends StatelessWidget {
       right: 0,
       child: Column(
         children: [
-          WCtaButton(text),
+          WCtaButton(text, onPressed: () {  },),
         ],
       ),
     );
@@ -25,10 +25,11 @@ class WCtaFloatingButton extends StatelessWidget {
 
 class WCtaButton extends StatelessWidget {
   final String text;
+  final VoidCallback onPressed;
 
   const WCtaButton(
       this.text, {
-        Key? key,
+        Key? key, required this.onPressed,
       }) : super(key: key);
 
   @override
@@ -37,7 +38,7 @@ class WCtaButton extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ElevatedButton(
-        onPressed: () async {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,
