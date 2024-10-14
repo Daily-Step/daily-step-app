@@ -13,3 +13,6 @@ const height5 = Height(5);
 const height10 = Height(10);
 const height20 = Height(20);
 const height30 = Height(30);
+
+/// 좌우 마진
+const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);

@@ -1,18 +1,20 @@
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
 class WTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final ValueChanged<String> onChanged;
 
-  const WTextField(
+  WTextField(
       this.controller, {
-        Key? key, required this.hintText,
+        Key? key, required this.hintText, required this.onChanged
       }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: globalMargin,
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
@@ -21,6 +23,7 @@ class WTextField extends StatelessWidget {
                 borderSide: BorderSide(
                   color: Colors.grey,
                 ))),
+        onChanged: onChanged,
       ),
     );
   }

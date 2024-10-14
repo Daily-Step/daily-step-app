@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class WCtaFloatingButton extends StatelessWidget {
   final String text;
+  final VoidCallback onPressed;
 
   const WCtaFloatingButton(
       this.text, {
-        Key? key,
+        Key? key, required this.onPressed,
       }) : super(key: key);
 
   @override
@@ -16,7 +17,7 @@ class WCtaFloatingButton extends StatelessWidget {
       right: 0,
       child: Column(
         children: [
-          WCtaButton(text, onPressed: () {  },),
+          WCtaButton(text, onPressed: onPressed,),
         ],
       ),
     );
