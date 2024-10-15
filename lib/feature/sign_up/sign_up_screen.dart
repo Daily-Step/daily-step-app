@@ -1,49 +1,34 @@
-import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/feature/sign_up/sign_up_provider.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/auth.dart';
 import '../../widgets/wigdet_date_picker.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   final DailyStepAuth auth;
 
   const SignUpScreen({super.key, required this.auth});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  int steps = 0;
-  String? nickName;
-  DateTime? selectedDate;
-  String? selectedSex;
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   TextEditingController nickNameController = TextEditingController();
   TextEditingController birthDateController = TextEditingController();
 
-  _signUpCtaAction() {
-    if (steps == 0) return () {
-      setState(() {
-        steps = 1;
-      });
-    };
-    if (steps == 1) return () {
-      setState(() {
-        steps = 2;
-      });
-    };
-    if (steps == 2) return widget.auth.signUp;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final signUpState = ref.watch(signUpProvider);
+    final signUpViewModel = ref.read(signUpProvider.notifier);
+
     return Scaffold(
       body: Stack(
         children: [
-          // Content
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -53,43 +38,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   size: 100,
                 ),
               ),
-              height10,
-              if (steps == 0)
-              NickNameField(
+              SizedBox(height: 10),
+              if (signUpState.step == 0)
+                NickNameField(
                   controller: nickNameController,
                   onChanged: (text) {
-                    nickName = text;
-                  })
-              else if (steps == 1)
-              BirthDateField(
+                    signUpViewModel.setNickName(text);
+                  },
+                )
+              else if (signUpState.step == 1)
+                BirthDateField(
                   controller: birthDateController,
-                  selectedDate: selectedDate,
+                  selectedDate: signUpState.selectedDate,
                   onDateSelected: (date) {
-                    setState(() {
-                      selectedDate = date;
-                      birthDateController.text =
-                          date.formattedDate; // 선택한 날짜를 텍스트 필드에 표시
-                    });
-                  })
-              else if (steps == 2)
-              SexField(
-                selectedSex: selectedSex,
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedSex = value;
-                  });
-                },
-              )
+                    signUpViewModel.setBirthDate(date);
+                    birthDateController.text = date.toLocal().toString().split(' ')[0];
+                  },
+                )
+              else if (signUpState.step == 2)
+                  SexField(
+                    selectedSex: signUpState.selectedSex,
+                    onChanged: (String? value) {
+                      signUpViewModel.setSex(value ?? '');
+                    },
+                  ),
             ],
           ),
-          // Buttons
-          WCtaFloatingButton('입력완료', onPressed: _signUpCtaAction() ),
+          WCtaFloatingButton(
+            '입력완료',
+            onPressed: signUpViewModel.canMoveToNextStep(widget.auth),
+          ),
         ],
       ),
     );
   }
 }
-
 class NickNameField extends StatelessWidget {
   const NickNameField({
     super.key,
