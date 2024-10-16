@@ -51,9 +51,8 @@ class DailyStepAuth extends ChangeNotifier {
   String? guard(BuildContext context, GoRouterState state) {
     final bool signedIn = this.signedIn;
     final bool signedUp = this.signedUp;
-    final bool signingIn = state.matchedLocation == '/signin';
 
-    if (!signedIn && !signingIn) {
+    if (!signedIn) {
       return '/signin';
     }
     else if(signedIn && !signedUp){
@@ -62,7 +61,6 @@ class DailyStepAuth extends ChangeNotifier {
     else if (signedIn && signedUp) {
       return '/main/home';
     }
-
     return null;
   }
 }
