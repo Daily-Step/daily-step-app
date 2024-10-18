@@ -1,4 +1,4 @@
-import '../../entity/user/vo_user.dart';
+import '../../model/user/user_model.dart';
 import 'dio/dio_set.dart';
 
 class UserApi {

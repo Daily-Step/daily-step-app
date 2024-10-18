@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'vo_email.freezed.dart';
+part 'email_model.freezed.dart';
 
 @freezed
 class Email with _$Email {

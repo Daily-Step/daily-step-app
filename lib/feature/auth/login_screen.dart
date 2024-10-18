@@ -1,4 +1,4 @@
-import 'package:dailystep/config/auth.dart';
+import 'package:dailystep/config/route/auth_redirection.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';

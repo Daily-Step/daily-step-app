@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../feature/auth/login_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
-import '../feature/tab/tab_item.dart';
-import 'auth.dart';
+import '../feature/nav/nav_item.dart';
+import 'route/auth_redirection.dart';
 
 class App extends ConsumerStatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();

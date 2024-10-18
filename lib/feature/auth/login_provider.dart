@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dailystep/common/util/custom_exception.dart';
-import 'package:dailystep/entity/user/vo_email.dart';
+import 'package:dailystep/model/user/email_model.dart';
 import 'package:dailystep/feature/auth/social_type.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,7 +8,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as KakaoSdk;
 import '../../common/util/run_catching_exception.dart';
 import '../../data/api/result/simple_result.dart';
 import '../../data/api/user_api.dart';
-import '../../entity/user/vo_user.dart';
+import '../../model/user/user_model.dart';
 
 ///TODO: 로그인 처리 네이티브 설정
 // @riverpod

@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../config/auth.dart';
+import '../../config/route/auth_redirection.dart';
 
 class SignUpState {
   final int step;

@@ -5,7 +5,7 @@ import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../config/auth.dart';
+import '../../config/route/auth_redirection.dart';
 import '../../widgets/wigdet_date_picker.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {

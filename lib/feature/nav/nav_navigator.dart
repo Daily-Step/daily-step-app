@@ -1,4 +1,4 @@
-import 'package:dailystep/feature/tab/tab_item.dart';
+import 'package:dailystep/feature/nav/nav_item.dart';
 import 'package:flutter/material.dart';
 
 class TabNavigator extends StatelessWidget {
