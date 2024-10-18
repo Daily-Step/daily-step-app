@@ -1,4 +1,4 @@
-import 'package:dailystep/config/auth.dart';
+import 'package:dailystep/config/route/auth_redirection.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
@@ -42,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 WCtaButton('구글 로그인', onPressed: widget.auth.googleSignIn),
                 height10,
-                WCtaButton('애플 로그인', onPressed: widget.auth.appleSignIn,),
+                WCtaButton('네이버 로그인', onPressed: widget.auth.naverSignIn,),
                 height10,
-                WCtaButton('카카오 로그인', onPressed: widget.auth.cacaoSignIn,),
+                WCtaButton('카카오 로그인', onPressed: widget.auth.kakaoSignIn,),
               ],
             ),
           ),
