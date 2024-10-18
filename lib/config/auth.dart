@@ -28,13 +28,13 @@ class DailyStepAuth extends ChangeNotifier {
     notifyListeners();
     return _signedIn;
   }
-  Future<bool> appleSignIn() async {
+  Future<bool> naverSignIn() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = true;
     notifyListeners();
     return _signedIn;
   }
-  Future<bool> cacaoSignIn() async {
+  Future<bool> kakaoSignIn() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = true;
     notifyListeners();

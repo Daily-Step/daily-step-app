@@ -42,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 WCtaButton('구글 로그인', onPressed: widget.auth.googleSignIn),
                 height10,
-                WCtaButton('네이버 로그인', onPressed: widget.auth.appleSignIn,),
+                WCtaButton('네이버 로그인', onPressed: widget.auth.naverSignIn,),
                 height10,
-                WCtaButton('카카오 로그인', onPressed: widget.auth.cacaoSignIn,),
+                WCtaButton('카카오 로그인', onPressed: widget.auth.kakaoSignIn,),
               ],
             ),
           ),
