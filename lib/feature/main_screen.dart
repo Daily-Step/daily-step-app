@@ -1,3 +1,4 @@
+import 'package:dailystep/common/extension/list_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
 import 'package:dailystep/common/util/flutter_async.dart';
 import 'package:dailystep/feature/nav/nav_item.dart';
@@ -5,7 +6,6 @@ import 'package:dailystep/feature/nav/nav_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav/nav.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);

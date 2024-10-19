@@ -14,10 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  #util
-  velocity_x: ^4.2.1
   freezed: ^2.5.7
-
   nav: ^1.4.3
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
