@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 class DailyStepAuth extends ChangeNotifier {
-  bool _signedIn = false;
-  bool _signedUp = false;
+  bool _signedIn = true;
+  bool _signedUp = true;
   DailyStepAuth(){}
   @override
   void dispose() {
