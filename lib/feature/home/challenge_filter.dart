@@ -30,6 +30,7 @@ class _CustomSegmentControlState extends State<ChallengeFilter> {
                 child: GestureDetector(
                   onTap: () => widget.onChanged(true),
                   child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     child: Center(
                       child: Text(
                         '진행완료',
