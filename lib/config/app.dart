@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../feature/auth/login_screen.dart';
+import '../feature/home/challenge_detail/challenge_detail_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
@@ -58,11 +59,6 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             FadeTransitionPage(key: state.pageKey, child: SignUpScreen(auth: _auth,)),
       ),
       GoRoute(
-        path: '/post/:postId',
-        redirect: (BuildContext context, GoRouterState state) =>
-            '/main/home/${state.pathParameters['postId']}',
-      ),
-      GoRoute(
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
@@ -71,6 +67,16 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             firstTab: TabItem.find(state.pathParameters['kind']),
           ),
         ),
+        routes: <GoRoute>[
+          GoRoute(
+            name: 'challenge_detail',
+            path: 'home/:postId',
+            builder: (BuildContext context, GoRouterState state) {
+              final String postId = state.pathParameters['postId']!;
+                return ChallengeDetailScreen(int.parse(postId));
+            },
+          ),
+        ],
       ),
     ],
     redirect: _auth.guard,

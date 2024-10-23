@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../model/challenge/challenge_model.dart';
 import 'challenge_filter.dart';
 import 'challenge_item.dart';
 import 'challenge_provider.dart';
@@ -32,6 +34,7 @@ class HomeFragment extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final challengeState = ref.watch(challengeNotifierProvider);
     final challengeNotifier = ref.read(challengeNotifierProvider.notifier);
+    List<Challenge> tasks = challengeNotifier.isCompleted? challengeNotifier.endTask :challengeNotifier.task;
 
     return Column(
       children: [
@@ -65,10 +68,10 @@ class HomeFragment extends ConsumerWidget {
         Expanded(
           child: challengeState.isEditing
               ? ReorderableListView.builder(
-                  itemCount: challengeNotifier.filteredTasks.length,
+                  itemCount: tasks.length,
                   onReorder: challengeNotifier.reorderTasks,
                   itemBuilder: (context, index) => Dismissible(
-                    key: Key(challengeState.tasks[index]['title']),
+                    key: Key(challengeState.tasks[index].id.toString()),
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
@@ -76,25 +79,15 @@ class HomeFragment extends ConsumerWidget {
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
                     direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      final removedTask = challengeNotifier.filteredTasks[index];
-                      challengeNotifier.removeTask(index);
+                    onDismissed: (direction) async {
+                      final removedTask = tasks[index];
+                      await challengeNotifier.removeTaskByTitle(removedTask.title);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('${removedTask['title']} 삭제됨'),
+                          content: Text('${removedTask.title} 삭제됨'),
                           action: SnackBarAction(
                             label: '실행 취소',
                             onPressed: () {
-                              final removedTaskTitle =
-                              challengeNotifier.filteredTasks[index]['title'];
-                              final removedTask = {
-                                'title': removedTaskTitle,
-                                'period': challengeNotifier.filteredTasks[index]['period'],
-                                'progress': challengeNotifier.filteredTasks[index]
-                                    ['progress'],
-                                'isSelected': challengeNotifier.filteredTasks[index]
-                                    ['isSelected'],
-                              };
                               challengeNotifier.undoRemoveTask(
                                   index, removedTask);
                             },
@@ -103,20 +96,22 @@ class HomeFragment extends ConsumerWidget {
                       );
                     },
                     child: ChallengeItem(
-                      task: challengeNotifier.filteredTasks[index],
+                      task: tasks[index],
                       index: index,
-                      isEditing: challengeState.isEditing,
+                      isEditing: challengeState.isEditing, onTap: () {  },
                     ),
                   ),
                 )
               : ListView.builder(
-                  itemCount: challengeNotifier.filteredTasks.length,
+                  itemCount: tasks.length,
                   itemBuilder: (context, index) {
-                    final task = challengeNotifier.filteredTasks[index];
+                    final task = tasks[index];
                     return ChallengeItem(
                       task: task,
                       index: index,
-                      isEditing: challengeState.isEditing,
+                      isEditing: challengeState.isEditing, onTap: () {
+                      context.go('/main/home/${task.id}');
+                    },
                     );
                   }),
         ),

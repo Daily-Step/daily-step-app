@@ -1,39 +1,24 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../model/challenge/challenge_dummies.dart';
+import '../../model/challenge/challenge_model.dart';
+
 part 'challenge_provider.g.dart';
 
 @riverpod
 class ChallengeNotifier extends _$ChallengeNotifier {
   ChallengesState build() {
     return ChallengesState(
-      tasks: [
-        {
-          'title': '주 3회 이상 헬스장 가기',
-          'period': '2024.09.29~2024.11.29',
-          'progress': 98.0,
-          'isCompleted': false,
-        },
-        {
-          'title': '매일 일기쓰기',
-          'period': '2024.09.29~2024.11.29',
-          'progress': 50.0,
-          'isCompleted': true,
-        },
-        {
-          'title': '숫풀 컨텐츠 끝내기',
-          'period': '2024.09.29~2024.11.29',
-          'progress': 20.0,
-          'isCompleted': false,
-        },
-      ],
+      tasks: dummyChallenges.where((item)=> item.isCompleted == false).toList(),
+      endTasks: dummyChallenges.where((item)=> item.isCompleted == true).toList(),
       isEditing: false,
       isCompleted: false,
     );
   }
-  List<Map<String, dynamic>> get filteredTasks {
-    return state.tasks.where((task) =>
-    task['isCompleted'] == state.isCompleted
-    ).toList();
-  }
+
+  bool get isCompleted => state.isCompleted;
+  List<Challenge> get task => state.tasks;
+  List<Challenge> get endTask => state.endTasks;
 
   void toggleEditing() {
     state = state.copyWith(isEditing: !state.isEditing);
@@ -53,14 +38,16 @@ class ChallengeNotifier extends _$ChallengeNotifier {
     state = state.copyWith(tasks: tasks);
   }
 
-  Future<Map<String,dynamic>> removeTask(int index) async {
+  Future<Challenge?> removeTaskByTitle(String title) async {
     final tasks = [...state.tasks];
-    final removedTask = tasks.removeAt(index);
+
+    final removedTask = tasks.firstWhere((task) => task.title == title);
+    tasks.remove(removedTask);
     state = state.copyWith(tasks: tasks);
     return removedTask;
   }
 
-  void undoRemoveTask(int index, Map<String, dynamic> task) {
+  void undoRemoveTask(int index, Challenge task) {
     final tasks = [...state.tasks];
     tasks.insert(index, task);
     state = state.copyWith(tasks: tasks);
@@ -69,23 +56,26 @@ class ChallengeNotifier extends _$ChallengeNotifier {
 
 // 상태 클래스
 class ChallengesState {
-  final List<Map<String, dynamic>> tasks;
+  final List<Challenge> tasks;
+  final List<Challenge> endTasks;
   final bool isEditing;
   final bool isCompleted;
 
   ChallengesState({
     required this.tasks,
+    required this.endTasks,
     required this.isEditing,
     required this.isCompleted,
   });
 
   ChallengesState copyWith({
-    List<Map<String, dynamic>>? tasks,
+    List<Challenge>? tasks,
     bool? isEditing,
     bool? isCompleted,
   }) {
     return ChallengesState(
-      tasks: tasks ?? this.tasks,
+      tasks: this.tasks,
+      endTasks: this.endTasks,
       isEditing: isEditing ?? this.isEditing,
       isCompleted: isCompleted ?? this.isCompleted,
     );

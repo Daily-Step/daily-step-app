@@ -6,7 +6,7 @@ part of 'challenge_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$challengeNotifierHash() => r'6bf7d0f2ce3be6a7ac4ce49d7b6099fb4acc231c';
+String _$challengeNotifierHash() => r'160abc3b2c5edc07e26bb74df535d6d8a00906ec';
 
 /// See also [ChallengeNotifier].
 @ProviderFor(ChallengeNotifier)

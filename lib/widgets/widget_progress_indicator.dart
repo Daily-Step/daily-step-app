@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WProgressIndicator extends StatelessWidget {
-  final double percentage;
+  final int percentage;
 
   const WProgressIndicator({
     super.key,
