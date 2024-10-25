@@ -22,7 +22,6 @@ class App extends ConsumerStatefulWidget {
 
 class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   final DailyStepAuth _auth = DailyStepAuth();
-  final ValueKey<String> _scaffoldKey = const ValueKey<String>('App scaffold');
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +61,14 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-          key: _scaffoldKey,
-          child: MainScreen(
-            firstTab: TabItem.find(state.pathParameters['kind']),
-          ),
-        ),
+              key: state.pageKey,
+              child: MainScreen(
+                firstTab: TabItem.find(state.pathParameters['kind']),
+              ),
+            ),
         routes: <GoRoute>[
           GoRoute(
-            name: 'challenge_detail',
-            path: 'home/:postId',
+            path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
                 return ChallengeDetailScreen(int.parse(postId));

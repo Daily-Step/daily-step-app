@@ -110,7 +110,7 @@ class HomeFragment extends ConsumerWidget {
                       task: task,
                       index: index,
                       isEditing: challengeState.isEditing, onTap: () {
-                      context.go('/main/home/${task.id}');
+                      context.push('/main/home/${task.id}');
                     },
                     );
                   }),
