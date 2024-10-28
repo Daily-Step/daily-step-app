@@ -1,8 +1,7 @@
+import 'package:dailystep/feature/home/reorderable_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../model/challenge/challenge_model.dart';
-import 'challenge_filter.dart';
 import 'challenge_item.dart';
 import 'challenge_provider.dart';
 
@@ -27,14 +26,20 @@ class Task {
       };
 }
 
-class HomeFragment extends ConsumerWidget {
+class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _HomeFragmentState createState() => _HomeFragmentState();
+}
+
+class _HomeFragmentState extends ConsumerState<HomeFragment> {
+  bool isEditing = false;
+
+  @override
+  Widget build(BuildContext context) {
     final challengeState = ref.watch(challengeNotifierProvider);
     final challengeNotifier = ref.read(challengeNotifierProvider.notifier);
-    List<Challenge> tasks = challengeNotifier.isCompleted? challengeNotifier.endTask :challengeNotifier.task;
 
     return Column(
       children: [
@@ -52,38 +57,35 @@ class HomeFragment extends ConsumerWidget {
               ),
               Spacer(),
               IconButton(
-                icon: Icon(challengeState.isEditing ? Icons.done : Icons.edit),
-                onPressed: () => challengeNotifier.toggleEditing(),
+                icon: Icon(isEditing ? Icons.done : Icons.edit),
+                onPressed: () {
+                  setState(() {
+                    isEditing = !isEditing;
+                  });
+                },
               ),
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-          child: ChallengeFilter(
-            isSelected: challengeState.isCompleted,
-            onChanged: challengeNotifier.toggleCompleted,
-          ),
-        ),
         Expanded(
-          child: challengeState.isEditing
-              ? ReorderableListView.builder(
-                  itemCount: tasks.length,
-                  onReorder: challengeNotifier.reorderTasks,
-                  itemBuilder: (context, index) => Dismissible(
-                    key: Key(challengeState.tasks[index].id.toString()),
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) async {
-                      final removedTask = tasks[index];
-                      await challengeNotifier.removeTaskByTitle(removedTask.title);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+          child: isEditing
+              ? CachedReorderableListView(
+                  list: challengeState.tasks,
+                  itemBuilder: (BuildContext context, item, index) {
+                    return Dismissible(
+                      key: ValueKey('task_${item.id}'),
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete, color: Colors.white),
+                      ),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) async {
+                        final removedTask = item;
+                        await challengeNotifier
+                            .removeTaskByTitle(removedTask.title);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('${removedTask.title} 삭제됨'),
                           action: SnackBarAction(
                             label: '실행 취소',
@@ -92,26 +94,31 @@ class HomeFragment extends ConsumerWidget {
                                   index, removedTask);
                             },
                           ),
-                        ),
-                      );
-                    },
-                    child: ChallengeItem(
-                      task: tasks[index],
-                      index: index,
-                      isEditing: challengeState.isEditing, onTap: () {  },
-                    ),
-                  ),
+                        ));
+                      },
+                      child: ChallengeItem(
+                        task: item,
+                        index: index,
+                        isEditing: isEditing,
+                        onTap: () {},
+                      ),
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    challengeNotifier.reorderTasks(oldIndex, newIndex);
+                  },
                 )
               : ListView.builder(
-                  itemCount: tasks.length,
+                  itemCount: challengeState.tasks.length,
                   itemBuilder: (context, index) {
-                    final task = tasks[index];
+                    final task = challengeState.tasks[index];
                     return ChallengeItem(
                       task: task,
                       index: index,
-                      isEditing: challengeState.isEditing, onTap: () {
-                      context.push('/main/home/${task.id}');
-                    },
+                      isEditing: isEditing,
+                      onTap: () {
+                        context.push('/main/home/${task.id}');
+                      },
                     );
                   }),
         ),
