@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChallengeDetailScreen extends StatefulWidget {
+class ChallengeDetailScreen extends ConsumerStatefulWidget {
   final int id;
   ChallengeDetailScreen(this.id);
 
   @override
-  _ExerciseSettingsScreenState createState() => _ExerciseSettingsScreenState();
+  _ChallengeDetailScreenState createState() => _ChallengeDetailScreenState();
 }
 
-class _ExerciseSettingsScreenState extends State<ChallengeDetailScreen> {
+class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
   bool pushEnabled = true;
   DateTime selectedDate = DateTime(2024, 9, 1);
   int weeks = 2;

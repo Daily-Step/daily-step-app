@@ -14,8 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
+  return _Challenge.fromJson(json);
+}
+
 /// @nodoc
-mixin _$Challenge {
+mixin _$ChallengeModel {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get startDate => throw _privateConstructorUsedError;
@@ -29,17 +33,21 @@ mixin _$Challenge {
   String get category => throw _privateConstructorUsedError;
   String? get note => throw _privateConstructorUsedError;
 
-  /// Create a copy of Challenge
+  /// Serializes this ChallengeModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ChallengeCopyWith<Challenge> get copyWith =>
+  $ChallengeModelCopyWith<ChallengeModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ChallengeCopyWith<$Res> {
-  factory $ChallengeCopyWith(Challenge value, $Res Function(Challenge) then) =
-      _$ChallengeCopyWithImpl<$Res, Challenge>;
+abstract class $ChallengeModelCopyWith<$Res> {
+  factory $ChallengeModelCopyWith(
+          ChallengeModel value, $Res Function(ChallengeModel) then) =
+      _$ChallengeModelCopyWithImpl<$Res, ChallengeModel>;
   @useResult
   $Res call(
       {int id,
@@ -57,16 +65,16 @@ abstract class $ChallengeCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ChallengeCopyWithImpl<$Res, $Val extends Challenge>
-    implements $ChallengeCopyWith<$Res> {
-  _$ChallengeCopyWithImpl(this._value, this._then);
+class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
+    implements $ChallengeModelCopyWith<$Res> {
+  _$ChallengeModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Challenge
+  /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -139,7 +147,7 @@ class _$ChallengeCopyWithImpl<$Res, $Val extends Challenge>
 
 /// @nodoc
 abstract class _$$ChallengeImplCopyWith<$Res>
-    implements $ChallengeCopyWith<$Res> {
+    implements $ChallengeModelCopyWith<$Res> {
   factory _$$ChallengeImplCopyWith(
           _$ChallengeImpl value, $Res Function(_$ChallengeImpl) then) =
       __$$ChallengeImplCopyWithImpl<$Res>;
@@ -162,13 +170,13 @@ abstract class _$$ChallengeImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ChallengeImplCopyWithImpl<$Res>
-    extends _$ChallengeCopyWithImpl<$Res, _$ChallengeImpl>
+    extends _$ChallengeModelCopyWithImpl<$Res, _$ChallengeImpl>
     implements _$$ChallengeImplCopyWith<$Res> {
   __$$ChallengeImplCopyWithImpl(
       _$ChallengeImpl _value, $Res Function(_$ChallengeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Challenge
+  /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -240,7 +248,7 @@ class __$$ChallengeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ChallengeImpl implements _Challenge {
   const _$ChallengeImpl(
       {required this.id,
@@ -255,6 +263,9 @@ class _$ChallengeImpl implements _Challenge {
       this.alarmDate,
       required this.category,
       this.note});
+
+  factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChallengeImplFromJson(json);
 
   @override
   final int id;
@@ -283,7 +294,7 @@ class _$ChallengeImpl implements _Challenge {
 
   @override
   String toString() {
-    return 'Challenge(id: $id, title: $title, startDate: $startDate, period: $period, progress: $progress, isCompleted: $isCompleted, repeat: $repeat, isAlarm: $isAlarm, alarmTime: $alarmTime, alarmDate: $alarmDate, category: $category, note: $note)';
+    return 'ChallengeModel(id: $id, title: $title, startDate: $startDate, period: $period, progress: $progress, isCompleted: $isCompleted, repeat: $repeat, isAlarm: $isAlarm, alarmTime: $alarmTime, alarmDate: $alarmDate, category: $category, note: $note)';
   }
 
   @override
@@ -311,6 +322,7 @@ class _$ChallengeImpl implements _Challenge {
             (identical(other.note, note) || other.note == note));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -327,16 +339,23 @@ class _$ChallengeImpl implements _Challenge {
       category,
       note);
 
-  /// Create a copy of Challenge
+  /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChallengeImplCopyWith<_$ChallengeImpl> get copyWith =>
       __$$ChallengeImplCopyWithImpl<_$ChallengeImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ChallengeImplToJson(
+      this,
+    );
+  }
 }
 
-abstract class _Challenge implements Challenge {
+abstract class _Challenge implements ChallengeModel {
   const factory _Challenge(
       {required final int id,
       required final String title,
@@ -350,6 +369,9 @@ abstract class _Challenge implements Challenge {
       final String? alarmDate,
       required final String category,
       final String? note}) = _$ChallengeImpl;
+
+  factory _Challenge.fromJson(Map<String, dynamic> json) =
+      _$ChallengeImpl.fromJson;
 
   @override
   int get id;
@@ -376,7 +398,7 @@ abstract class _Challenge implements Challenge {
   @override
   String? get note;
 
-  /// Create a copy of Challenge
+  /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)

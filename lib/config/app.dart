@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../feature/auth/login_screen.dart';
-import '../feature/home/challenge_detail/challenge_detail_screen.dart';
+import '../feature/challenge_detail/view/challenge_detail_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';

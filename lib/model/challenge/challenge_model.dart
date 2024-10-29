@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'challenge_model.freezed.dart';
+part 'challenge_model.g.dart';
 
 @freezed
-class Challenge with _$Challenge {
-  const factory Challenge({
+class ChallengeModel with _$ChallengeModel {
+  const factory ChallengeModel({
     required final int id,
     required final String title,
     required final String startDate,
@@ -17,4 +18,7 @@ class Challenge with _$Challenge {
     required final String category,
     String? note,
   }) = _Challenge;
+
+  factory ChallengeModel.fromJson(Map<String, dynamic> json) =>
+      _$ChallengeModelFromJson(json);
 }

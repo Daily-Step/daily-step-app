@@ -1,7 +1,7 @@
 import 'challenge_model.dart';
 
-final List<Challenge> dummyChallenges = [
-  const Challenge(
+final List<ChallengeModel> dummyChallenges = [
+  const ChallengeModel(
     id: 0,
     title: '30-Day Fitness Challenge',
     startDate: '2024-01-01',
@@ -15,7 +15,7 @@ final List<Challenge> dummyChallenges = [
     category: 'Health',
     note: 'Morning workout',
   ),
-  const Challenge(
+  const ChallengeModel(
     id: 1,
     title: 'Read 12 Books in a Year',
     startDate: '2024-02-01',
@@ -27,7 +27,7 @@ final List<Challenge> dummyChallenges = [
     category: 'Education',
     note: 'Focus on personal development books',
   ),
-  const Challenge(
+  const ChallengeModel(
     id: 2,
     title: 'Meditate Daily for 1 Month',
     startDate: '2024-03-01',
@@ -41,7 +41,7 @@ final List<Challenge> dummyChallenges = [
     category: 'Mindfulness',
     note: 'Morning meditation routine',
   ),
-  const Challenge(
+  const ChallengeModel(
     id: 3,
     title: 'Learn Flutter Basics',
     startDate: '2024-04-01',
@@ -55,7 +55,7 @@ final List<Challenge> dummyChallenges = [
     category: 'Programming',
     note: 'Follow online course for Flutter basics',
   ),
-  const Challenge(
+  const ChallengeModel(
     id: 4,
     title: 'No Sugar for 1 Week',
     startDate: '2024-05-01',
