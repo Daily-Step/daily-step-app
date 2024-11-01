@@ -21,17 +21,18 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChallengeModel {
   int get id => throw _privateConstructorUsedError;
+  int get memberId => throw _privateConstructorUsedError;
+  int get categoryId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get startDate => throw _privateConstructorUsedError;
-  int get period => throw _privateConstructorUsedError;
-  int get progress => throw _privateConstructorUsedError;
-  bool get isCompleted => throw _privateConstructorUsedError;
-  int get repeat => throw _privateConstructorUsedError;
-  bool get isAlarm => throw _privateConstructorUsedError;
-  String? get alarmTime => throw _privateConstructorUsedError;
-  String? get alarmDate => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  String? get note => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  String get color => throw _privateConstructorUsedError;
+  int get weeklyGoalCount => throw _privateConstructorUsedError;
+  int get totalGoalCount => throw _privateConstructorUsedError;
+  int get achievedTotalGoalCount => throw _privateConstructorUsedError;
+  DateTime get startDatetime => throw _privateConstructorUsedError;
+  DateTime get endDatetime => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this ChallengeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,17 +52,18 @@ abstract class $ChallengeModelCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
+      int memberId,
+      int categoryId,
       String title,
-      String startDate,
-      int period,
-      int progress,
-      bool isCompleted,
-      int repeat,
-      bool isAlarm,
-      String? alarmTime,
-      String? alarmDate,
-      String category,
-      String? note});
+      String content,
+      String color,
+      int weeklyGoalCount,
+      int totalGoalCount,
+      int achievedTotalGoalCount,
+      DateTime startDatetime,
+      DateTime endDatetime,
+      DateTime createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -80,67 +82,72 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   @override
   $Res call({
     Object? id = null,
+    Object? memberId = null,
+    Object? categoryId = null,
     Object? title = null,
-    Object? startDate = null,
-    Object? period = null,
-    Object? progress = null,
-    Object? isCompleted = null,
-    Object? repeat = null,
-    Object? isAlarm = null,
-    Object? alarmTime = freezed,
-    Object? alarmDate = freezed,
-    Object? category = null,
-    Object? note = freezed,
+    Object? content = null,
+    Object? color = null,
+    Object? weeklyGoalCount = null,
+    Object? totalGoalCount = null,
+    Object? achievedTotalGoalCount = null,
+    Object? startDatetime = null,
+    Object? endDatetime = null,
+    Object? createdAt = null,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      memberId: null == memberId
+          ? _value.memberId
+          : memberId // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoryId: null == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as int,
-      progress: null == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as int,
-      isCompleted: null == isCompleted
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-      repeat: null == repeat
-          ? _value.repeat
-          : repeat // ignore: cast_nullable_to_non_nullable
-              as int,
-      isAlarm: null == isAlarm
-          ? _value.isAlarm
-          : isAlarm // ignore: cast_nullable_to_non_nullable
-              as bool,
-      alarmTime: freezed == alarmTime
-          ? _value.alarmTime
-          : alarmTime // ignore: cast_nullable_to_non_nullable
-              as String?,
-      alarmDate: freezed == alarmDate
-          ? _value.alarmDate
-          : alarmDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
               as String,
-      note: freezed == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String?,
+      weeklyGoalCount: null == weeklyGoalCount
+          ? _value.weeklyGoalCount
+          : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalGoalCount: null == totalGoalCount
+          ? _value.totalGoalCount
+          : totalGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      achievedTotalGoalCount: null == achievedTotalGoalCount
+          ? _value.achievedTotalGoalCount
+          : achievedTotalGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      startDatetime: null == startDatetime
+          ? _value.startDatetime
+          : startDatetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDatetime: null == endDatetime
+          ? _value.endDatetime
+          : endDatetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -155,17 +162,18 @@ abstract class _$$ChallengeImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
+      int memberId,
+      int categoryId,
       String title,
-      String startDate,
-      int period,
-      int progress,
-      bool isCompleted,
-      int repeat,
-      bool isAlarm,
-      String? alarmTime,
-      String? alarmDate,
-      String category,
-      String? note});
+      String content,
+      String color,
+      int weeklyGoalCount,
+      int totalGoalCount,
+      int achievedTotalGoalCount,
+      DateTime startDatetime,
+      DateTime endDatetime,
+      DateTime createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -182,67 +190,72 @@ class __$$ChallengeImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? memberId = null,
+    Object? categoryId = null,
     Object? title = null,
-    Object? startDate = null,
-    Object? period = null,
-    Object? progress = null,
-    Object? isCompleted = null,
-    Object? repeat = null,
-    Object? isAlarm = null,
-    Object? alarmTime = freezed,
-    Object? alarmDate = freezed,
-    Object? category = null,
-    Object? note = freezed,
+    Object? content = null,
+    Object? color = null,
+    Object? weeklyGoalCount = null,
+    Object? totalGoalCount = null,
+    Object? achievedTotalGoalCount = null,
+    Object? startDatetime = null,
+    Object? endDatetime = null,
+    Object? createdAt = null,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$ChallengeImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      memberId: null == memberId
+          ? _value.memberId
+          : memberId // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoryId: null == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as int,
-      progress: null == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as int,
-      isCompleted: null == isCompleted
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-      repeat: null == repeat
-          ? _value.repeat
-          : repeat // ignore: cast_nullable_to_non_nullable
-              as int,
-      isAlarm: null == isAlarm
-          ? _value.isAlarm
-          : isAlarm // ignore: cast_nullable_to_non_nullable
-              as bool,
-      alarmTime: freezed == alarmTime
-          ? _value.alarmTime
-          : alarmTime // ignore: cast_nullable_to_non_nullable
-              as String?,
-      alarmDate: freezed == alarmDate
-          ? _value.alarmDate
-          : alarmDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
+      color: null == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
               as String,
-      note: freezed == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String?,
+      weeklyGoalCount: null == weeklyGoalCount
+          ? _value.weeklyGoalCount
+          : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalGoalCount: null == totalGoalCount
+          ? _value.totalGoalCount
+          : totalGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      achievedTotalGoalCount: null == achievedTotalGoalCount
+          ? _value.achievedTotalGoalCount
+          : achievedTotalGoalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      startDatetime: null == startDatetime
+          ? _value.startDatetime
+          : startDatetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDatetime: null == endDatetime
+          ? _value.endDatetime
+          : endDatetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -252,17 +265,18 @@ class __$$ChallengeImplCopyWithImpl<$Res>
 class _$ChallengeImpl implements _Challenge {
   const _$ChallengeImpl(
       {required this.id,
+      required this.memberId,
+      required this.categoryId,
       required this.title,
-      required this.startDate,
-      required this.period,
-      required this.progress,
-      required this.isCompleted,
-      required this.repeat,
-      required this.isAlarm,
-      this.alarmTime,
-      this.alarmDate,
-      required this.category,
-      this.note});
+      required this.content,
+      required this.color,
+      required this.weeklyGoalCount,
+      required this.totalGoalCount,
+      required this.achievedTotalGoalCount,
+      required this.startDatetime,
+      required this.endDatetime,
+      required this.createdAt,
+      this.updatedAt});
 
   factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeImplFromJson(json);
@@ -270,31 +284,33 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final int id;
   @override
+  final int memberId;
+  @override
+  final int categoryId;
+  @override
   final String title;
   @override
-  final String startDate;
+  final String content;
   @override
-  final int period;
+  final String color;
   @override
-  final int progress;
+  final int weeklyGoalCount;
   @override
-  final bool isCompleted;
+  final int totalGoalCount;
   @override
-  final int repeat;
+  final int achievedTotalGoalCount;
   @override
-  final bool isAlarm;
+  final DateTime startDatetime;
   @override
-  final String? alarmTime;
+  final DateTime endDatetime;
   @override
-  final String? alarmDate;
+  final DateTime createdAt;
   @override
-  final String category;
-  @override
-  final String? note;
+  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, title: $title, startDate: $startDate, period: $period, progress: $progress, isCompleted: $isCompleted, repeat: $repeat, isAlarm: $isAlarm, alarmTime: $alarmTime, alarmDate: $alarmDate, category: $category, note: $note)';
+    return 'ChallengeModel(id: $id, memberId: $memberId, categoryId: $categoryId, title: $title, content: $content, color: $color, weeklyGoalCount: $weeklyGoalCount, totalGoalCount: $totalGoalCount, achievedTotalGoalCount: $achievedTotalGoalCount, startDatetime: $startDatetime, endDatetime: $endDatetime, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -303,23 +319,27 @@ class _$ChallengeImpl implements _Challenge {
         (other.runtimeType == runtimeType &&
             other is _$ChallengeImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.memberId, memberId) ||
+                other.memberId == memberId) &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.period, period) || other.period == period) &&
-            (identical(other.progress, progress) ||
-                other.progress == progress) &&
-            (identical(other.isCompleted, isCompleted) ||
-                other.isCompleted == isCompleted) &&
-            (identical(other.repeat, repeat) || other.repeat == repeat) &&
-            (identical(other.isAlarm, isAlarm) || other.isAlarm == isAlarm) &&
-            (identical(other.alarmTime, alarmTime) ||
-                other.alarmTime == alarmTime) &&
-            (identical(other.alarmDate, alarmDate) ||
-                other.alarmDate == alarmDate) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.note, note) || other.note == note));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.weeklyGoalCount, weeklyGoalCount) ||
+                other.weeklyGoalCount == weeklyGoalCount) &&
+            (identical(other.totalGoalCount, totalGoalCount) ||
+                other.totalGoalCount == totalGoalCount) &&
+            (identical(other.achievedTotalGoalCount, achievedTotalGoalCount) ||
+                other.achievedTotalGoalCount == achievedTotalGoalCount) &&
+            (identical(other.startDatetime, startDatetime) ||
+                other.startDatetime == startDatetime) &&
+            (identical(other.endDatetime, endDatetime) ||
+                other.endDatetime == endDatetime) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -327,17 +347,18 @@ class _$ChallengeImpl implements _Challenge {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      memberId,
+      categoryId,
       title,
-      startDate,
-      period,
-      progress,
-      isCompleted,
-      repeat,
-      isAlarm,
-      alarmTime,
-      alarmDate,
-      category,
-      note);
+      content,
+      color,
+      weeklyGoalCount,
+      totalGoalCount,
+      achievedTotalGoalCount,
+      startDatetime,
+      endDatetime,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -358,17 +379,18 @@ class _$ChallengeImpl implements _Challenge {
 abstract class _Challenge implements ChallengeModel {
   const factory _Challenge(
       {required final int id,
+      required final int memberId,
+      required final int categoryId,
       required final String title,
-      required final String startDate,
-      required final int period,
-      required final int progress,
-      required final bool isCompleted,
-      required final int repeat,
-      required final bool isAlarm,
-      final String? alarmTime,
-      final String? alarmDate,
-      required final String category,
-      final String? note}) = _$ChallengeImpl;
+      required final String content,
+      required final String color,
+      required final int weeklyGoalCount,
+      required final int totalGoalCount,
+      required final int achievedTotalGoalCount,
+      required final DateTime startDatetime,
+      required final DateTime endDatetime,
+      required final DateTime createdAt,
+      final DateTime? updatedAt}) = _$ChallengeImpl;
 
   factory _Challenge.fromJson(Map<String, dynamic> json) =
       _$ChallengeImpl.fromJson;
@@ -376,27 +398,29 @@ abstract class _Challenge implements ChallengeModel {
   @override
   int get id;
   @override
+  int get memberId;
+  @override
+  int get categoryId;
+  @override
   String get title;
   @override
-  String get startDate;
+  String get content;
   @override
-  int get period;
+  String get color;
   @override
-  int get progress;
+  int get weeklyGoalCount;
   @override
-  bool get isCompleted;
+  int get totalGoalCount;
   @override
-  int get repeat;
+  int get achievedTotalGoalCount;
   @override
-  bool get isAlarm;
+  DateTime get startDatetime;
   @override
-  String? get alarmTime;
+  DateTime get endDatetime;
   @override
-  String? get alarmDate;
+  DateTime get createdAt;
   @override
-  String get category;
-  @override
-  String? get note;
+  DateTime? get updatedAt;
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.

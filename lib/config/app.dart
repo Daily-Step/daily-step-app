@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../feature/auth/login_screen.dart';
-import '../feature/challenge_detail/view/challenge_detail_screen.dart';
+import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
@@ -74,6 +74,13 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 return ChallengeDetailScreen(int.parse(postId));
             },
           ),
+          // GoRoute(
+          //   path: ':postId',
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     final String postId = state.pathParameters['postId']!;
+          //     return ChallengeDetailScreen(int.parse(postId));
+          //   },
+          // ),
         ],
       ),
     ],

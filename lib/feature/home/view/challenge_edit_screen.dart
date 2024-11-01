@@ -1,5 +1,7 @@
+import 'package:dailystep/feature/home/action/challenge_list_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../viewmodel/challenge_viewmodel.dart';
 
 class ChallengeDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -17,13 +19,15 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(challengeViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('주 3회 이상 헬스장 가기'),
+        title: Text(state.selectedTask!.title),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -36,8 +40,6 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
             children: [
               // 진행도 섹션
               Text('진행', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
-              _buildProgressBar('전행도', 0.95, Colors.grey.shade700),
               SizedBox(height: 8),
               _buildProgressBar('달성도', 0.85, Colors.grey.shade400),
 

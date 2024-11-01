@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../../../model/challenge/challenge_dummies.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../action/challenge_list_action.dart';
@@ -11,10 +10,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   late final List<ChallengeModel> _initialTasks;
 
   ChallengesState build() {
-    _initialTasks = dummyChallenges
-        .where((item) => item.isCompleted == false)
-        .map((item) => item.copyWith())
-        .toList();
+    _initialTasks = dummyChallenges;
 
     return ChallengesState(
       challengeList: _initialTasks,
@@ -28,7 +24,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     } else if (action is RemoveTaskAction) {
       await _handleRemoveTask(action);
     } else if (action is FindTaskAction) {
-      await _handleFindTask(action);
+      _handleFindTask(action);
     }
   }
 
@@ -44,21 +40,17 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   Future<void> _handleRemoveTask(RemoveTaskAction action) async {
     final tasks = List.of(state.challengeList);
-    final removedTask = tasks.firstWhere((task) => task.id == action.id);
     tasks.removeWhere((task) => task.id == action.id);
 
     state = state.copyWith(
       tasks: tasks,
-      selectedTask: removedTask,
     );
   }
 
   Future<void> _handleFindTask(FindTaskAction action) async {
     final tasks = List.of(state.challengeList);
     final selectedTask = tasks.firstWhere((task) => task.id == action.id);
-
     state = state.copyWith(
-      tasks: tasks,
       selectedTask: selectedTask,
     );
   }
@@ -85,4 +77,3 @@ class ChallengesState {
     );
   }
 }
-

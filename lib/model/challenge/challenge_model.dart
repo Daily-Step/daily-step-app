@@ -6,17 +6,18 @@ part 'challenge_model.g.dart';
 class ChallengeModel with _$ChallengeModel {
   const factory ChallengeModel({
     required final int id,
+    required final int memberId,
+    required final int categoryId,
     required final String title,
-    required final String startDate,
-    required final int period,
-    required final int progress,
-    required final bool isCompleted,
-    required final int repeat,
-    required final bool isAlarm,
-    String? alarmTime,
-    String? alarmDate,
-    required final String category,
-    String? note,
+    required final String content,
+    required final String color,
+    required final int weeklyGoalCount,
+    required final int totalGoalCount,
+    required final int achievedTotalGoalCount,
+    required final DateTime startDatetime,
+    required final DateTime endDatetime,
+    required final DateTime createdAt,
+    DateTime? updatedAt,
   }) = _Challenge;
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>

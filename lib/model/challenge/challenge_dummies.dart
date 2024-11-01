@@ -1,70 +1,49 @@
 import 'challenge_model.dart';
 
-final List<ChallengeModel> dummyChallenges = [
-  const ChallengeModel(
-    id: 0,
-    title: '30-Day Fitness Challenge',
-    startDate: '2024-01-01',
-    period: 7,
-    progress: 3,
-    isCompleted: false,
-    repeat: 3,
-    isAlarm: true,
-    alarmTime: '07:00',
-    alarmDate: '2024-01-01',
-    category: 'Health',
-    note: 'Morning workout',
-  ),
-  const ChallengeModel(
+var dummyChallenges = [
+  ChallengeModel(
     id: 1,
-    title: 'Read 12 Books in a Year',
-    startDate: '2024-02-01',
-    period: 14,
-    progress: 5,
-    isCompleted: false,
-    repeat: 3,
-    isAlarm: false,
-    category: 'Education',
-    note: 'Focus on personal development books',
+    memberId: 101,
+    categoryId: 5,
+    title: 'Daily Exercise Challenge',
+    content: 'Complete a daily exercise routine to stay healthy.',
+    color: '#FF5733',
+    weeklyGoalCount: 5, // 7보다 작음
+    totalGoalCount: 28, // 7의 배수
+    achievedTotalGoalCount: 20, // totalGoalCount보다 작음
+    startDatetime: DateTime(2024, 1, 1),
+    endDatetime: DateTime(2024, 1, 28),
+    createdAt: DateTime(2023, 12, 15),
+    updatedAt: DateTime(2024, 1, 10),
   ),
-  const ChallengeModel(
+   ChallengeModel(
     id: 2,
-    title: 'Meditate Daily for 1 Month',
-    startDate: '2024-03-01',
-    period: 21,
-    progress: 4,
-    isCompleted: true,
-    repeat: 1,
-    isAlarm: true,
-    alarmTime: '06:00',
-    alarmDate: '2024-03-01',
-    category: 'Mindfulness',
-    note: 'Morning meditation routine',
+    memberId: 101,
+    categoryId: 3,
+    title: 'Read a Book Weekly',
+    content: 'Finish one book every week for mental growth.',
+    color: '#4287f5',
+    weeklyGoalCount: 1, // 7보다 작음
+    totalGoalCount: 7,  // 7의 배수
+    achievedTotalGoalCount: 3, // totalGoalCount보다 작음
+    startDatetime: DateTime(2024, 2, 1),
+    endDatetime: DateTime(2024, 2, 28),
+    createdAt: DateTime(2024, 1, 25),
+    updatedAt: DateTime(2024, 2, 5),
   ),
-  const ChallengeModel(
+   ChallengeModel(
     id: 3,
-    title: 'Learn Flutter Basics',
-    startDate: '2024-04-01',
-    period: 14,
-    progress: 10,
-    isCompleted: false,
-    repeat: 2,
-    isAlarm: true,
-    alarmTime: '08:00',
-    alarmDate: '2024-04-01',
-    category: 'Programming',
-    note: 'Follow online course for Flutter basics',
-  ),
-  const ChallengeModel(
-    id: 4,
-    title: 'No Sugar for 1 Week',
-    startDate: '2024-05-01',
-    period: 14,
-    progress: 7,
-    isCompleted: true,
-    repeat: 1,
-    isAlarm: false,
-    category: 'Health',
-    note: 'Stick to a healthy diet',
+    memberId: 101,
+    categoryId: 2,
+    title: 'Practice Guitar Daily',
+    content: 'Improve skills by practicing guitar for at least 20 minutes every day.',
+    color: '#34a853',
+    weeklyGoalCount: 6, // 7보다 작음
+    totalGoalCount: 42, // 7의 배수
+    achievedTotalGoalCount: 30, // totalGoalCount보다 작음
+    startDatetime: DateTime(2024, 3, 1),
+    endDatetime: DateTime(2024, 4, 12),
+    createdAt: DateTime(2024, 2, 20),
+    updatedAt: DateTime(2024, 3, 10),
   ),
 ];

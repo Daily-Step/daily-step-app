@@ -65,7 +65,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
-                    notifier.handleAction(ReorderTasksAction(oldIndex, newIndex));
+                    notifier
+                        .handleAction(ReorderTasksAction(oldIndex, newIndex));
                   },
                 )
               : ListView.builder(
@@ -76,7 +77,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                       task: task,
                       index: index,
                       isEditing: isEditing,
-                      onTap: () {
+                      onTap: () async {
+                        await notifier.handleAction(FindTaskAction(task.id));
                         context.push('/main/home/${task.id}');
                       },
                     );

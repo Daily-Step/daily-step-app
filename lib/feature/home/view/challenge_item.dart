@@ -1,6 +1,5 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
-import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_progress_indicator.dart';
@@ -28,11 +27,17 @@ class ChallengeItem extends StatelessWidget {
         onTap: onTap,
         child: ListTile(
           leading: WProgressIndicator(
-            percentage: task.period.getProgress(task.progress),
+              percentage: task.totalGoalCount.getProgress(
+                  task.achievedTotalGoalCount),
+              width: 40,
+              height: 40,
+              strokeWidth: 6,
+              fontSize: 12,
           ),
           title: Text(task.title),
           subtitle: Text(
-              '${task.startDate} ~ ${task.startDate.toDateTime.addDaysToDate(task.period).formattedDate}'
+              '${task.startDatetime.formattedDate} ~ ${task.endDatetime
+                  .formattedDate}'
           ),
           trailing: ReorderableDragStartListener(
             index: index,
