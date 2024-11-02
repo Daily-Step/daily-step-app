@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
+import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
@@ -67,6 +68,12 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
               ),
             ),
         routes: <GoRoute>[
+          GoRoute(path: 'edit',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: ChallengeEditScreen(),
+              )
+          ),
           GoRoute(
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
@@ -74,13 +81,6 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 return ChallengeDetailScreen(int.parse(postId));
             },
           ),
-          // GoRoute(
-          //   path: ':postId',
-          //   builder: (BuildContext context, GoRouterState state) {
-          //     final String postId = state.pathParameters['postId']!;
-          //     return ChallengeDetailScreen(int.parse(postId));
-          //   },
-          // ),
         ],
       ),
     ],

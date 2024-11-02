@@ -1,27 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'challenge_viewmodel.dart';
+part of 'category_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$challengeViewModelHash() =>
-    r'5ca94d36bbcca1905f449789f3a544353142cad9';
+String _$categoryViewModelHash() => r'bda6e13f300695c87c0dab3cb45368c4deef15c2';
 
-/// See also [ChallengeViewModel].
-@ProviderFor(ChallengeViewModel)
-final challengeViewModelProvider =
-    AutoDisposeNotifierProvider<ChallengeViewModel, ChallengesState>.internal(
-  ChallengeViewModel.new,
-  name: r'challengeViewModelProvider',
+/// See also [CategoryViewModel].
+@ProviderFor(CategoryViewModel)
+final categoryViewModelProvider =
+    AutoDisposeNotifierProvider<CategoryViewModel, CategoryState>.internal(
+  CategoryViewModel.new,
+  name: r'categoryViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$challengeViewModelHash,
+      : _$categoryViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChallengeViewModel = AutoDisposeNotifier<ChallengesState>;
+typedef _$CategoryViewModel = AutoDisposeNotifier<CategoryState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -11,6 +11,7 @@ const width30 = Width(30);
 
 const height5 = Height(5);
 const height10 = Height(10);
+const height15 = Height(15);
 const height20 = Height(20);
 const height30 = Height(30);
 
