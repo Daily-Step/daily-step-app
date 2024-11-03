@@ -4,6 +4,8 @@ import '../viewmodel/calendar_viewmodel.dart';
 import 'widgets/custom_calendar_widget.dart';
 
 class CalendarScreen extends ConsumerWidget {
+  const CalendarScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(calendarViewModelProvider);
