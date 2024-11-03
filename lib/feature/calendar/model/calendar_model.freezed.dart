@@ -22,6 +22,9 @@ CalendarModel _$CalendarModelFromJson(Map<String, dynamic> json) {
 mixin _$CalendarModel {
   String get title => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
+  DateTime get startDate => throw _privateConstructorUsedError;
+  DateTime get endDate => throw _privateConstructorUsedError;
+  int get progress => throw _privateConstructorUsedError;
 
   /// Serializes this CalendarModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +42,12 @@ abstract class $CalendarModelCopyWith<$Res> {
           CalendarModel value, $Res Function(CalendarModel) then) =
       _$CalendarModelCopyWithImpl<$Res, CalendarModel>;
   @useResult
-  $Res call({String title, DateTime dateTime});
+  $Res call(
+      {String title,
+      DateTime dateTime,
+      DateTime startDate,
+      DateTime endDate,
+      int progress});
 }
 
 /// @nodoc
@@ -59,6 +67,9 @@ class _$CalendarModelCopyWithImpl<$Res, $Val extends CalendarModel>
   $Res call({
     Object? title = null,
     Object? dateTime = null,
+    Object? startDate = null,
+    Object? endDate = null,
+    Object? progress = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -69,6 +80,18 @@ class _$CalendarModelCopyWithImpl<$Res, $Val extends CalendarModel>
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      progress: null == progress
+          ? _value.progress
+          : progress // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -81,7 +104,12 @@ abstract class _$$CalendarModelImplCopyWith<$Res>
       __$$CalendarModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String title, DateTime dateTime});
+  $Res call(
+      {String title,
+      DateTime dateTime,
+      DateTime startDate,
+      DateTime endDate,
+      int progress});
 }
 
 /// @nodoc
@@ -99,6 +127,9 @@ class __$$CalendarModelImplCopyWithImpl<$Res>
   $Res call({
     Object? title = null,
     Object? dateTime = null,
+    Object? startDate = null,
+    Object? endDate = null,
+    Object? progress = null,
   }) {
     return _then(_$CalendarModelImpl(
       title: null == title
@@ -109,16 +140,32 @@ class __$$CalendarModelImplCopyWithImpl<$Res>
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      progress: null == progress
+          ? _value.progress
+          : progress // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CalendarModelImpl
-    with DiagnosticableTreeMixin
-    implements _CalendarModel {
-  const _$CalendarModelImpl({required this.title, required this.dateTime});
+class _$CalendarModelImpl extends _CalendarModel {
+  const _$CalendarModelImpl(
+      {required this.title,
+      required this.dateTime,
+      required this.startDate,
+      required this.endDate,
+      required this.progress})
+      : super._();
 
   factory _$CalendarModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CalendarModelImplFromJson(json);
@@ -127,19 +174,16 @@ class _$CalendarModelImpl
   final String title;
   @override
   final DateTime dateTime;
+  @override
+  final DateTime startDate;
+  @override
+  final DateTime endDate;
+  @override
+  final int progress;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CalendarModel(title: $title, dateTime: $dateTime)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'CalendarModel'))
-      ..add(DiagnosticsProperty('title', title))
-      ..add(DiagnosticsProperty('dateTime', dateTime));
+  String toString() {
+    return 'CalendarModel(title: $title, dateTime: $dateTime, startDate: $startDate, endDate: $endDate, progress: $progress)';
   }
 
   @override
@@ -149,12 +193,18 @@ class _$CalendarModelImpl
             other is _$CalendarModelImpl &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.dateTime, dateTime) ||
-                other.dateTime == dateTime));
+                other.dateTime == dateTime) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.progress, progress) ||
+                other.progress == progress));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, title, dateTime);
+  int get hashCode =>
+      Object.hash(runtimeType, title, dateTime, startDate, endDate, progress);
 
   /// Create a copy of CalendarModel
   /// with the given fields replaced by the non-null parameter values.
@@ -172,10 +222,14 @@ class _$CalendarModelImpl
   }
 }
 
-abstract class _CalendarModel implements CalendarModel {
+abstract class _CalendarModel extends CalendarModel {
   const factory _CalendarModel(
       {required final String title,
-      required final DateTime dateTime}) = _$CalendarModelImpl;
+      required final DateTime dateTime,
+      required final DateTime startDate,
+      required final DateTime endDate,
+      required final int progress}) = _$CalendarModelImpl;
+  const _CalendarModel._() : super._();
 
   factory _CalendarModel.fromJson(Map<String, dynamic> json) =
       _$CalendarModelImpl.fromJson;
@@ -184,6 +238,12 @@ abstract class _CalendarModel implements CalendarModel {
   String get title;
   @override
   DateTime get dateTime;
+  @override
+  DateTime get startDate;
+  @override
+  DateTime get endDate;
+  @override
+  int get progress;
 
   /// Create a copy of CalendarModel
   /// with the given fields replaced by the non-null parameter values.
