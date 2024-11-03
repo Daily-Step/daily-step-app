@@ -1,10 +1,19 @@
-import 'package:dailystep/data/api/user_api.dart';
+import 'package:dailystep/data/api/login_api.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'user_model.freezed.dart';
-
+part 'user_model.g.dart';
 @freezed
-class User with _$User {
-  const factory User({
-    required final KakaoAccount kakaoAccount,
-  }) = _User;
+class UserModel with _$UserModel {
+  const factory UserModel({
+    required final int id,
+    required final String email,
+    required final String nickname,
+    required final String birth,
+    required final String gender,
+    String? profileImg,
+    required final bool isNotificationReceived,
+  }) = _UserModel;
+
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }

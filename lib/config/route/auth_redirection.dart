@@ -1,16 +1,28 @@
+import 'package:dailystep/feature/auth/social_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/api/login_api.dart';
+import '../../feature/auth/login_provider.dart';
+import '../../model/user/user_model.dart';
+
 class DailyStepAuth extends ChangeNotifier {
-  bool _signedIn = true;
-  bool _signedUp = true;
-  DailyStepAuth(){}
+  bool _signedIn = false;
+  bool _signedUp = false;
+  SocialLoginRepository socialLoginRepository;
+  LoginApi loginApi;
+
+  UserModel? user;
+
+  DailyStepAuth({required this.socialLoginRepository, required this.loginApi});
+
   @override
   void dispose() {
     super.dispose();
   }
 
   bool get signedIn => _signedIn;
+
   bool get signedUp => _signedUp;
 
   Future<void> signOut() async {
@@ -19,23 +31,19 @@ class DailyStepAuth extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> googleSignIn() async {
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-    _signedIn = true;
-    notifyListeners();
-    return _signedIn;
+  Future<void> googleSignIn(BuildContext context) async {
+    await socialLoginRepository.socialLogin(socialType: SocialType.google);
+    signIn(context);
   }
-  Future<bool> naverSignIn() async {
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-    _signedIn = true;
-    notifyListeners();
-    return _signedIn;
+
+  Future<void> naverSignIn(BuildContext context) async {
+    await socialLoginRepository.socialLogin(socialType: SocialType.naver);
+    signIn(context);
   }
-  Future<bool> kakaoSignIn() async {
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-    _signedIn = true;
-    notifyListeners();
-    return _signedIn;
+
+  Future<void> kakaoSignIn(BuildContext context) async {
+    await socialLoginRepository.socialLogin(socialType: SocialType.kakao);
+    signIn(context);
   }
 
   Future<bool> signUp() async {
@@ -43,6 +51,20 @@ class DailyStepAuth extends ChangeNotifier {
     _signedUp = true;
     notifyListeners();
     return _signedUp;
+  }
+
+  Future<void> signIn(BuildContext context) async {
+    user = await loginApi.me();
+    _signedIn = true;
+    notifyListeners();
+
+    // 로그인 후 라우팅 처리
+    if (!signedUp) {
+      GoRouter.of(context).go('/signUp');
+    } else {
+      // 이미 회원가입이 완료된 경우 메인 페이지 등으로 이동
+      GoRouter.of(context).go('/home');
+    }
   }
 
   String? guard(BuildContext context, GoRouterState state) {
@@ -53,14 +75,11 @@ class DailyStepAuth extends ChangeNotifier {
     if (location == '/signIn' || location == '/signUp') {
       return null;
     }
-
     if (!signedIn) {
       return '/signIn';
-    }
-    else if(signedIn && !signedUp){
+    } else if (signedIn && !signedUp) {
       return '/signUp';
     }
-
     return null;
   }
 }

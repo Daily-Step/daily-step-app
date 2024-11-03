@@ -1,9 +1,11 @@
 import 'package:dailystep/config/route/fade_transition_page.dart';
+import 'package:dailystep/data/api/login_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../feature/auth/login_provider.dart';
 import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
@@ -22,7 +24,9 @@ class App extends ConsumerStatefulWidget {
 }
 
 class AppState extends ConsumerState<App> with WidgetsBindingObserver {
-  final DailyStepAuth _auth = DailyStepAuth();
+  final DailyStepAuth _auth = DailyStepAuth(
+      socialLoginRepository: SocialLoginRepository(),
+      loginApi: LoginApi.instance);
 
   @override
   Widget build(BuildContext context) {
@@ -56,29 +60,34 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
       GoRoute(
         path: '/signUp',
         pageBuilder: (BuildContext context, GoRouterState state) =>
-            FadeTransitionPage(key: state.pageKey, child: SignUpScreen(auth: _auth,)),
+            FadeTransitionPage(
+                key: state.pageKey,
+                child: SignUpScreen(
+                  auth: _auth,
+                )),
       ),
       GoRoute(
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-              key: state.pageKey,
-              child: MainScreen(
-                firstTab: TabItem.find(state.pathParameters['kind']),
-              ),
-            ),
-        routes: <GoRoute>[
-          GoRoute(path: 'edit',
-              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-                key: state.pageKey,
-                child: ChallengeEditScreen(),
-              )
+          key: state.pageKey,
+          child: MainScreen(
+            firstTab: TabItem.find(state.pathParameters['kind']),
           ),
+        ),
+        routes: <GoRoute>[
+          GoRoute(
+              path: 'edit',
+              pageBuilder: (BuildContext context, GoRouterState state) =>
+                  FadeTransitionPage(
+                    key: state.pageKey,
+                    child: ChallengeEditScreen(),
+                  )),
           GoRoute(
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
-                return ChallengeDetailScreen(int.parse(postId));
+              return ChallengeDetailScreen(int.parse(postId));
             },
           ),
         ],

@@ -1,18 +1,15 @@
 import 'dart:io';
 import 'package:dailystep/common/util/custom_exception.dart';
-import 'package:dailystep/model/user/email_model.dart';
 import 'package:dailystep/feature/auth/social_type.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as KakaoSdk;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import '../../common/util/run_catching_exception.dart';
 import '../../data/api/result/simple_result.dart';
-import '../../data/api/user_api.dart';
-import '../../model/user/user_model.dart';
 
 class SocialLoginRepository implements SocialRepositoryImpl {
   @override
-  Future<SimpleResult<Email?, CustomExceptions>> socialLogin({
+  Future<SimpleResult<dynamic, CustomExceptions>> socialLogin({
     required SocialType socialType,
   }) async {
     switch (socialType) {
@@ -25,62 +22,42 @@ class SocialLoginRepository implements SocialRepositoryImpl {
     }
   }
 
-  Future<SimpleResult<Email?, CustomExceptions>> _kakao() async {
+  Future<SimpleResult<User?, CustomExceptions>> _kakao() async {
     return await runCatchingExceptions(() async {
-      bool isInstalled = await _isKakaoTalkInstalled();
+      final UserApi api = UserApi.instance;
+      bool isInstalled = await isKakaoTalkInstalled();
       if (Platform.isIOS) {
         isInstalled = false;
       }
       isInstalled
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance.loginWithKakaoAccount();
+          ? await api.loginWithKakaoTalk()
+          : await api.loginWithKakaoAccount();
 
-      final User user = await UserApi.instance.me();
-      final String? userEmail = user.kakaoAccount.email;
+      final User user = await api.me();
       await UserApi.instance.unlink();
-
-      return userEmail != ''
-          ? Email(socialEmail: userEmail!, socialType: 0)
-          : null;
+      return user;
     });
   }
 
-  Future<SimpleResult<Email?, CustomExceptions>> _naver() async {
+  Future<SimpleResult<NaverLoginResult?, CustomExceptions>> _naver() async {
     return await runCatchingExceptions(() async {
-      final NaverLoginResult res = await FlutterNaverLogin.logIn();
-      final String userEmail = res.account.email;
-      return userEmail.isNotEmpty
-          ? Email(socialEmail: userEmail, socialType: 1)
-          : null;
+      final NaverLoginResult? res = await FlutterNaverLogin.logIn();
+      return res;
     });
   }
-/**/
-  Future<SimpleResult<Email?, CustomExceptions>> _google() async {
+
+  Future<SimpleResult<GoogleSignInAccount?, CustomExceptions>> _google() async {
     return await runCatchingExceptions(() async {
       final GoogleSignIn _googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      final String? userEmail = googleUser?.email;
-      await UserApi.instance.unlink();
-      return userEmail != null
-          ? Email(socialEmail: userEmail, socialType: 1)
-          : null;
+      final GoogleSignInAccount? res = await _googleSignIn.signIn();
+      return res;
     });
-  }
-  Future<bool> _isKakaoTalkInstalled() async {
-    try {
-      final isInstalled = await KakaoSdk.isKakaoTalkInstalled();
-      return isInstalled;
-    } catch (e) {
-      print('카카오톡 설치 여부 확인 중 오류 발생: $e');
-      return false;
-    }
   }
 }
 
 // 코드의 안정화를 위해 추가
 abstract class SocialRepositoryImpl {
-  Future<SimpleResult<Email?, CustomExceptions>> socialLogin({
+  Future<SimpleResult<dynamic, CustomExceptions>> socialLogin({
     required SocialType socialType,
   });
 }
