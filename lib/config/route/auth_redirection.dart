@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 class DailyStepAuth extends ChangeNotifier {
-  bool _signedIn = false;
-  bool _signedUp = false;
+  bool _signedIn = true;
+  bool _signedUp = true;
   DailyStepAuth(){}
   @override
   void dispose() {
@@ -51,16 +51,19 @@ class DailyStepAuth extends ChangeNotifier {
   String? guard(BuildContext context, GoRouterState state) {
     final bool signedIn = this.signedIn;
     final bool signedUp = this.signedUp;
+    final location = state.uri.path;
+
+    if (location == '/signIn' || location == '/signUp') {
+      return null;
+    }
 
     if (!signedIn) {
-      return '/signin';
+      return '/signIn';
     }
     else if(signedIn && !signedUp){
       return '/signUp';
     }
-    else if (signedIn && signedUp) {
-      return '/main/home';
-    }
+
     return null;
   }
 }

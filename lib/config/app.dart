@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../feature/auth/login_screen.dart';
+import '../feature/home/view/challenge_detail_screen.dart';
+import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
@@ -21,7 +23,6 @@ class App extends ConsumerStatefulWidget {
 
 class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   final DailyStepAuth _auth = DailyStepAuth();
-  final ValueKey<String> _scaffoldKey = const ValueKey<String>('App scaffold');
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +59,29 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             FadeTransitionPage(key: state.pageKey, child: SignUpScreen(auth: _auth,)),
       ),
       GoRoute(
-        path: '/post/:postId',
-        redirect: (BuildContext context, GoRouterState state) =>
-            '/main/home/${state.pathParameters['postId']}',
-      ),
-      GoRoute(
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-          key: _scaffoldKey,
-          child: MainScreen(
-            firstTab: TabItem.find(state.pathParameters['kind']),
+              key: state.pageKey,
+              child: MainScreen(
+                firstTab: TabItem.find(state.pathParameters['kind']),
+              ),
+            ),
+        routes: <GoRoute>[
+          GoRoute(path: 'edit',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: ChallengeEditScreen(),
+              )
           ),
-        ),
+          GoRoute(
+            path: ':postId',
+            builder: (BuildContext context, GoRouterState state) {
+              final String postId = state.pathParameters['postId']!;
+                return ChallengeDetailScreen(int.parse(postId));
+            },
+          ),
+        ],
       ),
     ],
     redirect: _auth.guard,

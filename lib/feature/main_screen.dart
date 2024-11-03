@@ -5,6 +5,7 @@ import 'package:dailystep/feature/nav/nav_item.dart';
 import 'package:dailystep/feature/nav/nav_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav/nav.dart';
 
 
@@ -34,8 +35,6 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   GlobalKey<NavigatorState> get _currentTabNavigationKey =>
       navigatorKeys[_currentIndex];
-
-  static double get bottomNavigationBarBorderRadius => 30.0;
   static const bottomNavigationBarHeight = 60.0;
 
   @override
@@ -64,17 +63,25 @@ class MainScreenState extends ConsumerState<MainScreen>
             children: [
               Scaffold(
                   body: Container(
-                    padding: EdgeInsets.only(bottom: 60 -
-                        bottomNavigationBarBorderRadius),
+                    padding: EdgeInsets.only(bottom: 60),
                     child: SafeArea(
                       child: pages,
                     ),
                   ),
                   bottomNavigationBar: _buildBottomNavigationBar(context)
               ),
-              AnimatedOpacity(opacity: _currentTab == TabItem.home ? 1 : 0,
-                duration: 200.ms,
-                child: const SizedBox(),)///floatingButton
+              Positioned(
+                bottom: bottomNavigationBarHeight + 4,
+                right: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: AnimatedOpacity(opacity: _currentTab == TabItem.home ? 1 : 0,
+                    duration: 200.ms,
+                    child: FloatingActionButton(onPressed: (){
+                      context.go('/main/home/edit');
+                    }, backgroundColor: Colors.grey, child: Icon(Icons.add, color: Colors.white,))),
+                ),
+              )
             ]
         ),
       ),
@@ -120,19 +127,13 @@ class MainScreenState extends ConsumerState<MainScreen>
           BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(bottomNavigationBarBorderRadius),
-          topRight: Radius.circular(bottomNavigationBarBorderRadius),
-        ),
-        child: BottomNavigationBar(
-          items: navigationBarItems(context),
-          currentIndex: _currentIndex,
-          onTap: _handleOnTapNavigationBarItem,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-        ),
+      child: BottomNavigationBar(
+        items: navigationBarItems(context),
+        currentIndex: _currentIndex,
+        onTap: _handleOnTapNavigationBarItem,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
