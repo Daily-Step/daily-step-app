@@ -46,11 +46,10 @@ class DailyStepAuth extends ChangeNotifier {
     signIn(context);
   }
 
-  Future<bool> signUp() async {
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+  Future<void> signUp(BuildContext context) async {
     _signedUp = true;
     notifyListeners();
-    return _signedUp;
+    GoRouter.of(context).go('/main/home');
   }
 
   Future<void> signIn(BuildContext context) async {
@@ -63,7 +62,7 @@ class DailyStepAuth extends ChangeNotifier {
       GoRouter.of(context).go('/signUp');
     } else {
       // 이미 회원가입이 완료된 경우 메인 페이지 등으로 이동
-      GoRouter.of(context).go('/home');
+      GoRouter.of(context).go('/main/home');
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/route/auth_redirection.dart';
 
@@ -51,13 +52,13 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     }
   }
 
-  VoidCallback? canMoveToNextStep(DailyStepAuth auth) {
+  VoidCallback? canMoveToNextStep(DailyStepAuth auth, BuildContext context) {
     if (state.step == 0 && state.nickName?.isNotEmpty == true) {
       return nextStep;
     } else if (state.step == 1 && state.selectedDate != null) {
       return nextStep;
     } else if (state.step == 2 && state.selectedSex?.isNotEmpty == true) {
-      return auth.signUp;
+      return () => auth.signUp(context);
     }
     return null;
   }

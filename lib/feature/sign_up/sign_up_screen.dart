@@ -52,27 +52,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   selectedDate: signUpState.selectedDate,
                   onDateSelected: (date) {
                     signUpViewModel.setBirthDate(date);
-                    birthDateController.text = date.toLocal().toString().split(' ')[0];
+                    birthDateController.text =
+                        date.toLocal().toString().split(' ')[0];
                   },
                 )
               else if (signUpState.step == 2)
-                  SexField(
-                    selectedSex: signUpState.selectedSex,
-                    onChanged: (String? value) {
-                      signUpViewModel.setSex(value ?? '');
-                    },
-                  ),
+                SexField(
+                  selectedSex: signUpState.selectedSex,
+                  onChanged: (String? value) {
+                    signUpViewModel.setSex(value ?? '');
+                  },
+                ),
             ],
           ),
           WCtaFloatingButton(
             '입력완료',
-            onPressed: signUpViewModel.canMoveToNextStep(widget.auth),
+            onPressed: signUpViewModel.canMoveToNextStep(widget.auth, context),
           ),
         ],
       ),
     );
   }
 }
+
 class NickNameField extends StatelessWidget {
   const NickNameField({
     super.key,
