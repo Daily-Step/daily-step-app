@@ -10,12 +10,6 @@ import '../../data/api/result/simple_result.dart';
 import '../../data/api/user_api.dart';
 import '../../model/user/user_model.dart';
 
-///TODO: 로그인 처리 네이티브 설정
-// @riverpod
-// SocialLoginRepository socialLoginRepository(SocialLoginRepositoryRef ref) {
-//   return SocialLoginRepository();
-// }
-
 class SocialLoginRepository implements SocialRepositoryImpl {
   @override
   Future<SimpleResult<Email?, CustomExceptions>> socialLogin({

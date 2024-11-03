@@ -10,18 +10,15 @@ class DailyStepAuth extends ChangeNotifier {
     super.dispose();
   }
 
-  /// Whether user has signed in.
   bool get signedIn => _signedIn;
   bool get signedUp => _signedUp;
 
-  /// Signs out the current user.
   Future<void> signOut() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = false;
     notifyListeners();
   }
 
-  /// Signs in a user.
   Future<bool> googleSignIn() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = true;
