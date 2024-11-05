@@ -1,6 +1,8 @@
 import 'package:dailystep/feature/mypage/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import '../viewmodel/mypage_viewmodel.dart';
 
 class MyPageScreen extends ConsumerWidget {
@@ -46,18 +48,22 @@ class MyPageScreen extends ConsumerWidget {
                           children: [
                             Text(
                               '${user.userName}님의 챌린지',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 4),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Text(
                                 '내 정보 수정',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal),
                               ),
                             ),
                           ],
@@ -68,7 +74,8 @@ class MyPageScreen extends ConsumerWidget {
                         radius: 40,
                         backgroundImage: user.profileImageUrl.isNotEmpty
                             ? NetworkImage(user.profileImageUrl)
-                            : NetworkImage('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f4ec842-6f7a-4d31-ab32-a35b7c42e7d8/dgvd6bj-d8c21830-800a-4642-954f-249381540aae.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmNGVjODQyLTZmN2EtNGQzMS1hYjMyLWEzNWI3YzQyZTdkOFwvZGd2ZDZiai1kOGMyMTgzMC04MDBhLTQ2NDItOTU0Zi0yNDkzODE1NDBhYWUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.DXNYAFrTUPlJjEfgUpPXR_YY_znMJ4qNWyu2QEG442E'),
+                            : NetworkImage(
+                                'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f4ec842-6f7a-4d31-ab32-a35b7c42e7d8/dgvd6bj-d8c21830-800a-4642-954f-249381540aae.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmNGVjODQyLTZmN2EtNGQzMS1hYjMyLWEzNWI3YzQyZTdkOFwvZGd2ZDZiai1kOGMyMTgzMC04MDBhLTQ2NDItOTU0Zi0yNDkzODE1NDBhYWUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.DXNYAFrTUPlJjEfgUpPXR_YY_znMJ4qNWyu2QEG442E'),
                       ),
                     ],
                   ),
@@ -79,7 +86,7 @@ class MyPageScreen extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 16),
-          _buildSettingsContainer(ref),
+          _buildSettingsContainer(ref, context),
         ],
       ),
     );
@@ -121,7 +128,7 @@ class MyPageScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSettingsContainer(WidgetRef ref) {
+  Widget _buildSettingsContainer(WidgetRef ref, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -159,9 +166,14 @@ class MyPageScreen extends ConsumerWidget {
               children: [
                 Text("Push 알림"),
                 Switch(
-                  value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
+                  value: ref
+                          .watch(myPageViewModelProvider)
+                          ?.isPushNotificationEnabled ??
+                      false,
                   onChanged: (value) {
-                    ref.read(myPageViewModelProvider.notifier).togglePushNotification();
+                    ref
+                        .read(myPageViewModelProvider.notifier)
+                        .togglePushNotification();
                   },
                 ),
               ],
@@ -171,6 +183,9 @@ class MyPageScreen extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text("버전 정보"),
               trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                context.go('/main/myPage/version_info');
+              },
             ),
             Divider(),
           ],

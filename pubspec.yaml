@@ -29,8 +29,7 @@ dependencies:
   #login
   flutter_naver_login: ^2.0.0
   google_sign_in: ^6.2.0
-  kakao_flutter_sdk: ^1.9.6
-  package_info_plus: ^8.0.3
+  package_info_plus: ^8.1.0
 
 dev_dependencies:
   flutter_test:
