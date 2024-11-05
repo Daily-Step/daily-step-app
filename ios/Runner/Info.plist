@@ -32,6 +32,22 @@
 				<string>kakaod33349b6986bb4ca962452cd00bc6c24</string>
 			</array>
 		</dict>
+		<dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>tempApp</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.108617643190-a5ne1cobnj7gedrnumh3h8v7m4ro7k3d</string>
+            </array>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -62,5 +78,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>naverConsumerKey</key>
+    <string>_cyEgeB3m8MXH7w355Ts</string>
+    <key>naverConsumerSecret</key>
+    <string>IZzUqe9J0H</string>
+    <key>naverServiceAppName</key>
+    <string>daily-step</string>
+    <key>naverServiceAppUrlScheme</key>
+    <string>tempApp</string>
 </dict>
 </plist>
