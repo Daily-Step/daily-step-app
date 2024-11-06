@@ -148,7 +148,7 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("카테고리 설정"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 카테고리 설정 화면으로 이동
+                context.go('/main/myPage/category_settings/category');
               },
             ),
             Divider(),
@@ -184,7 +184,7 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("버전 정보"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                context.go('/main/myPage/version_info');
+                context.go('/main/myPage/version/version_info');
               },
             ),
             Divider(),

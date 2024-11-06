@@ -68,43 +68,56 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 )),
       ),
       GoRoute(
-        path: '/main/:kind(home|calendar|chart|myPage)/:version',
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          final String version = state.pathParameters['version']!;
-          if (version == 'version_info') {
-            return FadeTransitionPage(
-              key: state.pageKey,
-              child: VersionInfoScreen(),
-            );
-          }
-          return FadeTransitionPage(
-            key: state.pageKey,
-            child: Scaffold(
-              appBar: AppBar(title: Text('잘못된 버전')),
-              body: Center(
-                child: Text('처리할 수 없는 버전입니다: $version'),
-              ),
-            ),
-          );
-        },
-      ),
-      GoRoute(
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-          key: state.pageKey,
-          child: MainScreen(
-            firstTab: TabItem.find(state.pathParameters['kind']),
-          ),
-        ),
+              key: state.pageKey,
+              child: MainScreen(firstTab: TabItem.find(state.pathParameters['kind'])),
+            ),
         routes: <GoRoute>[
           GoRoute(
-              path: 'edit',
-              pageBuilder: (BuildContext context, GoRouterState state) =>
-                  FadeTransitionPage(
-                    key: state.pageKey,
-                    child: ChallengeEditScreen(),
-                  )),
+            path: 'category_settings/:category',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(key: state.pageKey, child: CategorySettingsScreen()),
+          ),
+          GoRoute(
+            path: 'version/:version',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              final String version = state.pathParameters['version']!;
+              
+              if (version == 'version_info') {
+                return FadeTransitionPage(key: state.pageKey, child: VersionInfoScreen());
+              }
+
+              try {
+                final int versionNumber = int.parse(version);
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    appBar: AppBar(title: Text('버전: $version')),
+                    body: Center(
+                      child: Text('버전 정보: $versionNumber'),
+                    ),
+                  ),
+                );
+              } catch (e) {
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    appBar: AppBar(title: Text('잘못된 버전')),
+                    body: Center(
+                      child: Text('처리할 수 없는 버전입니다: $version'),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          GoRoute(
+            path: 'edit',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(key: state.pageKey, child: ChallengeEditScreen()),
+          ),
           GoRoute(
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
@@ -115,7 +128,7 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         ],
       ),
     ],
-    //redirect: _auth.guard,
+    // redirect: _auth.guard,
     refreshListenable: _auth,
     debugLogDiagnostics: true,
   );
