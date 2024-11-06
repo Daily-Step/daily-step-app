@@ -77,12 +77,23 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         ),
         routes: <GoRoute>[
           GoRoute(
-              path: 'edit',
-              pageBuilder: (BuildContext context, GoRouterState state) =>
-                  FadeTransitionPage(
-                    key: state.pageKey,
-                    child: ChallengeEditScreen(),
-                  )),
+            path: 'challenge/new',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                  key: state.pageKey,
+                  child: ChallengeEditScreen(null),
+                ),
+          ),
+          GoRoute(
+            path: 'challenge/edit/:id',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              final String id = state.pathParameters['id']!;
+              return FadeTransitionPage(
+                key: state.pageKey,
+                child: ChallengeEditScreen(int.parse(id)),
+              );
+            },
+          ),
           GoRoute(
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {

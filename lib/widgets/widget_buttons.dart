@@ -1,3 +1,4 @@
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
 class WCtaFloatingButton extends StatelessWidget {
@@ -36,6 +37,9 @@ class WCtaButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: globalBorderRadius
+      ),
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ElevatedButton(

@@ -1,8 +1,8 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
 import 'package:flutter/material.dart';
-import '../../../model/challenge/challenge_model.dart';
-import '../../../widgets/widget_progress_indicator.dart';
+import '../../../../model/challenge/challenge_model.dart';
+import '../../../../widgets/widget_progress_indicator.dart';
 
 class ChallengeItem extends StatelessWidget {
   final ChallengeModel task;

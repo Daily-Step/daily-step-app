@@ -1,13 +1,13 @@
-import 'package:dailystep/feature/home/view/reorderable_item.dart';
-import 'package:dailystep/feature/home/view/reorderable_list.dart';
+import 'package:dailystep/feature/home/view/home/reorderable_item.dart';
+import 'package:dailystep/feature/home/view/home/reorderable_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../action/category_list_action.dart';
-import '../action/challenge_list_action.dart';
-import '../viewmodel/category_viewmodel.dart';
+import '../../action/category_list_action.dart';
+import '../../action/challenge_list_action.dart';
+import '../../viewmodel/category_viewmodel.dart';
 import 'challenge_item.dart';
-import '../viewmodel/challenge_viewmodel.dart';
+import '../../viewmodel/challenge_viewmodel.dart';
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});

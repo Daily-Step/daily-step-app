@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../home/view/home_fragment.dart';
+import '../home/view/home/home_fragment.dart';
 
 enum TabItem {
   home(Icons.home, '홈', HomeFragment()),

@@ -25,7 +25,7 @@ mixin _$ChallengeModel {
   int get categoryId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  String get color => throw _privateConstructorUsedError;
+  int get color => throw _privateConstructorUsedError;
   int get weeklyGoalCount => throw _privateConstructorUsedError;
   int get totalGoalCount => throw _privateConstructorUsedError;
   int get achievedTotalGoalCount => throw _privateConstructorUsedError;
@@ -56,7 +56,7 @@ abstract class $ChallengeModelCopyWith<$Res> {
       int categoryId,
       String title,
       String content,
-      String color,
+      int color,
       int weeklyGoalCount,
       int totalGoalCount,
       int achievedTotalGoalCount,
@@ -119,7 +119,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
       color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
           : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
@@ -166,7 +166,7 @@ abstract class _$$ChallengeImplCopyWith<$Res>
       int categoryId,
       String title,
       String content,
-      String color,
+      int color,
       int weeklyGoalCount,
       int totalGoalCount,
       int achievedTotalGoalCount,
@@ -227,7 +227,7 @@ class __$$ChallengeImplCopyWithImpl<$Res>
       color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
           : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
@@ -292,7 +292,7 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final String content;
   @override
-  final String color;
+  final int color;
   @override
   final int weeklyGoalCount;
   @override
@@ -383,7 +383,7 @@ abstract class _Challenge implements ChallengeModel {
       required final int categoryId,
       required final String title,
       required final String content,
-      required final String color,
+      required final int color,
       required final int weeklyGoalCount,
       required final int totalGoalCount,
       required final int achievedTotalGoalCount,
@@ -406,7 +406,7 @@ abstract class _Challenge implements ChallengeModel {
   @override
   String get content;
   @override
-  String get color;
+  int get color;
   @override
   int get weeklyGoalCount;
   @override

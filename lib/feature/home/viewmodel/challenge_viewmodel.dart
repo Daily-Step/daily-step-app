@@ -21,6 +21,10 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   Future<void> handleAction(ChallengeListAction action) async {
     if (action is ReorderTasksAction) {
       _handleReorderTasks(action);
+    } else if(action is AddTaskAction){
+      _handleAddTask(action);
+    } else if(action is UpdateTaskAction){
+      _handleUpdateTask(action);
     } else if (action is RemoveTaskAction) {
       await _handleRemoveTask(action);
     } else if (action is FindTaskAction) {
@@ -37,6 +41,25 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
     state = state.copyWith(tasks: newTasks);
   }
+
+  void _handleAddTask(AddTaskAction action){
+    final newTasks = List<ChallengeModel>.from(state.challengeList);
+    newTasks.add(action.challengeModel);
+
+    state = state.copyWith(tasks: newTasks);
+  }
+
+  void _handleUpdateTask(UpdateTaskAction action){
+    final updatedTasks = state.challengeList.map((task) {
+      if (task.id == action.id) {
+        return action.challengeModel;
+      }
+      return task;
+    }).toList();
+
+    state = state.copyWith(tasks: updatedTasks);
+  }
+
 
   Future<void> _handleRemoveTask(RemoveTaskAction action) async {
     final tasks = List.of(state.challengeList);

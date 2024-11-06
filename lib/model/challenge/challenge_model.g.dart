@@ -13,7 +13,7 @@ _$ChallengeImpl _$$ChallengeImplFromJson(Map<String, dynamic> json) =>
       categoryId: (json['categoryId'] as num).toInt(),
       title: json['title'] as String,
       content: json['content'] as String,
-      color: json['color'] as String,
+      color: (json['color'] as num).toInt(),
       weeklyGoalCount: (json['weeklyGoalCount'] as num).toInt(),
       totalGoalCount: (json['totalGoalCount'] as num).toInt(),
       achievedTotalGoalCount: (json['achievedTotalGoalCount'] as num).toInt(),

@@ -78,7 +78,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                   child: AnimatedOpacity(opacity: _currentTab == TabItem.home ? 1 : 0,
                     duration: 200.ms,
                     child: FloatingActionButton(onPressed: (){
-                      context.go('/main/home/edit');
+                      context.go('/main/home/challenge/new');
                     }, backgroundColor: Colors.grey, child: Icon(Icons.add, color: Colors.white,))),
                 ),
               )

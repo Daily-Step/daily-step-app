@@ -7,8 +7,8 @@ import '../../feature/auth/login_provider.dart';
 import '../../model/user/user_model.dart';
 
 class DailyStepAuth extends ChangeNotifier {
-  bool _signedIn = false;
-  bool _signedUp = false;
+  bool _signedIn = true;
+  bool _signedUp = true;
   SocialLoginRepository socialLoginRepository;
   LoginApi loginApi;
 

@@ -3,6 +3,8 @@ import 'package:dailystep/common/extension/mun_duration_extension.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_card.dart';
 import '../../../widgets/widget_progress_indicator.dart';
 import '../viewmodel/category_viewmodel.dart';
@@ -140,19 +142,16 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
                 Text(state.selectedTask!.content),
               ],
             )),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () {
-              },
-              child: Text('수정하기', style: TextStyle(fontSize: 16)),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: WCtaButton(
+          '수정하기',
+          onPressed: () {
+            context.go('/main/home/challenge/edit/${widget.id}');
+          },
         ),
       ),
     );

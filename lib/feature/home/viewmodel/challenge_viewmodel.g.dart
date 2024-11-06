@@ -7,7 +7,7 @@ part of 'challenge_viewmodel.dart';
 // **************************************************************************
 
 String _$challengeViewModelHash() =>
-    r'5ca94d36bbcca1905f449789f3a544353142cad9';
+    r'216d4136af864fc394c8dc046a290533895829ae';
 
 /// See also [ChallengeViewModel].
 @ProviderFor(ChallengeViewModel)
