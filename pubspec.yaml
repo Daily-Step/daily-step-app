@@ -30,6 +30,7 @@ dependencies:
   flutter_naver_login: ^2.0.0
   google_sign_in: ^6.2.0
   package_info_plus: ^8.1.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

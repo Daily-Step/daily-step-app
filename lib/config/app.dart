@@ -71,22 +71,25 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         path: '/main/:kind(home|calendar|chart|myPage)',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-              key: state.pageKey,
-              child: MainScreen(firstTab: TabItem.find(state.pathParameters['kind'])),
-            ),
+          key: state.pageKey,
+          child:
+              MainScreen(firstTab: TabItem.find(state.pathParameters['kind'])),
+        ),
         routes: <GoRoute>[
           GoRoute(
             path: 'category_settings/:category',
             pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(key: state.pageKey, child: CategorySettingsScreen()),
+                FadeTransitionPage(
+                    key: state.pageKey, child: CategorySettingsScreen()),
           ),
           GoRoute(
             path: 'version/:version',
             pageBuilder: (BuildContext context, GoRouterState state) {
               final String version = state.pathParameters['version']!;
-              
+
               if (version == 'version_info') {
-                return FadeTransitionPage(key: state.pageKey, child: VersionInfoScreen());
+                return FadeTransitionPage(
+                    key: state.pageKey, child: VersionInfoScreen());
               }
 
               try {
@@ -114,9 +117,16 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             },
           ),
           GoRoute(
+            path: 'editMyInfo',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                    key: state.pageKey, child: EditMyInfoScreen()),
+          ),
+          GoRoute(
             path: 'edit',
             pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(key: state.pageKey, child: ChallengeEditScreen()),
+                FadeTransitionPage(
+                    key: state.pageKey, child: ChallengeEditScreen()),
           ),
           GoRoute(
             path: ':postId',

@@ -52,18 +52,20 @@ class MyPageScreen extends ConsumerWidget {
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 4),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(16),
+                            TextButton(
+                              onPressed: () {
+                                context.go('/main/myPage/editMyInfo');
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                backgroundColor: Colors.grey[200],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
                               ),
-                              child: Text(
+                              child: const Text(
                                 '내 정보 수정',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                               ),
                             ),
                           ],
