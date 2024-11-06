@@ -138,7 +138,7 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         ],
       ),
     ],
-    // redirect: _auth.guard,
+    redirect: _auth.guard,
     refreshListenable: _auth,
     debugLogDiagnostics: true,
   );
