@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'user_model.freezed.dart';
-part 'user_model.g.dart';
+part 'mypage_model.freezed.dart';
+part 'mypage_model.g.dart';
 
 @freezed
-class UserModel with _$UserModel {
-  const factory UserModel({
+class MyPageModel with _$MyPageModel {
+  const factory MyPageModel({
     required String userName,
     required String profileImageUrl,
     required int ongoingChallenges,
@@ -16,6 +16,6 @@ class UserModel with _$UserModel {
     required String gender,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory MyPageModel.fromJson(Map<String, dynamic> json) =>
+      _$MyPageModelFromJson(json);
 }

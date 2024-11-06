@@ -1,4 +1,4 @@
-import 'package:dailystep/feature/mypage/model/user_model.dart';
+import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -94,7 +94,7 @@ class MyPageScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildChallengeCards(UserModel user) {
+  Widget _buildChallengeCards(MyPageModel user) {
     final challenges = [
       {"title": "진행 중 챌린지 수", "count": user.ongoingChallenges},
       {"title": "완료한 챌린지 수", "count": user.completedChallenges},

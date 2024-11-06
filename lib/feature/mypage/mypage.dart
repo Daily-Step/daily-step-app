@@ -1,5 +1,5 @@
 export 'action/mypage_action.dart';
-export 'model/user_model.dart';
+export 'model/mypage_model.dart';
 export 'view/mypage_screen.dart';
 export 'viewmodel/mypage_viewmodel.dart';
 export 'view/settings/edit_my_info_settings/edit_my_info_screen.dart';

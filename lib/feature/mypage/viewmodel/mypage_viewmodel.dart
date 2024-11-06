@@ -1,8 +1,8 @@
 import 'package:dailystep/feature/mypage/action/mypage_action.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../model/user_model.dart';
+import '../model/mypage_model.dart';
 
-class MyPageViewModel extends StateNotifier<UserModel?> with EventMixin<MyPageAction> {
+class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPageAction> {
   MyPageViewModel() : super(null) {
     loadDummyUserData(); 
   }
@@ -21,7 +21,7 @@ class MyPageViewModel extends StateNotifier<UserModel?> with EventMixin<MyPageAc
   // 유저 정보 가져오기
   // TODO : 실제 유저로 바꾸기 api가 만들어 지면
   void loadDummyUserData() {
-    state = UserModel(
+    state = MyPageModel(
       userName: "챌린저123",
       profileImageUrl: "",
       ongoingChallenges: 3,
@@ -53,6 +53,6 @@ class MyPageViewModel extends StateNotifier<UserModel?> with EventMixin<MyPageAc
 }
 
 // Provider 정의
-final myPageViewModelProvider = StateNotifierProvider<MyPageViewModel, UserModel?>((ref) {
+final myPageViewModelProvider = StateNotifierProvider<MyPageViewModel, MyPageModel?>((ref) {
   return MyPageViewModel();
 });

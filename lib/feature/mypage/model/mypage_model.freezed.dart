@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_model.dart';
+part of 'mypage_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
+MyPageModel _$MyPageModelFromJson(Map<String, dynamic> json) {
   return _UserModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserModel {
+mixin _$MyPageModel {
   String get userName => throw _privateConstructorUsedError;
   String get profileImageUrl => throw _privateConstructorUsedError;
   int get ongoingChallenges => throw _privateConstructorUsedError;
@@ -29,20 +29,21 @@ mixin _$UserModel {
   DateTime get birth => throw _privateConstructorUsedError;
   String get gender => throw _privateConstructorUsedError;
 
-  /// Serializes this UserModel to a JSON map.
+  /// Serializes this MyPageModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of UserModel
+  /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $UserModelCopyWith<UserModel> get copyWith =>
+  $MyPageModelCopyWith<MyPageModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserModelCopyWith<$Res> {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+abstract class $MyPageModelCopyWith<$Res> {
+  factory $MyPageModelCopyWith(
+          MyPageModel value, $Res Function(MyPageModel) then) =
+      _$MyPageModelCopyWithImpl<$Res, MyPageModel>;
   @useResult
   $Res call(
       {String userName,
@@ -56,16 +57,16 @@ abstract class $UserModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
-    implements $UserModelCopyWith<$Res> {
-  _$UserModelCopyWithImpl(this._value, this._then);
+class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
+    implements $MyPageModelCopyWith<$Res> {
+  _$MyPageModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UserModel
+  /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -118,7 +119,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 
 /// @nodoc
 abstract class _$$UserModelImplCopyWith<$Res>
-    implements $UserModelCopyWith<$Res> {
+    implements $MyPageModelCopyWith<$Res> {
   factory _$$UserModelImplCopyWith(
           _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
       __$$UserModelImplCopyWithImpl<$Res>;
@@ -137,13 +138,13 @@ abstract class _$$UserModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$UserModelImplCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$UserModelImpl>
+    extends _$MyPageModelCopyWithImpl<$Res, _$UserModelImpl>
     implements _$$UserModelImplCopyWith<$Res> {
   __$$UserModelImplCopyWithImpl(
       _$UserModelImpl _value, $Res Function(_$UserModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UserModel
+  /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -230,7 +231,7 @@ class _$UserModelImpl implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(userName: $userName, profileImageUrl: $profileImageUrl, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, birth: $birth, gender: $gender)';
+    return 'MyPageModel(userName: $userName, profileImageUrl: $profileImageUrl, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, birth: $birth, gender: $gender)';
   }
 
   @override
@@ -268,7 +269,7 @@ class _$UserModelImpl implements _UserModel {
       birth,
       gender);
 
-  /// Create a copy of UserModel
+  /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -284,7 +285,7 @@ class _$UserModelImpl implements _UserModel {
   }
 }
 
-abstract class _UserModel implements UserModel {
+abstract class _UserModel implements MyPageModel {
   const factory _UserModel(
       {required final String userName,
       required final String profileImageUrl,
@@ -315,7 +316,7 @@ abstract class _UserModel implements UserModel {
   @override
   String get gender;
 
-  /// Create a copy of UserModel
+  /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
