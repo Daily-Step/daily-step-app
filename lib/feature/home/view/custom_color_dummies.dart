@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
-import 'custom_color_model.dart';
+class CustomColor {
+  final Color color;
+  final String name;
+
+  CustomColor({required this.color, required this.name});
+
+  Widget get widget => Container(
+    width: 30,
+    height: 30,
+    decoration: BoxDecoration(
+      color: color,
+      shape: BoxShape.circle,
+    ),
+  );
+}
 
 List<CustomColor> customColors = [
   CustomColor(color: Colors.blue, name: 'Blue'),

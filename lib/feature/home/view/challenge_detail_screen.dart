@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_card.dart';
 import '../../../widgets/widget_progress_indicator.dart';
-import '../viewmodel/category_viewmodel.dart';
 import '../viewmodel/challenge_viewmodel.dart';
+import 'category_dummies.dart';
 
 class ChallengeDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -23,7 +23,6 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(challengeViewModelProvider);
-    final categoryState = ref.watch(categoryViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -125,7 +124,12 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
                       SizedBox(height: 8),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Text(categoryState.selectedCategory?.title ?? '',
+                        child: Text(
+                            dummyCategories
+                                .firstWhere((category) =>
+                                    category.id ==
+                                    state.selectedTask?.categoryId)
+                                .toString(),
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
@@ -134,7 +138,8 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
               ],
             ),
             height10,
-            WCard(child: Column(
+            WCard(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('상세 내용', style: TextStyle(color: Colors.grey)),

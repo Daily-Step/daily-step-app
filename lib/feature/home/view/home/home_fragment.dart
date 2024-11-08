@@ -3,9 +3,7 @@ import 'package:dailystep/feature/home/view/home/reorderable_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../action/category_list_action.dart';
 import '../../action/challenge_list_action.dart';
-import '../../viewmodel/category_viewmodel.dart';
 import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 
@@ -23,7 +21,6 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   Widget build(BuildContext context) {
     final state = ref.watch(challengeViewModelProvider);
     final notifier = ref.read(challengeViewModelProvider.notifier);
-    final categoryNotifier = ref.watch(categoryViewModelProvider.notifier);
 
     return Column(
       children: [
@@ -82,7 +79,6 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                       isEditing: isEditing,
                       onTap: () async {
                         await notifier.handleAction(FindTaskAction(task.id));
-                        categoryNotifier.handleAction(FindItemAction(task.categoryId));
                         context.push('/main/home/${task.id}');
                       },
                     );

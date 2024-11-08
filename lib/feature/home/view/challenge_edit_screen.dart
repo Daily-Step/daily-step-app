@@ -1,11 +1,15 @@
+import 'dart:math';
+
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/model/category/category_dummies.dart';
+import 'package:dailystep/feature/home/view/category_dummies.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../model/custom_color/custom_color_dummies.dart';
+import '../../../model/challenge/challenge_model.dart';
+import '../action/challenge_list_action.dart';
+import 'custom_color_dummies.dart';
 import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_scroll_picker.dart';
 import '../../../widgets/widget_select_input.dart';
@@ -26,6 +30,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   int? weeklyGoal;
   int? selectedCategory;
   int? selectedColor;
+  ChallengeModel? selectedChallenge;
 
   // 에러 상태
   Map<String, bool> errors = {
@@ -37,7 +42,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   };
 
   //컨트롤러
-  final TextEditingController titleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final int maxCharacters = 500;
 
@@ -48,7 +53,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
       setState(() {});
     });
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -58,15 +63,15 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   void _initializeData() async {
     if (widget.id != null) {
       final state = ref.watch(challengeViewModelProvider);
-      print(state.selectedTask.toString());
       if (state.selectedTask != null) {
         setState(() {
-          titleController.text = state.selectedTask!.title;
+          selectedChallenge = state.selectedTask;
+          _titleController.text = state.selectedTask!.title;
           challengeWeeks = state.selectedTask!.startDatetime
               .calculateWeeksBetween(state.selectedTask!.endDatetime);
           weeklyGoal = state.selectedTask!.weeklyGoalCount;
           selectedCategory = state.selectedTask!.categoryId;
-          selectedColor = state.selectedTask!.color;
+          selectedColor = state.selectedTask!.colorId;
           _noteController.text = state.selectedTask!.content;
         });
       }
@@ -75,6 +80,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = ref.read(challengeViewModelProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -87,7 +93,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             WTextField(
-              titleController,
+              _titleController,
               hintText: '제목을 입력해주세요',
               label: '제목',
               onChanged: (String value) {},
@@ -149,7 +155,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               onTap: () => _showModal(WScrollPickerModal(
                 value: selectedCategory != null ? selectedCategory! : 1,
                 childCount: dummyCategories.length,
-                childList: dummyCategories.map((item) => item.title).toList(),
+                childList:
+                    dummyCategories.map((item) => item.toString()).toList(),
                 onSelected: (int) {
                   setState(() {
                     selectedCategory = int;
@@ -159,7 +166,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               label: '카테고리',
               child: selectedCategory != null
                   ? Text(
-                      dummyCategories[selectedCategory!].title,
+                      dummyCategories[selectedCategory!].toString(),
                       style: contentTextStyle,
                     )
                   : Text(
@@ -181,11 +188,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     });
                   },
                   itemBuilder: (context, index, bool) {
-                    return Row(
-                      children: [
-                        customColors[index].widget,
-                      ],
-                    );
+                    return customColors[index].widget;
                   })),
               label: '컬러',
               child: selectedColor != null
@@ -227,8 +230,35 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: WCtaButton('수정하기', onPressed: (){
-          if(_validateInputs == true){
+        child: WCtaButton('수정하기', onPressed: () {
+          if (_validateInputs() == true) {
+            final Duration challengeDays = Duration(days: challengeWeeks! * 7);
+            Random random = Random();
+            final challenge = ChallengeModel(
+              id: widget.id ?? random.nextInt(999999),
+              memberId: 0,
+              categoryId: selectedCategory!,
+              title: _titleController.text,
+              content: _noteController.text,
+              colorId: selectedColor!,
+              weeklyGoalCount: weeklyGoal!,
+              totalGoalCount: weeklyGoal! * challengeWeeks!,
+              achievedTotalGoalCount:
+                  selectedChallenge?.achievedTotalGoalCount ?? 0,
+              startDatetime: selectedChallenge?.startDatetime ?? DateTime.now(),
+              endDatetime:
+                  selectedChallenge?.startDatetime.add(challengeDays) ??
+                      DateTime.now().add(challengeDays),
+              createdAt: selectedChallenge?.createdAt ?? DateTime.now(),
+              updatedAt: DateTime.now(),
+            );
+            if (widget.id != null) {
+              notifier.handleAction(UpdateTaskAction(widget.id, challenge));
+              Navigator.pop(context);
+            } else {
+              notifier.handleAction(AddTaskAction(challenge));
+              Navigator.pop(context);
+            }
           }
         }),
       ),
@@ -241,7 +271,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
 
   bool _validateInputs() {
     setState(() {
-      errors['title'] = titleController.text.isEmpty;
+      errors['title'] = _titleController.text.isEmpty;
       errors['challengeWeeks'] = challengeWeeks == null;
       errors['weeklyGoal'] = weeklyGoal == null;
       errors['category'] = selectedCategory == null;

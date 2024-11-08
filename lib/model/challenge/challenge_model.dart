@@ -10,7 +10,7 @@ class ChallengeModel with _$ChallengeModel {
     required final int categoryId,
     required final String title,
     required final String content,
-    required final int color,
+    required final int colorId,
     required final int weeklyGoalCount,
     required final int totalGoalCount,
     required final int achievedTotalGoalCount,

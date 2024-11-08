@@ -24,8 +24,6 @@ class UpdateTaskAction extends ChallengeListAction {
   const UpdateTaskAction(this.id, this.challengeModel);
 }
 
-
-
 class RemoveTaskAction extends ChallengeListAction {
   final int id;
 

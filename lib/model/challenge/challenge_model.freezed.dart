@@ -25,7 +25,7 @@ mixin _$ChallengeModel {
   int get categoryId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  int get color => throw _privateConstructorUsedError;
+  int get colorId => throw _privateConstructorUsedError;
   int get weeklyGoalCount => throw _privateConstructorUsedError;
   int get totalGoalCount => throw _privateConstructorUsedError;
   int get achievedTotalGoalCount => throw _privateConstructorUsedError;
@@ -56,7 +56,7 @@ abstract class $ChallengeModelCopyWith<$Res> {
       int categoryId,
       String title,
       String content,
-      int color,
+      int colorId,
       int weeklyGoalCount,
       int totalGoalCount,
       int achievedTotalGoalCount,
@@ -86,7 +86,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? categoryId = null,
     Object? title = null,
     Object? content = null,
-    Object? color = null,
+    Object? colorId = null,
     Object? weeklyGoalCount = null,
     Object? totalGoalCount = null,
     Object? achievedTotalGoalCount = null,
@@ -116,9 +116,9 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
+      colorId: null == colorId
+          ? _value.colorId
+          : colorId // ignore: cast_nullable_to_non_nullable
               as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
@@ -166,7 +166,7 @@ abstract class _$$ChallengeImplCopyWith<$Res>
       int categoryId,
       String title,
       String content,
-      int color,
+      int colorId,
       int weeklyGoalCount,
       int totalGoalCount,
       int achievedTotalGoalCount,
@@ -194,7 +194,7 @@ class __$$ChallengeImplCopyWithImpl<$Res>
     Object? categoryId = null,
     Object? title = null,
     Object? content = null,
-    Object? color = null,
+    Object? colorId = null,
     Object? weeklyGoalCount = null,
     Object? totalGoalCount = null,
     Object? achievedTotalGoalCount = null,
@@ -224,9 +224,9 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
+      colorId: null == colorId
+          ? _value.colorId
+          : colorId // ignore: cast_nullable_to_non_nullable
               as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
@@ -269,7 +269,7 @@ class _$ChallengeImpl implements _Challenge {
       required this.categoryId,
       required this.title,
       required this.content,
-      required this.color,
+      required this.colorId,
       required this.weeklyGoalCount,
       required this.totalGoalCount,
       required this.achievedTotalGoalCount,
@@ -292,7 +292,7 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final String content;
   @override
-  final int color;
+  final int colorId;
   @override
   final int weeklyGoalCount;
   @override
@@ -310,7 +310,7 @@ class _$ChallengeImpl implements _Challenge {
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, memberId: $memberId, categoryId: $categoryId, title: $title, content: $content, color: $color, weeklyGoalCount: $weeklyGoalCount, totalGoalCount: $totalGoalCount, achievedTotalGoalCount: $achievedTotalGoalCount, startDatetime: $startDatetime, endDatetime: $endDatetime, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ChallengeModel(id: $id, memberId: $memberId, categoryId: $categoryId, title: $title, content: $content, colorId: $colorId, weeklyGoalCount: $weeklyGoalCount, totalGoalCount: $totalGoalCount, achievedTotalGoalCount: $achievedTotalGoalCount, startDatetime: $startDatetime, endDatetime: $endDatetime, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -325,7 +325,7 @@ class _$ChallengeImpl implements _Challenge {
                 other.categoryId == categoryId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.color, color) || other.color == color) &&
+            (identical(other.colorId, colorId) || other.colorId == colorId) &&
             (identical(other.weeklyGoalCount, weeklyGoalCount) ||
                 other.weeklyGoalCount == weeklyGoalCount) &&
             (identical(other.totalGoalCount, totalGoalCount) ||
@@ -351,7 +351,7 @@ class _$ChallengeImpl implements _Challenge {
       categoryId,
       title,
       content,
-      color,
+      colorId,
       weeklyGoalCount,
       totalGoalCount,
       achievedTotalGoalCount,
@@ -383,7 +383,7 @@ abstract class _Challenge implements ChallengeModel {
       required final int categoryId,
       required final String title,
       required final String content,
-      required final int color,
+      required final int colorId,
       required final int weeklyGoalCount,
       required final int totalGoalCount,
       required final int achievedTotalGoalCount,
@@ -406,7 +406,7 @@ abstract class _Challenge implements ChallengeModel {
   @override
   String get content;
   @override
-  int get color;
+  int get colorId;
   @override
   int get weeklyGoalCount;
   @override
