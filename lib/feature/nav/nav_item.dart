@@ -1,11 +1,13 @@
+import 'package:dailystep/feature/calendar/calender.dart';
+import 'package:dailystep/feature/mypage/view/mypage_screen.dart';
 import 'package:flutter/material.dart';
 import '../home/view/home/home_fragment.dart';
 
 enum TabItem {
   home(Icons.home, '홈', HomeFragment()),
-  calendar(Icons.calendar_month, '캘린더', HomeFragment()),
+  calendar(Icons.calendar_month, '캘린더', CalendarScreen()),
   chart(Icons.pie_chart, '통계', HomeFragment()),
-  myPage(Icons.person, '마이페이지', HomeFragment());
+  myPage(Icons.person, '마이페이지', MyPageScreen());
 
   final IconData activeIcon;
   final IconData inActiveIcon;

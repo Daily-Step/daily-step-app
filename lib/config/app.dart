@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../feature/auth/login_provider.dart';
 import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
+import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_screen.dart';
+import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
 import 'route/auth_redirection.dart';
@@ -80,9 +82,9 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             path: 'challenge/new',
             pageBuilder: (BuildContext context, GoRouterState state) =>
                 FadeTransitionPage(
-                  key: state.pageKey,
-                  child: ChallengeEditScreen(null),
-                ),
+              key: state.pageKey,
+              child: ChallengeEditScreen(null),
+            ),
           ),
           GoRoute(
             path: 'challenge/edit/:id',
@@ -100,6 +102,51 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
               final String postId = state.pathParameters['postId']!;
               return ChallengeDetailScreen(int.parse(postId));
             },
+          ),
+          GoRoute(
+            path: 'category_settings/:category',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                    key: state.pageKey, child: CategorySettingsScreen()),
+          ),
+          GoRoute(
+            path: 'version/:version',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              final String version = state.pathParameters['version']!;
+
+              if (version == 'version_info') {
+                return FadeTransitionPage(
+                    key: state.pageKey, child: VersionInfoScreen());
+              }
+              try {
+                final int versionNumber = int.parse(version);
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    appBar: AppBar(title: Text('버전: $version')),
+                    body: Center(
+                      child: Text('버전 정보: $versionNumber'),
+                    ),
+                  ),
+                );
+              } catch (e) {
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: Scaffold(
+                    appBar: AppBar(title: Text('잘못된 버전')),
+                    body: Center(
+                      child: Text('처리할 수 없는 버전입니다: $version'),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          GoRoute(
+            path: 'editMyInfo',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                    key: state.pageKey, child: EditMyInfoScreen()),
           ),
         ],
       ),
