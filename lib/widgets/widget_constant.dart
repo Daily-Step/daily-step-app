@@ -24,3 +24,8 @@ var globalBorderRadius = BorderRadius.circular(4);
 var labelTextStyle = TextStyle(fontSize: 14, color: Colors.black54);
 var hintTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade400);
 var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade900);
+
+/// 색상
+var blackColor = Color(0xFF000000);
+var disabledColor = Color(0xFFD8D8D8);
+var mainColor = Color(0xFF2F41F2);

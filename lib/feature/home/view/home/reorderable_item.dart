@@ -7,8 +7,10 @@ class ReorderableItem extends StatelessWidget {
   final ChallengeModel task;
   final int index;
   final bool isEditing;
+  final bool isAchieved;
   final Future<void> Function(int id) onDismissed;
   final VoidCallback? onTap;
+  final VoidCallback? onClickAchieveButton;
 
   const ReorderableItem({
     super.key,
@@ -16,7 +18,8 @@ class ReorderableItem extends StatelessWidget {
     required this.index,
     required this.isEditing,
     required this.onDismissed,
-    this.onTap,
+    required this.onClickAchieveButton,
+    this.onTap, required this.isAchieved,
   });
 
   @override
@@ -38,6 +41,8 @@ class ReorderableItem extends StatelessWidget {
         index: index,
         isEditing: isEditing,
         onTap: onTap,
+        onClickAchieveButton: onClickAchieveButton,
+        isAchieved: isAchieved,
       ),
     );
   }

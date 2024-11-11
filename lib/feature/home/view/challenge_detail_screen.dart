@@ -8,7 +8,7 @@ import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_card.dart';
 import '../../../widgets/widget_progress_indicator.dart';
 import '../viewmodel/challenge_viewmodel.dart';
-import 'category_dummies.dart';
+import 'settings/category_dummies.dart';
 
 class ChallengeDetailScreen extends ConsumerStatefulWidget {
   final int id;

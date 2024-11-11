@@ -15,4 +15,8 @@ extension DateTimeExtension on DateTime {
       return -1;
     }
   }
+
+  bool isSameDate(DateTime date){
+    return this.year == date.year && this.month == date.month && this.day == date.day;
+  }
 }

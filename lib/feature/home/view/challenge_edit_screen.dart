@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/feature/home/view/category_dummies.dart';
+import 'package:dailystep/feature/home/view/settings/category_dummies.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../model/challenge/challenge_model.dart';
 import '../action/challenge_list_action.dart';
-import 'custom_color_dummies.dart';
+import 'settings/custom_color_dummies.dart';
 import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_scroll_picker.dart';
 import '../../../widgets/widget_select_input.dart';
@@ -251,6 +251,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                       DateTime.now().add(challengeDays),
               createdAt: selectedChallenge?.createdAt ?? DateTime.now(),
               updatedAt: DateTime.now(),
+              successList: selectedChallenge?.successList ?? [],
             );
             if (widget.id != null) {
               notifier.handleAction(UpdateTaskAction(widget.id, challenge));

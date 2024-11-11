@@ -1,8 +1,11 @@
+import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/home/reorderable_item.dart';
 import 'package:dailystep/feature/home/view/home/reorderable_list.dart';
+import 'package:dailystep/feature/home/view/home/week_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../model/challenge/challenge_model.dart';
 import '../../action/challenge_list_action.dart';
 import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
@@ -30,7 +33,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '00님의 챌린지',
+                '진행 중 챌린지',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -48,11 +51,14 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             ],
           ),
         ),
+        WeekCalendar(challengeList: state.challengeList),
         Expanded(
           child: isEditing
               ? CachedReorderableListView(
                   list: state.challengeList,
                   itemBuilder: (BuildContext context, item, index) {
+                    final bool isAchieved = item.successList.any((date) => date.isSameDate(DateTime.now()));
+
                     return ReorderableItem(
                       key: ValueKey('task_${item.id}'),
                       task: item,
@@ -62,6 +68,18 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                         await notifier.handleAction(RemoveTaskAction(id));
                       },
                       onTap: () {},
+                      onClickAchieveButton: () async {
+                        if(isAchieved == true){
+
+                        } else {
+                          ChallengeModel updatedChallenge = item.copyWith(
+                            successList: [...item.successList, DateTime.now()],
+                          );
+                          print(updatedChallenge.successList);
+                          await notifier.handleAction(UpdateTaskAction(item.id,updatedChallenge));
+                        }
+                      },
+                      isAchieved: isAchieved,
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
@@ -72,15 +90,27 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               : ListView.builder(
                   itemCount: state.challengeList.length,
                   itemBuilder: (context, index) {
-                    final task = state.challengeList[index];
+                    final challenge = state.challengeList[index];
+                    final bool isAchieved = challenge.successList.any((date) => date.isSameDate(DateTime.now()));
                     return ChallengeItem(
-                      task: task,
+                      task: challenge,
                       index: index,
                       isEditing: isEditing,
                       onTap: () async {
-                        await notifier.handleAction(FindTaskAction(task.id));
-                        context.push('/main/home/${task.id}');
+                        await notifier.handleAction(FindTaskAction(challenge.id));
+                        context.push('/main/home/${challenge.id}');
                       },
+                      onClickAchieveButton: () async {
+                        if(isAchieved == true){
+
+                        } else {
+                          ChallengeModel updatedChallenge = challenge.copyWith(
+                            successList: [...challenge.successList, DateTime.now()],
+                          );
+                          await notifier.handleAction(UpdateTaskAction(challenge.id,updatedChallenge));
+                        }
+                      },
+                      isAchieved: isAchieved,
                     );
                   }),
         ),
