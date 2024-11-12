@@ -8,6 +8,7 @@ import '../feature/auth/login_provider.dart';
 import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
+import '../feature/home/view/challenge_record/challenge_record_edit.dart';
 import '../feature/main_screen.dart';
 import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_screen.dart';
@@ -101,6 +102,16 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
               return ChallengeDetailScreen(int.parse(postId));
+            },
+          ),
+          GoRoute(
+            path: 'record/edit/:id',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              final String challengeId = state.pathParameters['id']!;
+              return FadeTransitionPage(
+                key: state.pageKey,
+                child: ChallengeRecordEditScreen(int.parse(challengeId),null),
+              );
             },
           ),
           GoRoute(

@@ -68,17 +68,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                         await notifier.handleAction(RemoveTaskAction(id));
                       },
                       onTap: () {},
-                      onClickAchieveButton: () async {
-                        if(isAchieved == true){
-
-                        } else {
-                          ChallengeModel updatedChallenge = item.copyWith(
-                            successList: [...item.successList, DateTime.now()],
-                          );
-                          print(updatedChallenge.successList);
-                          await notifier.handleAction(UpdateTaskAction(item.id,updatedChallenge));
-                        }
-                      },
+                      onClickAchieveButton: () {},
                       isAchieved: isAchieved,
                     );
                   },
@@ -107,6 +97,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                           ChallengeModel updatedChallenge = challenge.copyWith(
                             successList: [...challenge.successList, DateTime.now()],
                           );
+                          print('수정화면');
+                          context.push('/main/home/record/edit/${challenge.id}');
                           await notifier.handleAction(UpdateTaskAction(challenge.id,updatedChallenge));
                         }
                       },

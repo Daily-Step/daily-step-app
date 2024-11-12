@@ -37,6 +37,7 @@ class WTextField extends StatelessWidget {
           TextField(
             controller: controller,
             maxLength: maxCharacters ?? 10,
+            maxLines: 5,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
