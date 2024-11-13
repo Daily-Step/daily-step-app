@@ -94,12 +94,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                         if(isAchieved == true){
 
                         } else {
-                          ChallengeModel updatedChallenge = challenge.copyWith(
-                            successList: [...challenge.successList, DateTime.now()],
-                          );
-                          print('수정화면');
+                          await notifier.handleAction(FindTaskAction(challenge.id));
                           context.push('/main/home/record/edit/${challenge.id}');
-                          await notifier.handleAction(UpdateTaskAction(challenge.id,updatedChallenge));
                         }
                       },
                       isAchieved: isAchieved,

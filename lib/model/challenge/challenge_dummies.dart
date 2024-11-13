@@ -44,8 +44,6 @@ var dummyChallenges = [
     successList: [
       DateTime(2024, 11, 10),
       DateTime(2024, 11, 10),
-      DateTime(2024, 11, 13),
-      DateTime(2024, 11, 14)
     ],
   ),
   ChallengeModel(
@@ -68,7 +66,6 @@ var dummyChallenges = [
     successList: [
       DateTime(2024, 11, 10),
       DateTime(2024, 11, 11),
-      DateTime(2024, 11, 13),
       DateTime(2024, 11, 14)
     ],
   ),

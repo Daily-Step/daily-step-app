@@ -110,7 +110,7 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
               final String challengeId = state.pathParameters['id']!;
               return FadeTransitionPage(
                 key: state.pageKey,
-                child: ChallengeRecordEditScreen(int.parse(challengeId),null),
+                child: ChallengeRecordEditScreen(int.parse(challengeId)),
               );
             },
           ),

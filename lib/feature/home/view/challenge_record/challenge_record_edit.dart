@@ -10,12 +10,15 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../model/challenge/challenge_model.dart';
 import '../../../../model/challenge_record/challenge_record_model.dart';
 import '../../../../widgets/widget_buttons.dart';
+import '../../action/challenge_list_action.dart';
+import '../../action/challenge_record_action.dart';
+import '../../viewmodel/challenge_record_viewmodel.dart';
+import '../../viewmodel/challenge_viewmodel.dart';
 
 class ChallengeRecordEditScreen extends ConsumerStatefulWidget {
   final int challengeId;
-  final int? id;
 
-  const ChallengeRecordEditScreen(this.challengeId, int? this.id, {Key? key})
+  const ChallengeRecordEditScreen(this.challengeId, {Key? key})
       : super(key: key);
 
   @override
@@ -25,6 +28,8 @@ class ChallengeRecordEditScreen extends ConsumerStatefulWidget {
 class _ChallengeRecordScreenState
     extends ConsumerState<ChallengeRecordEditScreen> {
   ChallengeModel? selectedChallenge;
+
+  ChallengeRecordModel? selectedRecord;
   final List<String> imageList = [];
   final TextEditingController _noteController = TextEditingController();
   final int maxCharacters = 500;
@@ -44,26 +49,33 @@ class _ChallengeRecordScreenState
   }
 
   void _initializeData() async {
-    if (widget.id != null) {
-      //TODO: 수정시 기존 데이터 패칭
-      // final state = ref.watch(challengeViewModelProvider);
-      // if (state.selectedTask != null) {
-      //   setState(() {
-      //     selectedChallenge = state.selectedTask;
-      //     _noteController.text = state.selectedTask!.content;
-      //   });
-    }
+    final challengeState = ref.watch(challengeViewModelProvider);
+    final recordState = ref.watch(challengeRecordViewModelProvider);
+    setState(() {
+      selectedChallenge =
+          challengeState.challengeList.firstWhere((c) =>
+          c.id == widget.challengeId);
+      //레코드에 해당 챌린지에 대한 기록이 있다면 해당 기록을 패치함
+      if (recordState.recordList.any((r) =>
+      r.challengeId == widget.challengeId)) {
+        selectedRecord =
+            recordState.recordList.firstWhere((r) => r.challengeId ==
+                widget.challengeId);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    //final notifier = ref.read(challengeViewModelProvider.notifier);
+    final challengeNotifier = ref.read(challengeViewModelProvider.notifier);
+    final recordNotifier = ref.read(challengeRecordViewModelProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        title: Text(selectedChallenge?.title ?? ''),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -74,12 +86,12 @@ class _ChallengeRecordScreenState
               onTap: () async {
                 try {
                   final selectedSource =
-                      await SelectImageSourceDialog().show(context);
+                  await SelectImageSourceDialog().show(context);
                   if (selectedSource == null) {
                     return;
                   }
                   final file =
-                      await ImagePicker().pickImage(source: selectedSource);
+                  await ImagePicker().pickImage(source: selectedSource);
                   if (file == null) {
                     return;
                   }
@@ -119,7 +131,7 @@ class _ChallengeRecordScreenState
                   _noteController.value = TextEditingValue(
                     text: modifiedLines,
                     selection:
-                        TextSelection.collapsed(offset: modifiedLines.length),
+                    TextSelection.collapsed(offset: modifiedLines.length),
                   );
                 }
               },
@@ -130,18 +142,32 @@ class _ChallengeRecordScreenState
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: WCtaButton('저장하기', onPressed: () {
+        child: WCtaButton('저장하기', onPressed: () async {
           int random = Random().nextInt(999999);
-          final challenge = ChallengeRecordModel(
-            id: widget.id ?? random,
-            challengeId: widget.id ?? random,
+          DateTime now = DateTime.now();
+
+          final challengeRecord = ChallengeRecordModel(
+            id: selectedRecord?.id ?? random,
+            challengeId: selectedRecord?.id ?? random,
             createdAt: DateTime.now(),
           );
-          if (widget.id != null) {
-            //notifier.handleAction(UpdateTaskAction(widget.id, challenge));
+
+          List<DateTime> copiedChallengeSuccessList =
+          List<DateTime>.from(selectedChallenge!.successList);
+          copiedChallengeSuccessList.add(now);
+
+          final challenge = selectedChallenge!
+              .copyWith(successList: copiedChallengeSuccessList);
+          if (selectedRecord != null) {
+            await challengeNotifier
+                .handleAction(UpdateTaskAction(challenge.id, challenge));
+            recordNotifier.handleAction(
+                UpdateRecordAction(challenge.id, challengeRecord));
             Navigator.pop(context);
           } else {
-            //notifier.handleAction(AddTaskAction(challenge));
+            await challengeNotifier
+                .handleAction(UpdateTaskAction(challenge.id, challenge));
+            recordNotifier.handleAction(AddRecordAction(challengeRecord));
             Navigator.pop(context);
           }
         }),
@@ -156,7 +182,7 @@ class _ImageSelectWidget extends StatelessWidget {
   final void Function(String path) onTapDeleteImage;
 
   const _ImageSelectWidget(this.imageList,
-      {super.key, required this.onTap, required this.onTapDeleteImage});
+      {required this.onTap, required this.onTapDeleteImage});
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +195,8 @@ class _ImageSelectWidget extends StatelessWidget {
             child: Row(
               children: [
                 SelectImageButton(onTap: onTap, imageList: imageList),
-                ...imageList.map((imagePath) => Padding(
+                ...imageList.map((imagePath) =>
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Stack(children: [
                         SizedBox(
