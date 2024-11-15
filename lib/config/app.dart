@@ -17,22 +17,17 @@ import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
 import 'route/auth_redirection.dart';
 
-class App extends ConsumerStatefulWidget {
+class App extends ConsumerWidget with WidgetsBindingObserver{
+
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
-  const App({super.key});
-
-  @override
-  ConsumerState<App> createState() => AppState();
-}
-
-class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   final DailyStepAuth _auth = DailyStepAuth(
       socialLoginRepository: SocialLoginRepository(),
       loginApi: LoginApi.instance);
 
+  App({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref)  {
     return DailyStepAuthScope(
       notifier: _auth,
       child: MaterialApp.router(

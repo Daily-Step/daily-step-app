@@ -10,18 +10,13 @@ import '../../../widgets/widget_progress_indicator.dart';
 import '../viewmodel/challenge_viewmodel.dart';
 import 'settings/category_dummies.dart';
 
-class ChallengeDetailScreen extends ConsumerStatefulWidget {
+class ChallengeDetailScreen extends ConsumerWidget {
   final int id;
 
   ChallengeDetailScreen(this.id);
 
   @override
-  _ChallengeDetailScreenState createState() => _ChallengeDetailScreenState();
-}
-
-class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(challengeViewModelProvider);
 
     return Scaffold(
@@ -155,7 +150,7 @@ class _ChallengeDetailScreenState extends ConsumerState<ChallengeDetailScreen> {
         child: WCtaButton(
           '수정하기',
           onPressed: () {
-            context.go('/main/home/challenge/edit/${widget.id}');
+            context.go('/main/home/challenge/edit/${id}');
           },
         ),
       ),

@@ -28,19 +28,10 @@ class ChallengeRecordEditScreen extends ConsumerStatefulWidget {
 class _ChallengeRecordScreenState
     extends ConsumerState<ChallengeRecordEditScreen> {
   ChallengeModel? selectedChallenge;
-
   ChallengeRecordModel? selectedRecord;
   final List<String> imageList = [];
   final TextEditingController _noteController = TextEditingController();
   final int maxCharacters = 500;
-
-  @override
-  void initState() {
-    super.initState();
-    _noteController.addListener(() {
-      setState(() {});
-    });
-  }
 
   @override
   void didChangeDependencies() {

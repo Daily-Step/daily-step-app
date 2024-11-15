@@ -8,5 +8,5 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
-  runApp(ProviderScope(child: const App()));
+  runApp(ProviderScope(child: App()));
 }

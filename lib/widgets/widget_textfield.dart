@@ -10,6 +10,7 @@ class WTextField extends StatelessWidget {
   final String? label;
   final bool hasError;
   final String? errorMessage;
+  final int? maxLines;
 
   WTextField(
       this.controller, {
@@ -17,6 +18,7 @@ class WTextField extends StatelessWidget {
         required this.hintText,
         required this.onChanged,
         this.maxCharacters,
+        this.maxLines,
         this.counterText,
         this.label,
         this.hasError = false,
@@ -37,7 +39,7 @@ class WTextField extends StatelessWidget {
           TextField(
             controller: controller,
             maxLength: maxCharacters ?? 10,
-            maxLines: 5,
+            maxLines: maxLines ?? 1,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(

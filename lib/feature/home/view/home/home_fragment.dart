@@ -5,7 +5,6 @@ import 'package:dailystep/feature/home/view/home/week_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../model/challenge/challenge_model.dart';
 import '../../action/challenge_list_action.dart';
 import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';

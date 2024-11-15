@@ -192,7 +192,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                   })),
               label: '컬러',
               child: selectedColor != null
-                  ? customColors[selectedColor!].widget
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: customColors[selectedColor!].widget)
                   : Text(
                       '색상을 입력하세요',
                       style: hintTextStyle,
@@ -205,6 +207,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               _noteController,
               label: '메모',
               maxCharacters: maxCharacters,
+              maxLines: 5,
               counterText: '${_noteController.text.length}/$maxCharacters자 이내',
               hintText: '챌린지에 대한 상세 내용을 입력하세요',
               onChanged: (text) {
