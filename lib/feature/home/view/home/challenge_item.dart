@@ -35,7 +35,7 @@ class ChallengeItem extends StatelessWidget {
             child: ListTile(
               leading: WProgressIndicator(
                 percentage: task.totalGoalCount
-                    .getProgress(task.achievedTotalGoalCount),
+                    .getProgress(task.successList.length),
                 width: 40,
                 height: 40,
                 strokeWidth: 6,

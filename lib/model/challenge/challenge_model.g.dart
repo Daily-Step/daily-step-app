@@ -16,7 +16,6 @@ _$ChallengeImpl _$$ChallengeImplFromJson(Map<String, dynamic> json) =>
       colorId: (json['colorId'] as num).toInt(),
       weeklyGoalCount: (json['weeklyGoalCount'] as num).toInt(),
       totalGoalCount: (json['totalGoalCount'] as num).toInt(),
-      achievedTotalGoalCount: (json['achievedTotalGoalCount'] as num).toInt(),
       successList: (json['successList'] as List<dynamic>)
           .map((e) => DateTime.parse(e as String))
           .toList(),
@@ -38,7 +37,6 @@ Map<String, dynamic> _$$ChallengeImplToJson(_$ChallengeImpl instance) =>
       'colorId': instance.colorId,
       'weeklyGoalCount': instance.weeklyGoalCount,
       'totalGoalCount': instance.totalGoalCount,
-      'achievedTotalGoalCount': instance.achievedTotalGoalCount,
       'successList':
           instance.successList.map((e) => e.toIso8601String()).toList(),
       'startDatetime': instance.startDatetime.toIso8601String(),

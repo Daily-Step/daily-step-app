@@ -49,7 +49,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                           child: WProgressIndicator(
                             percentage: state.selectedTask!.totalGoalCount
                                 .getProgress(
-                                    state.selectedTask!.achievedTotalGoalCount),
+                                    state.selectedTask!.successList.length),
                             width: 80,
                             height: 80,
                             strokeWidth: 12,
@@ -101,7 +101,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                            state.selectedTask!.achievedTotalGoalCount
+                            state.selectedTask!.successList.length
                                     .toString() +
                                 '일',
                             style: TextStyle(fontWeight: FontWeight.bold)),

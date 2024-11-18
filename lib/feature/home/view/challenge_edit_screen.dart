@@ -246,8 +246,6 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               colorId: selectedColor!,
               weeklyGoalCount: weeklyGoal!,
               totalGoalCount: weeklyGoal! * challengeWeeks!,
-              achievedTotalGoalCount:
-                  selectedChallenge?.achievedTotalGoalCount ?? 0,
               startDatetime: selectedChallenge?.startDatetime ?? DateTime.now(),
               endDatetime:
                   selectedChallenge?.startDatetime.add(challengeDays) ??

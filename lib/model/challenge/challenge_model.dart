@@ -13,7 +13,6 @@ class ChallengeModel with _$ChallengeModel {
     required final int colorId,
     required final int weeklyGoalCount,
     required final int totalGoalCount,
-    required final int achievedTotalGoalCount,
     required final List<DateTime> successList,
     required final DateTime startDatetime,
     required final DateTime endDatetime,
