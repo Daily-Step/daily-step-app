@@ -9,7 +9,7 @@ class SignUpState {
   final String? selectedSex;
 
   SignUpState({
-    this.step = 0,
+    this.step = 1,
     this.nickName,
     this.selectedDate,
     this.selectedSex,
@@ -46,17 +46,21 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
   }
 
   void nextStep() {
-    if (state.step < 2) {
+    if (state.step < 3) {
       state = state.copyWith(step: state.step + 1);
     }
   }
 
+  void beforeStep() {
+      state = state.copyWith(step: state.step - 1);
+  }
+
   VoidCallback? canMoveToNextStep(DailyStepAuth auth, BuildContext context) {
-    if (state.step == 0 && state.nickName?.isNotEmpty == true) {
+    if (state.step == 1 && state.nickName?.isNotEmpty == true) {
       return nextStep;
-    } else if (state.step == 1 && state.selectedDate != null) {
+    } else if (state.step == 2 && state.selectedDate != null) {
       return nextStep;
-    } else if (state.step == 2 && state.selectedSex?.isNotEmpty == true) {
+    } else if (state.step == 3 && state.selectedSex?.isNotEmpty == true) {
       return () => auth.signUp(context);
     }
     return null;

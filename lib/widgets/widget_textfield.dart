@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 class WTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final ValueChanged<String> onChanged;
+  final Function(String) onChanged;
   final int? maxCharacters;
+  final int? maxLines;
   final String? counterText;
   final String? label;
   final bool hasError;
   final String? errorMessage;
-  final int? maxLines;
+  final Widget? suffixButton;
 
-  WTextField(
+  const WTextField(
       this.controller, {
         Key? key,
         required this.hintText,
@@ -23,6 +24,7 @@ class WTextField extends StatelessWidget {
         this.label,
         this.hasError = false,
         this.errorMessage,
+        this.suffixButton, // 추가된 파라미터
       }) : super(key: key);
 
   @override
@@ -41,15 +43,15 @@ class WTextField extends StatelessWidget {
             maxLength: maxCharacters ?? 10,
             maxLines: maxLines ?? 1,
             decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
+              enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: hasError ? Colors.red : Colors.grey.shade300,
                 ),
                 borderRadius: globalBorderRadius,
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: hasError ? Colors.red : Colors.grey.shade300,
+                  color: hasError ? Colors.red : Colors.grey.shade500,
                 ),
                 borderRadius: globalBorderRadius,
               ),
@@ -57,6 +59,12 @@ class WTextField extends StatelessWidget {
               hintStyle: hintTextStyle,
               counterText: counterText ?? '',
               errorText: hasError ? errorMessage : null,
+              suffixIcon: suffixButton != null
+                  ? Padding(
+                padding: const EdgeInsets.only(right:4,bottom: 6),
+                child: suffixButton,
+              )
+                  : null,
             ),
             onChanged: onChanged,
           ),

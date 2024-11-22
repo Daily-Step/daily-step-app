@@ -13,12 +13,13 @@ const height10 = Height(10);
 const height15 = Height(15);
 const height20 = Height(20);
 const height30 = Height(30);
+const height60 = Height(60);
 
 /// 좌우 마진
 const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 
 /// 박스 border radius
-var globalBorderRadius = BorderRadius.circular(4);
+var globalBorderRadius = BorderRadius.circular(2);
 
 /// 텍스트 스타일
 var labelTextStyle = TextStyle(fontSize: 14, color: Colors.black54);

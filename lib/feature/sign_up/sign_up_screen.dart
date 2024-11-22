@@ -1,3 +1,4 @@
+import 'package:dailystep/feature/sign_up/progress_bar.dart';
 import 'package:dailystep/feature/sign_up/sign_up_provider.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
@@ -27,26 +28,35 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final signUpViewModel = ref.read(signUpProvider.notifier);
 
     return Scaffold(
+      appBar: AppBar(
+        leading: signUpState.step != 1
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: signUpViewModel.beforeStep,
+              )
+            : const SizedBox.shrink(),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(24),
+          child: ProgressStepper(currentStep: signUpState.step),
+        ),
+      ),
       body: Stack(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              height60,
               Center(
-                child: Icon(
-                  Icons.check_circle,
-                  size: 100,
-                ),
+                child: buildCheckIcon(true)
               ),
               SizedBox(height: 10),
-              if (signUpState.step == 0)
+              if (signUpState.step == 1)
                 NickNameField(
                   controller: nickNameController,
                   onChanged: (text) {
                     signUpViewModel.setNickName(text);
                   },
                 )
-              else if (signUpState.step == 1)
+              else if (signUpState.step == 2)
                 BirthDateField(
                   controller: birthDateController,
                   selectedDate: signUpState.selectedDate,
@@ -56,7 +66,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         date.toLocal().toString().split(' ')[0];
                   },
                 )
-              else if (signUpState.step == 2)
+              else if (signUpState.step == 3)
                 SexField(
                   selectedSex: signUpState.selectedSex,
                   onChanged: (String? value) {
@@ -66,10 +76,37 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             ],
           ),
           WCtaFloatingButton(
-            '입력완료',
+            '다음',
             onPressed: signUpViewModel.canMoveToNextStep(widget.auth, context),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildCheckIcon(bool isAvailable) {
+    if (!isAvailable) {
+      return Icon(
+        Icons.check_circle,
+        size: 80,
+        color: Colors.grey[300],
+      );
+    }
+    return ShaderMask(
+      shaderCallback: (Rect bounds) => LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF7DF6FF),
+          Color(0xFF2F41F2),
+        ],
+        tileMode: TileMode.mirror,
+      ).createShader(bounds),
+      blendMode: BlendMode.srcIn,
+      child: Icon(
+        Icons.check_circle,
+        size: 80,
+        color: Colors.white,
       ),
     );
   }
@@ -90,14 +127,19 @@ class NickNameField extends StatelessWidget {
     return Column(
       children: [
         const Text(
-          '닉네임을 입력해 주세요',
+          '사용하실 닉네임을 입력하세요',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         height30,
         WTextField(
           controller,
-          hintText: '닉네임을 입력해 주세요',
+          hintText: '사용하실 닉네임을 입력하세요',
           onChanged: onChanged,
+          suffixButton: WRoundButton(
+            isEnabled: controller.text != '',
+            onPressed: () {},
+            text: '중복확인',
+          ),
         )
       ],
     );
