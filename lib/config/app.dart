@@ -40,6 +40,9 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+        ),
         routerConfig: _router,
       ),
     );
