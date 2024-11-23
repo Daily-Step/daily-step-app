@@ -48,8 +48,7 @@ class MyPageScreen extends ConsumerWidget {
                           children: [
                             Text(
                               '${user.userName}님의 챌린지',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 4),
                             TextButton(
@@ -145,13 +144,20 @@ class MyPageScreen extends ConsumerWidget {
               "앱 설정",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
             ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text("카테고리 설정"),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                context.go('/main/myPage/category_settings/category');
-              },
+            SizedBox(
+              height: 24,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Push 알림"),
+                Switch(
+                  value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
+                  onChanged: (value) {
+                    ref.read(myPageViewModelProvider.notifier).togglePushNotification();
+                  },
+                ),
+              ],
             ),
             Divider(),
             ListTile(
@@ -163,22 +169,13 @@ class MyPageScreen extends ConsumerWidget {
               },
             ),
             Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Push 알림"),
-                Switch(
-                  value: ref
-                          .watch(myPageViewModelProvider)
-                          ?.isPushNotificationEnabled ??
-                      false,
-                  onChanged: (value) {
-                    ref
-                        .read(myPageViewModelProvider.notifier)
-                        .togglePushNotification();
-                  },
-                ),
-              ],
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text("문의하기"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                context.go('/main/myPage/category_settings/category');
+              },
             ),
             Divider(),
             ListTile(
