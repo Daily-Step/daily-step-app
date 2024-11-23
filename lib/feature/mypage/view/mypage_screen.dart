@@ -14,81 +14,86 @@ class MyPageScreen extends ConsumerWidget {
 
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(title: Text("마이페이지")),
+        appBar: AppBar(
+          title: Text("마이페이지"),
+        ),
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(title: Text("마이페이지")),
-      body: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white, // 배경색 설정
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2), // 그림자 색상 설정
-                  blurRadius: 4,
-                  offset: Offset(0, 2), // 그림자의 위치
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${user.userName}님의 챌린지',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 4),
-                            TextButton(
-                              onPressed: () {
-                                context.go('/main/myPage/editMyInfo');
-                              },
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                backgroundColor: Colors.grey[200],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              child: const Text(
-                                '내 정보 수정',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: user.profileImageUrl.isNotEmpty
-                            ? NetworkImage(user.profileImageUrl)
-                            : NetworkImage(
-                                'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f4ec842-6f7a-4d31-ab32-a35b7c42e7d8/dgvd6bj-d8c21830-800a-4642-954f-249381540aae.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmNGVjODQyLTZmN2EtNGQzMS1hYjMyLWEzNWI3YzQyZTdkOFwvZGd2ZDZiai1kOGMyMTgzMC04MDBhLTQ2NDItOTU0Zi0yNDkzODE1NDBhYWUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.DXNYAFrTUPlJjEfgUpPXR_YY_znMJ4qNWyu2QEG442E'),
-                      ),
-                    ],
+      body: Container(
+        color: Color(0xffD8D8D8),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // 배경색 설정
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2), // 그림자 색상 설정
+                    blurRadius: 4,
+                    offset: Offset(0, 2), // 그림자의 위치
                   ),
-                  SizedBox(height: 16),
-                  _buildChallengeCards(user),
                 ],
               ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${user.userName}님의 챌린지',
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 4),
+                              TextButton(
+                                onPressed: () {
+                                  context.go('/main/myPage/editMyInfo');
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  backgroundColor: Colors.grey[200],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: const Text(
+                                  '내 정보 수정',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundImage: user.profileImageUrl.isNotEmpty
+                              ? NetworkImage(user.profileImageUrl)
+                              : NetworkImage(
+                                  'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3f4ec842-6f7a-4d31-ab32-a35b7c42e7d8/dgvd6bj-d8c21830-800a-4642-954f-249381540aae.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNmNGVjODQyLTZmN2EtNGQzMS1hYjMyLWEzNWI3YzQyZTdkOFwvZGd2ZDZiai1kOGMyMTgzMC04MDBhLTQ2NDItOTU0Zi0yNDkzODE1NDBhYWUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.DXNYAFrTUPlJjEfgUpPXR_YY_znMJ4qNWyu2QEG442E'),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    _buildChallengeCards(user),
+                  ],
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 16),
-          _buildSettingsContainer(ref, context),
-        ],
+            SizedBox(height: 16),
+            _buildSettingsContainer(ref, context),
+          ],
+        ),
       ),
     );
   }
@@ -156,6 +161,11 @@ class MyPageScreen extends ConsumerWidget {
                   onChanged: (value) {
                     ref.read(myPageViewModelProvider.notifier).togglePushNotification();
                   },
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.black,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Color(0xffD2D2D2),
+                  trackOutlineColor: WidgetStatePropertyAll(Colors.transparent)
                 ),
               ],
             ),
@@ -165,7 +175,7 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("계정 설정"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // 계정 설정 화면으로 이동
+                context.go('/main/myPage/account_settings/account');
               },
             ),
             Divider(),
@@ -187,6 +197,7 @@ class MyPageScreen extends ConsumerWidget {
               },
             ),
             Divider(),
+            SizedBox(height: 50,)
           ],
         ),
       ),

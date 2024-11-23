@@ -63,7 +63,6 @@ class MainScreenState extends ConsumerState<MainScreen>
             children: [
               Scaffold(
                   body: Container(
-                    padding: EdgeInsets.only(bottom: 60),
                     child: SafeArea(
                       child: pages,
                     ),

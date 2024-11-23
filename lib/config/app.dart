@@ -11,6 +11,7 @@ import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
+import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
 import 'route/auth_redirection.dart';
@@ -42,6 +43,9 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         ],
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+          )
         ),
         routerConfig: _router,
       ),
@@ -80,10 +84,10 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         ),
         routes: <GoRoute>[
           GoRoute(
-            path: 'category_settings/:category',
+            path: 'account_settings/:account',
             pageBuilder: (BuildContext context, GoRouterState state) =>
                 FadeTransitionPage(
-                    key: state.pageKey, child: CategorySettingsScreen()),
+                    key: state.pageKey, child: AccountSettingScreen()),
           ),
           GoRoute(
             path: 'version/:version',

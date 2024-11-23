@@ -9,7 +9,6 @@ class VersionInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         titleSpacing: 0,
         centerTitle: true,
         title: Text('버전 정보'),
