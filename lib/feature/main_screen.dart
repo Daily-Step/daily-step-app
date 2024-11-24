@@ -8,12 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav/nav.dart';
 
-
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
 class MainScreen extends ConsumerStatefulWidget {
   final TabItem firstTab;
-  const MainScreen( {super.key, this.firstTab = TabItem.home});
+
+  const MainScreen({super.key, this.firstTab = TabItem.home});
 
   @override
   ConsumerState<MainScreen> createState() => MainScreenState();
@@ -21,14 +21,12 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
-
   TabItem get _currentTab => ref.watch(currentTabProvider);
+
   int get _currentIndex => tabs.indexOf(_currentTab);
 
   final tabs = [
     TabItem.home,
-    TabItem.calendar,
-    TabItem.chart,
     TabItem.myPage,
   ];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
@@ -45,8 +43,8 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   @override
   void didUpdateWidget(covariant MainScreen oldWidget) {
-    if(oldWidget.firstTab != widget.firstTab){
-      delay((){
+    if (oldWidget.firstTab != widget.firstTab) {
+      delay(() {
         ref.read(currentTabProvider.notifier).state = widget.firstTab;
       }, 0.ms);
     }
@@ -59,54 +57,50 @@ class MainScreenState extends ConsumerState<MainScreen>
       child: PopScope(
         canPop: isRootPage,
         onPopInvokedWithResult: _handleBackPressed,
-        child: Stack(
-            children: [
-              Scaffold(
-                  body: Container(
-                    padding: EdgeInsets.only(bottom: 60),
-                    child: SafeArea(
-                      child: pages,
-                    ),
-                  ),
-                  bottomNavigationBar: _buildBottomNavigationBar(context)
+        child: Stack(children: [
+          Scaffold(
+            body: Container(
+              padding: EdgeInsets.only(bottom: 60),
+              child: SafeArea(
+                child: pages,
               ),
-              Positioned(
-                bottom: bottomNavigationBarHeight + 4,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: AnimatedOpacity(opacity: _currentTab == TabItem.home ? 1 : 0,
-                    duration: 200.ms,
-                    child: FloatingActionButton(onPressed: (){
-                      context.go('/main/home/challenge/new');
-                    }, backgroundColor: Colors.grey, child: Icon(Icons.add, color: Colors.white,))),
-                ),
-              )
-            ]
-        ),
+            ),
+            bottomNavigationBar: _buildBottomNavigationBar(context),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  context.go('/main/home/challenge/new');
+                },
+                shape: const CircleBorder(),
+                backgroundColor: Colors.black,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                )),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          ),
+        ]),
       ),
     );
   }
 
   bool get isRootPage =>
       _currentTab == TabItem.home &&
-          _currentTabNavigationKey.currentState?.canPop() == false;
+      _currentTabNavigationKey.currentState?.canPop() == false;
 
-  IndexedStack get pages =>
-      IndexedStack(
-          index: _currentIndex,
-          children: tabs
-              .mapIndexed((tab, index) =>
-              Offstage(
+  IndexedStack get pages => IndexedStack(
+      index: _currentIndex,
+      children: tabs
+          .mapIndexed((tab, index) => Offstage(
                 offstage: _currentTab != tab,
                 child: TabNavigator(
                   navigatorKey: navigatorKeys[index],
                   tabItem: tab,
                 ),
               ))
-              .toList());
+          .toList());
 
-  void _handleBackPressed(bool didPop,_) {
+  void _handleBackPressed(bool didPop, _) {
     if (!didPop) {
       if (_currentTabNavigationKey.currentState?.canPop() == true) {
         Nav.pop(_currentTabNavigationKey.currentContext!);
@@ -141,12 +135,11 @@ class MainScreenState extends ConsumerState<MainScreen>
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
-          (tab, index) =>
-          tab.toNavigationBarItem(
+          (tab, index) => tab.toNavigationBarItem(
             context,
             isActivated: _currentIndex == index,
           ),
-    )
+        )
         .toList();
   }
 

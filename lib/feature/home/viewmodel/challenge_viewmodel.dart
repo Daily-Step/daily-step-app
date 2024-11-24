@@ -33,7 +33,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       _handleAddTask(action);
     } else if (action is UpdateTaskAction) {
       _handleUpdateTask(action);
-    } else if (action is RemoveTaskAction) {
+    } else if (action is DeleteTaskAction) {
       await _handleRemoveTask(action);
     } else if (action is FindTaskAction) {
       _handleFindTask(action);
@@ -68,7 +68,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     state = state.copyWith(tasks: updatedTasks);
   }
 
-  Future<void> _handleRemoveTask(RemoveTaskAction action) async {
+  Future<void> _handleRemoveTask(DeleteTaskAction action) async {
     final tasks = List.of(state.challengeList);
     tasks.removeWhere((task) => task.id == action.id);
 

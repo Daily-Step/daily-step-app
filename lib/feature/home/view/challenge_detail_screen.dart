@@ -4,9 +4,9 @@ import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../widgets/widget_buttons.dart';
 import '../../../widgets/widget_card.dart';
 import '../../../widgets/widget_progress_indicator.dart';
+import '../action/challenge_list_action.dart';
 import '../viewmodel/challenge_viewmodel.dart';
 import 'settings/category_dummies.dart';
 
@@ -18,6 +18,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(challengeViewModelProvider);
+    final notifier = ref.read(challengeViewModelProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +26,30 @@ class ChallengeDetailScreen extends ConsumerWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(state.selectedTask!.title),
+        title: Align(alignment: Alignment.center,child: Text(state.selectedTask!.title)),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert),
+            onSelected: (String value) {
+              if (value == '수정하기') {
+                context.go('/main/home/challenge/edit/${id}');
+              } else if (value == '삭제하기') {
+                notifier.handleAction(DeleteTaskAction(id));
+                Navigator.pop(context);
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: '수정하기',
+                child: Text('수정하기'),
+              ),
+              PopupMenuItem(
+                value: '삭제하기',
+                child: Text('삭제하기'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,15 +67,15 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text('달성도', style: TextStyle(color: Colors.grey)),
-                        height15,
+                        height40,
                         Align(
                           alignment: Alignment.center,
                           child: WProgressIndicator(
                             percentage: state.selectedTask!.totalGoalCount
                                 .getProgress(
                                     state.selectedTask!.successList.length),
-                            width: 80,
-                            height: 80,
+                            width: 100,
+                            height: 100,
                             strokeWidth: 12,
                             fontSize: 20,
                           ),
@@ -65,7 +89,9 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       children: [
                         Text('챌린지 시작일', style: TextStyle(color: Colors.grey)),
                         Text(state.selectedTask!.startDatetime.formattedDate,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: detailDataFontSize)),
                         height10,
                         Text('챌린지 기간', style: TextStyle(color: Colors.grey)),
                         Text(
@@ -74,65 +100,76 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                         state.selectedTask!.endDatetime)
                                     .toString() +
                                 '주 챌린지',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: detailDataFontSize)),
                         height10,
                         Text('실천 횟수', style: TextStyle(color: Colors.grey)),
                         Text(
                             state.selectedTask!.weeklyGoalCount.toString() +
                                 '회 실천',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: detailDataFontSize)),
+                        height10,
+                        Text('카테고리', style: TextStyle(color: Colors.grey)),
+                        Text(
+                            dummyCategories
+                                .firstWhere((category) =>
+                                    category.id ==
+                                    state.selectedTask?.categoryId)
+                                .toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: detailDataFontSize)),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            height10,
+            height2,
             // 달성 횟수와 카테고리 카드
             Row(
               children: [
-                Expanded(
-                  child: WCard(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('달성 횟수', style: TextStyle(color: Colors.grey)),
-                      SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                            state.selectedTask!.successList.length
-                                    .toString() +
-                                '일',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  )),
-                ),
-                width10,
-                Expanded(
-                  child: WCard(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('카테고리', style: TextStyle(color: Colors.grey)),
-                      SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                            dummyCategories
-                                .firstWhere((category) =>
-                                    category.id ==
-                                    state.selectedTask?.categoryId)
-                                .toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  )),
+                _card(state,'달성한 날',Text(state.selectedTask!.successList.length.toString() + '일',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: detailDataFontSize)),
+            ),
+                width2,
+                _card(state,'미달성한 날',Text(state.selectedTask!.successList.length.toString() + '일',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: detailDataFontSize)),
                 ),
               ],
             ),
-            height10,
+            height2,
+            Row(
+              children: [
+                _card(state,'최대 연속 성공 횟수',Text(state.selectedTask!.successList.length.toString() + '일',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: detailDataFontSize)),
+                ),
+                width2,
+                _card(state,'남은 기간',Text(state.selectedTask!.successList.length.toString() + '일',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: detailDataFontSize)),
+                ),
+              ],
+            ),
+            height2,
+            WCard(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('달성한 날', style: TextStyle(color: Colors.grey)),
+                    IconButton(
+                      icon: Icon(Icons.calendar_today_outlined),
+                      onPressed: (){},
+                    )
+                  ],
+                )),
             WCard(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,15 +182,22 @@ class ChallengeDetailScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: WCtaButton(
-          '수정하기',
-          onPressed: () {
-            context.go('/main/home/challenge/edit/${id}');
-          },
-        ),
-      ),
+    );
+  }
+
+  Expanded _card(ChallengesState state, String title, Widget contents) {
+    return Expanded(
+      child: WCard(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: TextStyle(color: Colors.grey)),
+          SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: contents)
+        ],
+      )),
     );
   }
 }

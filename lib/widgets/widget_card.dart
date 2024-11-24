@@ -12,6 +12,7 @@ class WCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: globalBorderRadius,
       ),

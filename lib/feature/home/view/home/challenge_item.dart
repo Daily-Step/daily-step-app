@@ -8,7 +8,6 @@ import '../../../../widgets/widget_progress_indicator.dart';
 class ChallengeItem extends StatelessWidget {
   final ChallengeModel task;
   final int index;
-  final bool isEditing;
   final bool isAchieved;
   final VoidCallback? onTap;
   final VoidCallback? onClickAchieveButton;
@@ -17,7 +16,6 @@ class ChallengeItem extends StatelessWidget {
     Key? key,
     required this.task,
     required this.index,
-    required this.isEditing,
     required this.onTap,
     required this.onClickAchieveButton,
     required this.isAchieved,
@@ -46,11 +44,7 @@ class ChallengeItem extends StatelessWidget {
                   '${task.startDatetime.formattedDate} ~ ${task.endDatetime.formattedDate}'),
               trailing: ReorderableDragStartListener(
                 index: index,
-                child: isEditing
-                    ? Icon(
-                        Icons.drag_handle,
-                      )
-                    : Container(
+                child: Container(
                         decoration: BoxDecoration(
                             color: disabledColor, shape: BoxShape.circle),
                         child: Padding(
@@ -74,7 +68,7 @@ class ChallengeItem extends StatelessWidget {
                 minimumSize: Size(double.infinity, 40),
               ),
               child: Text(
-                isAchieved? '기록 확인':'미션 달성',
+                isAchieved? '챌린지 달성 완료!':'챌린지 달성',
                 style: TextStyle(color: Colors.white),
               ),
             ),

@@ -3,25 +3,29 @@ import 'package:flutter/material.dart';
 
 const spacer = Spacer();
 
+const width2 = Width(2);
 const width5 = Width(5);
 const width10 = Width(10);
 const width20 = Width(20);
 const width30 = Width(30);
 
+const height2 = Height(2);
 const height5 = Height(5);
 const height10 = Height(10);
 const height15 = Height(15);
 const height20 = Height(20);
 const height30 = Height(30);
+const height40 = Height(40);
 const height60 = Height(60);
 
 const pickerFontSize = 24.0;
+const detailDataFontSize = 18.0;
 
 /// 좌우 마진
 const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 
 /// 박스 border radius
-var globalBorderRadius = BorderRadius.circular(2);
+var globalBorderRadius = BorderRadius.circular(10);
 
 /// 텍스트 스타일
 var labelTextStyle = TextStyle(fontSize: 14, color: Colors.black54);

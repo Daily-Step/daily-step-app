@@ -12,7 +12,7 @@ class Category {
 }
 
 final List<Category> dummyCategories = [
-  Category(id: 0, name: '운동', emoji: '🏃‍♂️'),
+  Category(id: 0, name: '운동', emoji: '🏃'),
   Category(id: 1, name: '식단', emoji: '🥗'),
   Category(id: 2, name: '공부', emoji: '📚'),
   Category(id: 3, name: '게임', emoji: '🎮'),
