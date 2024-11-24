@@ -105,7 +105,7 @@ class _ChallengeRecordScreenState
             ),
             height20,
             WTextField(
-              _noteController,
+              controller: _noteController,
               label: '메모',
               maxCharacters: maxCharacters,
               counterText: '${_noteController.text.length}/$maxCharacters자 이내',

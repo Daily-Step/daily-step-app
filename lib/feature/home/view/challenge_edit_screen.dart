@@ -93,16 +93,16 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             WTextField(
-              _titleController,
+              controller: _titleController,
               hintText: '제목을 입력해주세요',
               label: '제목',
               onChanged: (String value) {},
-              hasError: errors['title']!,
+              isEnable: errors['title']!,
               errorMessage: '제목을 입력해주세요',
             ),
             height20,
             WSelectInput(
-              onTap: () => _showModal(WScrollPickerModal(
+              onTap: () => _showModal(WScrollPicker(
                 value: challengeWeeks != null ? challengeWeeks! : 1,
                 subText: '주',
                 childCount: 4,
@@ -127,7 +127,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             ),
             height20,
             WSelectInput(
-              onTap: () => _showModal(WScrollPickerModal(
+              onTap: () => _showModal(WScrollPicker(
                 value: weeklyGoal != null ? weeklyGoal! : 1,
                 subText: '회',
                 childCount: 7,
@@ -152,7 +152,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             ),
             height20,
             WSelectInput(
-              onTap: () => _showModal(WScrollPickerModal(
+              onTap: () => _showModal(WScrollPicker(
                 value: selectedCategory != null ? selectedCategory! : 1,
                 childCount: dummyCategories.length,
                 childList:
@@ -178,7 +178,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             ),
             height20,
             WSelectInput(
-              onTap: () => _showModal(WScrollPickerModal(
+              onTap: () => _showModal(WScrollPicker(
                   value: selectedColor != null ? selectedColor! : 1,
                   childCount: customColors.length,
                   childList: customColors,
@@ -204,7 +204,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             ),
             height20,
             WTextField(
-              _noteController,
+              controller: _noteController,
               label: '메모',
               maxCharacters: maxCharacters,
               maxLines: 5,

@@ -15,6 +15,8 @@ const height20 = Height(20);
 const height30 = Height(30);
 const height60 = Height(60);
 
+const pickerFontSize = 24.0;
+
 /// 좌우 마진
 const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 
@@ -29,4 +31,16 @@ var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade900);
 /// 색상
 var blackColor = Color(0xFF000000);
 var disabledColor = Color(0xFFD8D8D8);
+var subTextColor = Color(0xFF8E8E8E);
 var mainColor = Color(0xFF2F41F2);
+
+/// 그라디언트
+const mainGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color(0xFF15C5EC),
+    Color(0xFF2F41F2),
+  ],
+  tileMode: TileMode.mirror,
+);

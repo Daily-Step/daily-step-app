@@ -1,6 +1,7 @@
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
-class WScrollPickerModal extends StatefulWidget {
+class WScrollPicker extends StatefulWidget {
   final int value;
   final int childCount;
   final String? subText;
@@ -9,7 +10,7 @@ class WScrollPickerModal extends StatefulWidget {
 
   final Widget Function(BuildContext, int, bool)? itemBuilder;
 
-  const WScrollPickerModal({
+  const WScrollPicker({
     Key? key,
     required this.value,
     required this.onSelected,
@@ -20,10 +21,10 @@ class WScrollPickerModal extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<WScrollPickerModal> createState() => _WeekPickerModalState();
+  State<WScrollPicker> createState() => _WeekPickerModalState();
 }
 
-class _WeekPickerModalState extends State<WScrollPickerModal> {
+class _WeekPickerModalState extends State<WScrollPicker> {
   late FixedExtentScrollController _controller;
   late int _selectedValue;
 
@@ -94,7 +95,7 @@ class _WeekPickerModalState extends State<WScrollPickerModal> {
                                     ? '${widget.childList?[index]}'
                                     : '${index + 1}',
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: pickerFontSize,
                                   color: _selectedValue == index + 1
                                       ? Colors.black
                                       : Colors.grey,

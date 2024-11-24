@@ -44,11 +44,12 @@ class WRoundButton extends StatelessWidget {
 class WCtaFloatingButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+  final LinearGradient? gradient;
 
-  const WCtaFloatingButton(
-    this.text, {
+  const WCtaFloatingButton(this.text, {
     Key? key,
     required this.onPressed,
+    this.gradient,
   }) : super(key: key);
 
   @override
@@ -60,8 +61,9 @@ class WCtaFloatingButton extends StatelessWidget {
       child: Column(
         children: [
           WCtaButton(
-            text,
-            onPressed: onPressed,
+              text,
+              onPressed: onPressed,
+              gradient: gradient,
           ),
         ],
       ),
@@ -72,11 +74,11 @@ class WCtaFloatingButton extends StatelessWidget {
 class WCtaButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
-
-  const WCtaButton(
-    this.text, {
+  final LinearGradient? gradient;
+  const WCtaButton(this.text, {
     Key? key,
     required this.onPressed,
+    this.gradient,
   }) : super(key: key);
 
   @override
@@ -91,10 +93,24 @@ class WCtaButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           foregroundColor: isEnabled ? Colors.white : Colors.grey[400],
-          backgroundColor: isEnabled ? Colors.black : Colors.grey[200],
+          padding: EdgeInsets.zero, // 패딩을 0으로 설정하여 그라데이션이 버튼 전체를 채우도록
           minimumSize: const Size(200, 50),
         ),
-        child: Text(text),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: globalBorderRadius,
+            gradient: gradient != null && isEnabled
+                ? gradient
+                : null,
+            color: gradient != null ? null : (isEnabled ? Colors.black : Colors.grey[200]),
+          ),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            alignment: Alignment.center,
+            child: Text(text),
+          ),
+        ),
       ),
     );
   }

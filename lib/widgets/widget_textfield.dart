@@ -9,23 +9,23 @@ class WTextField extends StatelessWidget {
   final int? maxLines;
   final String? counterText;
   final String? label;
-  final bool hasError;
+  final bool isEnable;
   final String? errorMessage;
   final Widget? suffixButton;
 
-  const WTextField(
-      this.controller, {
-        Key? key,
-        required this.hintText,
-        required this.onChanged,
-        this.maxCharacters,
-        this.maxLines,
-        this.counterText,
-        this.label,
-        this.hasError = false,
-        this.errorMessage,
-        this.suffixButton, // 추가된 파라미터
-      }) : super(key: key);
+  const WTextField({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.onChanged,
+    this.maxCharacters,
+    this.maxLines,
+    this.counterText,
+    this.label,
+    this.isEnable = true,
+    this.errorMessage,
+    this.suffixButton, // 추가된 파라미터
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,8 @@ class WTextField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (label != null)
-            Text(label!, style: labelTextStyle),
-          if (label != null)
-            const SizedBox(height: 8),
+          if (label != null) Text(label!, style: labelTextStyle),
+          if (label != null) const SizedBox(height: 8),
           TextField(
             controller: controller,
             maxLength: maxCharacters ?? 10,
@@ -45,25 +43,23 @@ class WTextField extends StatelessWidget {
             decoration: InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: hasError ? Colors.red : Colors.grey.shade300,
+                  color: isEnable ? Colors.grey.shade300 : Colors.red,
                 ),
-                borderRadius: globalBorderRadius,
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: hasError ? Colors.red : Colors.grey.shade500,
+                  color: isEnable ? Colors.grey.shade500 : Colors.red,
                 ),
-                borderRadius: globalBorderRadius,
               ),
               hintText: hintText,
               hintStyle: hintTextStyle,
               counterText: counterText ?? '',
-              errorText: hasError ? errorMessage : null,
+              errorText: isEnable ? null : errorMessage,
               suffixIcon: suffixButton != null
                   ? Padding(
-                padding: const EdgeInsets.only(right:4,bottom: 6),
-                child: suffixButton,
-              )
+                      padding: const EdgeInsets.only(right: 4, bottom: 6),
+                      child: suffixButton,
+                    )
                   : null,
             ),
             onChanged: onChanged,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class WSelectInput extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
-  final String label;
+  final String? label;
   final bool hasError;
   final String? errorMessage;
 
@@ -12,7 +12,7 @@ class WSelectInput extends StatelessWidget {
     Key? key,
     required this.child,
     required this.onTap,
-    required this.label,
+    this.label,
     this.hasError = false,
     this.errorMessage,
   }) : super(key: key);
@@ -24,8 +24,9 @@ class WSelectInput extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if(label != null)
           Text(
-            label,
+            label!,
             style: labelTextStyle,
           ),
           const SizedBox(height: 8),
