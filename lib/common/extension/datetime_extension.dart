@@ -24,4 +24,18 @@ extension DateTimeExtension on DateTime {
     final lastDay = DateTime(year, month + 1, 0).day;
     return List.generate(lastDay, (index) => index + 1);
   }
+
+  int goalDays(DateTime endDttm, int weeklyGoalCount){
+    return calculateWeeksBetween(endDttm) * weeklyGoalCount;
+  }
+
+  int failDays(DateTime endDttm, int weeklyGoalCount, int successDayCount){
+    return (calculateWeeksBetween(endDttm) * weeklyGoalCount) -  successDayCount;
+  }
+
+  int lastDays(){
+    final today = DateTime.now();
+    Duration difference = this.difference(today);
+    return difference.inDays;
+  }
 }

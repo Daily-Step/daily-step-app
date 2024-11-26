@@ -48,8 +48,6 @@ var dummyChallenges = [
     createdAt: DateTime(2024, 1, 25),
     updatedAt: DateTime(2024, 2, 5),
     successList: [
-      DateTime(2024, 11, 15),
-      DateTime(2024, 11, 16),
       DateTime(2024, 11, 17),
       DateTime(2024, 11, 18),
       DateTime(2024, 11, 19)

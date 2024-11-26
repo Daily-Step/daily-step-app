@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../model/challenge/challenge_model.dart';
 import '../../../../widgets/widget_constant.dart';
 import '../../../../widgets/widget_progress_indicator.dart';
+import '../settings/custom_color_dummies.dart';
 
 class ChallengeItem extends StatelessWidget {
   final ChallengeModel task;
@@ -37,7 +38,8 @@ class ChallengeItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 strokeWidth: 6,
-                fontSize: 12,
+                fontSize: 14,
+                color: customColors[task.colorId].color,
               ),
               title: Text(task.title),
               subtitle: Text(

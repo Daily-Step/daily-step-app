@@ -6,6 +6,7 @@ import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../model/challenge/challenge_model.dart';
 import '../action/challenge_list_action.dart';
@@ -83,6 +84,10 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
     final notifier = ref.read(challengeViewModelProvider.notifier);
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          widget.id != null ? '챌린지 수정' : '새로운 챌린지 추가',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -92,22 +97,30 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            height20,
             WTextField(
               controller: _titleController,
-              hintText: '제목을 입력해주세요',
-              label: '제목',
-              onChanged: (String value) {},
-              isEnable: errors['title']!,
-              errorMessage: '제목을 입력해주세요',
+              hintText: '챌린지 이름을 입력하세요',
+              label: '챌린지 이름',
+              onChanged: (String value) {
+                if(value != '') {
+                  setState(() {
+                    errors['title'] = false;
+                  });
+                }
+              },
+              isEnable: !errors['title']!,
+              errorMessage: '챌린지 이름을 입력하세요',
             ),
             height20,
-            WSelectInput(
+            WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
                 value: challengeWeeks != null ? challengeWeeks! : 1,
                 subText: '주',
                 childCount: 4,
                 onSelected: (int) {
                   setState(() {
+                    errors['challengeWeeks'] = false;
                     challengeWeeks = int + 1;
                   });
                 },
@@ -115,24 +128,25 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               label: '챌린지 기간',
               child: challengeWeeks != null
                   ? Text(
-                      '${challengeWeeks}주 챌린지',
+                      '${challengeWeeks}주',
                       style: contentTextStyle,
                     )
                   : Text(
-                      '몇주동안 챌린지를 할지 입력하세요',
+                      '선택',
                       style: hintTextStyle,
                     ),
               hasError: errors['challengeWeeks']!,
               errorMessage: '챌린지 기간을 선택해주세요',
             ),
             height20,
-            WSelectInput(
+            WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
                 value: weeklyGoal != null ? weeklyGoal! : 1,
                 subText: '회',
                 childCount: 7,
                 onSelected: (int) {
                   setState(() {
+                    errors['weeklyGoal'] = false;
                     weeklyGoal = int + 1;
                   });
                 },
@@ -144,14 +158,14 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                       style: contentTextStyle,
                     )
                   : Text(
-                      '챌린지를 한주에 몇회 실천할지 입력하세요',
+                      '선택',
                       style: hintTextStyle,
                     ),
               hasError: errors['weeklyGoal']!,
               errorMessage: '실천 횟수를 선택해주세요',
             ),
             height20,
-            WSelectInput(
+            WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
                 value: selectedCategory != null ? selectedCategory! : 1,
                 childCount: dummyCategories.length,
@@ -159,6 +173,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     dummyCategories.map((item) => item.toString()).toList(),
                 onSelected: (int) {
                   setState(() {
+                    errors['category'] = false;
                     selectedCategory = int;
                   });
                 },
@@ -170,20 +185,21 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                       style: contentTextStyle,
                     )
                   : Text(
-                      '카테고리를 입력하세요',
+                      '선택',
                       style: hintTextStyle,
                     ),
               hasError: errors['category']!,
               errorMessage: '카테고리를 선택해주세요',
             ),
             height20,
-            WSelectInput(
+            WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
                   value: selectedColor != null ? selectedColor! : 1,
                   childCount: customColors.length,
                   childList: customColors,
                   onSelected: (int) {
                     setState(() {
+                      errors['color'] = false;
                       selectedColor = int;
                     });
                   },
@@ -194,27 +210,28 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               child: selectedColor != null
                   ? Align(
                       alignment: Alignment.centerLeft,
-                      child: customColors[selectedColor!].widget)
+                      child: customColors[selectedColor!].widget,
+                       )
                   : Text(
-                      '색상을 입력하세요',
+                      '선택',
                       style: hintTextStyle,
                     ),
               hasError: errors['color']!,
               errorMessage: '색상을 선택해주세요',
             ),
-            height20,
+            height30,
             WTextField(
               controller: _noteController,
-              label: '메모',
+              label: '상세 내용',
               maxCharacters: maxCharacters,
               maxLines: 5,
               counterText: '${_noteController.text.length}/$maxCharacters자 이내',
               hintText: '챌린지에 대한 상세 내용을 입력하세요',
+              isBox: true,
               onChanged: (text) {
                 final lines = text.split('\n');
                 final modifiedLines = lines.map((line) {
                   if (line.isEmpty) return line;
-                  if (!line.startsWith('• ')) return '• $line';
                   return line;
                 }).join('\n');
 
@@ -233,7 +250,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: WCtaButton('수정하기', onPressed: () {
+        child: WCtaButton('저장하기', onPressed: () {
           if (_validateInputs() == true) {
             final Duration challengeDays = Duration(days: challengeWeeks! * 7);
             Random random = Random();
@@ -257,6 +274,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             if (widget.id != null) {
               notifier.handleAction(UpdateTaskAction(widget.id, challenge));
               Navigator.pop(context);
+              context.push('/main/home/${widget.id}');
             } else {
               notifier.handleAction(AddTaskAction(challenge));
               Navigator.pop(context);

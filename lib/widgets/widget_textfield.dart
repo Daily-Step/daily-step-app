@@ -12,6 +12,7 @@ class WTextField extends StatelessWidget {
   final bool isEnable;
   final String? errorMessage;
   final Widget? suffixButton;
+  final bool isBox;
 
   const WTextField({
     Key? key,
@@ -24,33 +25,56 @@ class WTextField extends StatelessWidget {
     this.label,
     this.isEnable = true,
     this.errorMessage,
-    this.suffixButton, // 추가된 파라미터
+    this.suffixButton,
+    this.isBox = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = isEnable ? Colors.grey.shade300 : Colors.red;
+
     return Padding(
       padding: globalMargin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label != null) Text(label!, style: labelTextStyle),
-          if (label != null) const SizedBox(height: 8),
+          if (label != null) const SizedBox(height: 6),
           TextField(
             controller: controller,
             maxLength: maxCharacters ?? 10,
             maxLines: maxLines ?? 1,
             decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: isEnable ? Colors.grey.shade300 : Colors.red,
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: isEnable ? Colors.grey.shade500 : Colors.red,
-                ),
-              ),
+              border: isBox
+                  ? OutlineInputBorder(
+                      borderSide: BorderSide(color: borderColor),
+                      borderRadius: BorderRadius.circular(10.0),
+                    )
+                  : null,
+              fillColor: isBox ? Colors.white : null,
+              // 배경색
+              filled: isBox,
+              // 배경색 활성화
+              enabledBorder: isBox
+                  ? OutlineInputBorder(
+                      borderSide: BorderSide(color: borderColor),
+                      borderRadius: BorderRadius.circular(10.0),
+                    )
+                  : UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: borderColor,
+                      ),
+                    ),
+              focusedBorder: isBox
+                  ? OutlineInputBorder(
+                      borderSide: BorderSide(color: borderColor),
+                      borderRadius: BorderRadius.circular(10.0),
+                    )
+                  : UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: borderColor,
+                      ),
+                    ),
               hintText: hintText,
               hintStyle: hintTextStyle,
               counterText: counterText ?? '',

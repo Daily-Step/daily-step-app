@@ -1,5 +1,5 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/feature/home/view/home/month_calendar.dart';
+import 'package:dailystep/widgets/widget_month_calendar.dart';
 import 'package:dailystep/feature/home/view/home/week_calendar.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: _showCalendar,
+                  onPressed: () => showCalendarModal(context, _generateDummySuccessDates()),
                 ),
               ]),
               Spacer(),
@@ -81,50 +81,6 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
         ),
       ],
     );
-  }
-
-  void _showCalendar() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.chevron_left),
-                        onPressed: () {},
-                      ),
-                      Text(
-                        DateTime.now().formattedMonth,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.chevron_right),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  MonthCalendar(
-                      successDates: _generateDummySuccessDates(),
-                      selectedMonth: DateTime.now()),
-                  height20,
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   List<DateTime> _generateDummySuccessDates() {

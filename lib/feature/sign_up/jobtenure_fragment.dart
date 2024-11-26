@@ -29,30 +29,33 @@ class JobTenureFragment extends StatelessWidget {
           style: TextStyle(fontSize: 12, color: subTextColor),
         ),
         height20,
-        WSelectInput(
-          onTap: () => showModalBottomSheet(
-              context: context,
-              builder: (context) => WScrollPicker(
-                  value: jobTenure != null ? jobTenure! : 1,
-                  childCount: dummyJobTenure.length,
-                  onSelected: (int) {
-                    onChanged(int + 1);
-                  },
-                  itemBuilder: (context, index, bool) {
-                    return Text(
-                      dummyJobTenure[index].name,
-                      style: TextStyle(fontSize: pickerFontSize),
-                    );
-                  })),
-          child: jobTenure != null
-              ? Text(
-                  dummyJobTenure[jobTenure!-1].name,
-                  style: contentTextStyle,
-                )
-              : Text(
-                  '선택',
-                  style: hintTextStyle,
-                ),
+        Padding(
+          padding: globalMargin,
+          child: WSelectInput(
+            onTap: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => WScrollPicker(
+                    value: jobTenure != null ? jobTenure! : 1,
+                    childCount: dummyJobTenure.length,
+                    onSelected: (int) {
+                      onChanged(int + 1);
+                    },
+                    itemBuilder: (context, index, bool) {
+                      return Text(
+                        dummyJobTenure[index].name,
+                        style: TextStyle(fontSize: pickerFontSize),
+                      );
+                    })),
+            child: jobTenure != null
+                ? Text(
+                    dummyJobTenure[jobTenure!-1].name,
+                    style: contentTextStyle,
+                  )
+                : Text(
+                    '선택',
+                    style: hintTextStyle,
+                  ),
+          ),
         ),
       ],
     );

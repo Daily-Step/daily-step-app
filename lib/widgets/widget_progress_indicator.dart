@@ -6,6 +6,8 @@ class WProgressIndicator extends StatelessWidget {
   final double width;
   final double height;
   final double strokeWidth;
+  final Color color;
+  final String? subString;
 
   const WProgressIndicator({
     super.key,
@@ -14,6 +16,8 @@ class WProgressIndicator extends StatelessWidget {
     required this.height,
     required this.strokeWidth,
     required this.fontSize,
+    required this.color,
+    this.subString,
   });
 
   @override
@@ -26,12 +30,13 @@ class WProgressIndicator extends StatelessWidget {
           value: percentage / 100,
           strokeWidth: strokeWidth,
           backgroundColor: Colors.grey[200],
-          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
       Text(
-        '${percentage.toInt()}%',
-        style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        '${percentage.toInt()}${subString??''}',
+        style: TextStyle(
+            fontSize: fontSize, fontWeight: FontWeight.bold, color: color),
       ),
     ]);
   }

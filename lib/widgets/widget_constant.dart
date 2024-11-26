@@ -20,6 +20,7 @@ const height60 = Height(60);
 
 const pickerFontSize = 24.0;
 const detailDataFontSize = 18.0;
+const subFontSize = 16.0;
 
 /// 좌우 마진
 const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
@@ -28,7 +29,7 @@ const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 var globalBorderRadius = BorderRadius.circular(10);
 
 /// 텍스트 스타일
-var labelTextStyle = TextStyle(fontSize: 14, color: Colors.black54);
+var labelTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
 var hintTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade400);
 var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade900);
 
