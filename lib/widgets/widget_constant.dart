@@ -29,15 +29,18 @@ const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 var globalBorderRadius = BorderRadius.circular(10);
 
 /// 텍스트 스타일
+var subTextStyle = TextStyle(fontSize: 12 ,color: Colors.grey.shade500);
 var labelTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
 var hintTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade400);
-var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade900);
+var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade600);
+var boldTextStyle = TextStyle(fontSize: detailDataFontSize ,fontWeight: FontWeight.bold);
 
 /// 색상
 var blackColor = Color(0xFF000000);
 var disabledColor = Color(0xFFD8D8D8);
 var subTextColor = Color(0xFF8E8E8E);
-var mainColor = Color(0xFF2F41F2);
+var primaryColor = Color(0xFF2F41F2);
+var backgroundColor = Color(0xFFF8F8F8);
 
 /// 그라디언트
 const mainGradient = LinearGradient(

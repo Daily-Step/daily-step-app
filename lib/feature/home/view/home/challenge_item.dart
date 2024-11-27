@@ -63,7 +63,7 @@ class ChallengeItem extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onClickAchieveButton,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isAchieved? Colors.blue : Colors.black,
+                backgroundColor: isAchieved? primaryColor : Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: globalBorderRadius,
                 ),

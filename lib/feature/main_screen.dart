@@ -118,7 +118,7 @@ class MainScreenState extends ConsumerState<MainScreen>
       height: bottomNavigationBarHeight,
       decoration: const BoxDecoration(
         boxShadow: [
-          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
+          BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10),
         ],
       ),
       child: BottomNavigationBar(
@@ -128,6 +128,8 @@ class MainScreenState extends ConsumerState<MainScreen>
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.black,
       ),
     );
   }

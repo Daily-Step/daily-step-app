@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../home/view/home/home_fragment.dart';
 
 enum TabItem {
-  home(Icons.home, '챌린지', HomeFragment()),
-  myPage(Icons.person, '마이', MyPageScreen());
+  home(Icons.home, '챌린지', HomeFragment(), inActiveIcon: Icons.home_outlined),
+  myPage(Icons.person, '마이', MyPageScreen(), inActiveIcon: Icons.person_outline);
 
   final IconData activeIcon;
   final IconData inActiveIcon;
@@ -23,7 +23,9 @@ enum TabItem {
         icon: Icon(
           key: ValueKey(tabName),
           isActivated ? activeIcon : inActiveIcon,
+          color: isActivated ? Colors.black : Colors.grey,
         ),
-        label: tabName);
+        label: tabName
+    );
   }
 }

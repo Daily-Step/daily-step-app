@@ -1,10 +1,11 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_month_calendar.dart';
 import 'package:dailystep/feature/home/view/home/week_calendar.dart';
-import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../widgets/widget_constant.dart';
+import '../../../../widgets/widget_dashed_border.dart';
 import '../../action/challenge_list_action.dart';
 import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
@@ -37,7 +38,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: () => showCalendarModal(context, _generateDummySuccessDates()),
+                  onPressed: () =>
+                      showCalendarModal(context, _generateDummySuccessDates()),
                 ),
               ]),
               Spacer(),
@@ -50,35 +52,65 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
           ),
         ),
         WeekCalendar(challengeList: state.challengeList),
-        Expanded(
-          child: ListView.builder(
-              itemCount: state.challengeList.length,
-              itemBuilder: (context, index) {
-                final challenge = state.challengeList[index];
-                final bool isAchieved = challenge.successList
-                    .any((date) => date.isSameDate(DateTime.now()));
-                return ChallengeItem(
-                  task: challenge,
-                  index: index,
-                  onTap: () async {
-                    await notifier.handleAction(FindTaskAction(challenge.id));
-                    context.push('/main/home/${challenge.id}');
-                  },
-                  onClickAchieveButton: () async {
-                    if (isAchieved == false) {
-                      List<DateTime> copiedChallengeSuccessList =
-                          List<DateTime>.from(challenge.successList);
-                      copiedChallengeSuccessList.add(DateTime.now());
-                      final newChallenge = challenge.copyWith(
-                          successList: copiedChallengeSuccessList);
-                      await notifier.handleAction(
-                          UpdateTaskAction(challenge.id, newChallenge));
-                    }
-                  },
-                  isAchieved: isAchieved,
-                );
-              }),
-        ),
+        height20,
+        state.challengeList.length == 0
+            ? Padding(
+                padding: globalMargin,
+                child: CustomPaint(
+                  painter: DashedBorderPainter(),
+                  child: Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40)
+                    ),
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_circle_outline,color: Colors.grey.shade300,),
+                        width5,
+                        Text(
+                          '새 챌린지를 등록해보세요',
+                          style: TextStyle(
+                            color: Colors.grey.shade300,
+                            fontWeight: FontWeight.w600
+                          ),
+                        )
+                      ],
+                    ), // 원하는 위젯 배치
+                  ),
+                ),
+              )
+            : Expanded(
+                child: ListView.builder(
+                    itemCount: state.challengeList.length,
+                    itemBuilder: (context, index) {
+                      final challenge = state.challengeList[index];
+                      final bool isAchieved = challenge.successList
+                          .any((date) => date.isSameDate(DateTime.now()));
+                      return ChallengeItem(
+                        task: challenge,
+                        index: index,
+                        onTap: () async {
+                          await notifier
+                              .handleAction(FindTaskAction(challenge.id));
+                          context.push('/main/home/${challenge.id}');
+                        },
+                        onClickAchieveButton: () async {
+                          if (isAchieved == false) {
+                            List<DateTime> copiedChallengeSuccessList =
+                                List<DateTime>.from(challenge.successList);
+                            copiedChallengeSuccessList.add(DateTime.now());
+                            final newChallenge = challenge.copyWith(
+                                successList: copiedChallengeSuccessList);
+                            await notifier.handleAction(
+                                UpdateTaskAction(challenge.id, newChallenge));
+                          }
+                        },
+                        isAchieved: isAchieved,
+                      );
+                    }),
+              ),
       ],
     );
   }

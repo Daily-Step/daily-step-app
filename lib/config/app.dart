@@ -14,6 +14,7 @@ import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_scree
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
+import '../widgets/widget_constant.dart';
 import 'route/auth_redirection.dart';
 
 class App extends ConsumerWidget with WidgetsBindingObserver{
@@ -37,6 +38,10 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
           GlobalCupertinoLocalizations.delegate,
         ],
         routerConfig: _router,
+          theme: ThemeData(
+            scaffoldBackgroundColor: backgroundColor,
+            primaryColor: Colors.black,
+          ),
       ),
     );
   }

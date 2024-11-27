@@ -35,7 +35,7 @@ class WeekCalendar extends StatelessWidget {
           if (isSelected) {
             // 오늘 날짜는 검은색 원
             indicatorColor = Colors.black;
-          } else if (date.isBefore(now)) {
+          } else if (date.isBefore(now) && challengeList.length != 0) {
             if (isAllAchieved) {
               // 모든 챌린지가 달성된 날짜는 파란색 원
               indicatorColor = Colors.blue;

@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../model/challenge/challenge_model.dart';
+import '../../../widgets/widget_confirm_modal.dart';
 import '../action/challenge_list_action.dart';
 import 'settings/custom_color_dummies.dart';
 import '../../../widgets/widget_buttons.dart';
@@ -277,7 +278,22 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               context.push('/main/home/${widget.id}');
             } else {
               notifier.handleAction(AddTaskAction(challenge));
-              Navigator.pop(context);
+              showConfirmModal(context: context,
+                  content: Column(
+                    children: [
+                      Text('챌린지 등록이 완료되었습니다', style: boldTextStyle,),
+                      height5,
+                      Text(
+                        '닫기버튼을 누르면 홈으로 이동합니다',
+                        style: subTextStyle,
+                      )
+                    ],
+                  ),
+                  confirmText: '닫기',
+                  onClickConfirm: (){
+                    Navigator.pop(context);
+                  },
+                  isCancelButton: false);
             }
           }
         }),
