@@ -25,10 +25,10 @@ mixin _$ChallengeModel {
   int get categoryId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  String get color => throw _privateConstructorUsedError;
+  int get colorId => throw _privateConstructorUsedError;
   int get weeklyGoalCount => throw _privateConstructorUsedError;
   int get totalGoalCount => throw _privateConstructorUsedError;
-  int get achievedTotalGoalCount => throw _privateConstructorUsedError;
+  List<DateTime> get successList => throw _privateConstructorUsedError;
   DateTime get startDatetime => throw _privateConstructorUsedError;
   DateTime get endDatetime => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -56,10 +56,10 @@ abstract class $ChallengeModelCopyWith<$Res> {
       int categoryId,
       String title,
       String content,
-      String color,
+      int colorId,
       int weeklyGoalCount,
       int totalGoalCount,
-      int achievedTotalGoalCount,
+      List<DateTime> successList,
       DateTime startDatetime,
       DateTime endDatetime,
       DateTime createdAt,
@@ -86,10 +86,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? categoryId = null,
     Object? title = null,
     Object? content = null,
-    Object? color = null,
+    Object? colorId = null,
     Object? weeklyGoalCount = null,
     Object? totalGoalCount = null,
-    Object? achievedTotalGoalCount = null,
+    Object? successList = null,
     Object? startDatetime = null,
     Object? endDatetime = null,
     Object? createdAt = null,
@@ -116,10 +116,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as String,
+      colorId: null == colorId
+          ? _value.colorId
+          : colorId // ignore: cast_nullable_to_non_nullable
+              as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
           : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
@@ -128,10 +128,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.totalGoalCount
           : totalGoalCount // ignore: cast_nullable_to_non_nullable
               as int,
-      achievedTotalGoalCount: null == achievedTotalGoalCount
-          ? _value.achievedTotalGoalCount
-          : achievedTotalGoalCount // ignore: cast_nullable_to_non_nullable
-              as int,
+      successList: null == successList
+          ? _value.successList
+          : successList // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
       startDatetime: null == startDatetime
           ? _value.startDatetime
           : startDatetime // ignore: cast_nullable_to_non_nullable
@@ -166,10 +166,10 @@ abstract class _$$ChallengeImplCopyWith<$Res>
       int categoryId,
       String title,
       String content,
-      String color,
+      int colorId,
       int weeklyGoalCount,
       int totalGoalCount,
-      int achievedTotalGoalCount,
+      List<DateTime> successList,
       DateTime startDatetime,
       DateTime endDatetime,
       DateTime createdAt,
@@ -194,10 +194,10 @@ class __$$ChallengeImplCopyWithImpl<$Res>
     Object? categoryId = null,
     Object? title = null,
     Object? content = null,
-    Object? color = null,
+    Object? colorId = null,
     Object? weeklyGoalCount = null,
     Object? totalGoalCount = null,
-    Object? achievedTotalGoalCount = null,
+    Object? successList = null,
     Object? startDatetime = null,
     Object? endDatetime = null,
     Object? createdAt = null,
@@ -224,10 +224,10 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as String,
+      colorId: null == colorId
+          ? _value.colorId
+          : colorId // ignore: cast_nullable_to_non_nullable
+              as int,
       weeklyGoalCount: null == weeklyGoalCount
           ? _value.weeklyGoalCount
           : weeklyGoalCount // ignore: cast_nullable_to_non_nullable
@@ -236,10 +236,10 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.totalGoalCount
           : totalGoalCount // ignore: cast_nullable_to_non_nullable
               as int,
-      achievedTotalGoalCount: null == achievedTotalGoalCount
-          ? _value.achievedTotalGoalCount
-          : achievedTotalGoalCount // ignore: cast_nullable_to_non_nullable
-              as int,
+      successList: null == successList
+          ? _value._successList
+          : successList // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
       startDatetime: null == startDatetime
           ? _value.startDatetime
           : startDatetime // ignore: cast_nullable_to_non_nullable
@@ -269,14 +269,15 @@ class _$ChallengeImpl implements _Challenge {
       required this.categoryId,
       required this.title,
       required this.content,
-      required this.color,
+      required this.colorId,
       required this.weeklyGoalCount,
       required this.totalGoalCount,
-      required this.achievedTotalGoalCount,
+      required final List<DateTime> successList,
       required this.startDatetime,
       required this.endDatetime,
       required this.createdAt,
-      this.updatedAt});
+      this.updatedAt})
+      : _successList = successList;
 
   factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeImplFromJson(json);
@@ -292,13 +293,19 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final String content;
   @override
-  final String color;
+  final int colorId;
   @override
   final int weeklyGoalCount;
   @override
   final int totalGoalCount;
+  final List<DateTime> _successList;
   @override
-  final int achievedTotalGoalCount;
+  List<DateTime> get successList {
+    if (_successList is EqualUnmodifiableListView) return _successList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_successList);
+  }
+
   @override
   final DateTime startDatetime;
   @override
@@ -310,7 +317,7 @@ class _$ChallengeImpl implements _Challenge {
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, memberId: $memberId, categoryId: $categoryId, title: $title, content: $content, color: $color, weeklyGoalCount: $weeklyGoalCount, totalGoalCount: $totalGoalCount, achievedTotalGoalCount: $achievedTotalGoalCount, startDatetime: $startDatetime, endDatetime: $endDatetime, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ChallengeModel(id: $id, memberId: $memberId, categoryId: $categoryId, title: $title, content: $content, colorId: $colorId, weeklyGoalCount: $weeklyGoalCount, totalGoalCount: $totalGoalCount, successList: $successList, startDatetime: $startDatetime, endDatetime: $endDatetime, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -325,13 +332,13 @@ class _$ChallengeImpl implements _Challenge {
                 other.categoryId == categoryId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.color, color) || other.color == color) &&
+            (identical(other.colorId, colorId) || other.colorId == colorId) &&
             (identical(other.weeklyGoalCount, weeklyGoalCount) ||
                 other.weeklyGoalCount == weeklyGoalCount) &&
             (identical(other.totalGoalCount, totalGoalCount) ||
                 other.totalGoalCount == totalGoalCount) &&
-            (identical(other.achievedTotalGoalCount, achievedTotalGoalCount) ||
-                other.achievedTotalGoalCount == achievedTotalGoalCount) &&
+            const DeepCollectionEquality()
+                .equals(other._successList, _successList) &&
             (identical(other.startDatetime, startDatetime) ||
                 other.startDatetime == startDatetime) &&
             (identical(other.endDatetime, endDatetime) ||
@@ -351,10 +358,10 @@ class _$ChallengeImpl implements _Challenge {
       categoryId,
       title,
       content,
-      color,
+      colorId,
       weeklyGoalCount,
       totalGoalCount,
-      achievedTotalGoalCount,
+      const DeepCollectionEquality().hash(_successList),
       startDatetime,
       endDatetime,
       createdAt,
@@ -383,10 +390,10 @@ abstract class _Challenge implements ChallengeModel {
       required final int categoryId,
       required final String title,
       required final String content,
-      required final String color,
+      required final int colorId,
       required final int weeklyGoalCount,
       required final int totalGoalCount,
-      required final int achievedTotalGoalCount,
+      required final List<DateTime> successList,
       required final DateTime startDatetime,
       required final DateTime endDatetime,
       required final DateTime createdAt,
@@ -406,13 +413,13 @@ abstract class _Challenge implements ChallengeModel {
   @override
   String get content;
   @override
-  String get color;
+  int get colorId;
   @override
   int get weeklyGoalCount;
   @override
   int get totalGoalCount;
   @override
-  int get achievedTotalGoalCount;
+  List<DateTime> get successList;
   @override
   DateTime get startDatetime;
   @override

@@ -10,7 +10,15 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   late final List<ChallengeModel> _initialTasks;
 
   ChallengesState build() {
-    _initialTasks = dummyChallenges;
+    _initialTasks = dummyChallenges.where((challenge) {
+      DateTime today = DateTime.now();
+      DateTime startDttm = challenge.startDatetime;
+      DateTime endDttm = challenge.endDatetime;
+
+      return today.isAfter(startDttm) && today.isBefore(endDttm) ||
+          today.isAtSameMomentAs(startDttm) ||
+          today.isAtSameMomentAs(endDttm);
+    }).toList();
 
     return ChallengesState(
       challengeList: _initialTasks,
@@ -21,7 +29,11 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   Future<void> handleAction(ChallengeListAction action) async {
     if (action is ReorderTasksAction) {
       _handleReorderTasks(action);
-    } else if (action is RemoveTaskAction) {
+    } else if (action is AddTaskAction) {
+      _handleAddTask(action);
+    } else if (action is UpdateTaskAction) {
+      _handleUpdateTask(action);
+    } else if (action is DeleteTaskAction) {
       await _handleRemoveTask(action);
     } else if (action is FindTaskAction) {
       _handleFindTask(action);
@@ -38,7 +50,25 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     state = state.copyWith(tasks: newTasks);
   }
 
-  Future<void> _handleRemoveTask(RemoveTaskAction action) async {
+  void _handleAddTask(AddTaskAction action) {
+    final newTasks = List<ChallengeModel>.from(state.challengeList);
+    newTasks.add(action.challengeModel);
+
+    state = state.copyWith(tasks: newTasks);
+  }
+
+  void _handleUpdateTask(UpdateTaskAction action) {
+    final updatedTasks = state.challengeList.map((task) {
+      if (task.id == action.id) {
+        return action.challengeModel;
+      }
+      return task;
+    }).toList();
+
+    state = state.copyWith(tasks: updatedTasks);
+  }
+
+  Future<void> _handleRemoveTask(DeleteTaskAction action) async {
     final tasks = List.of(state.challengeList);
     tasks.removeWhere((task) => task.id == action.id);
 

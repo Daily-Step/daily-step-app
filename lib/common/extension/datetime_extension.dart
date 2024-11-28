@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
   String get formattedDate => DateFormat('yyyy.MM.dd').format(this);
+  String get formattedMonth => DateFormat('yyyy.MM').format(this);
 
   String get formattedTime => DateFormat('HH:mm').format(this);
 
@@ -14,5 +15,27 @@ extension DateTimeExtension on DateTime {
     } catch (e) {
       return -1;
     }
+  }
+
+  bool isSameDate(DateTime date){
+    return this.year == date.year && this.month == date.month && this.day == date.day;
+  }
+  List<int> getDaysInMonth(int year, int month) {
+    final lastDay = DateTime(year, month + 1, 0).day;
+    return List.generate(lastDay, (index) => index + 1);
+  }
+
+  int goalDays(DateTime endDttm, int weeklyGoalCount){
+    return calculateWeeksBetween(endDttm) * weeklyGoalCount;
+  }
+
+  int failDays(DateTime endDttm, int weeklyGoalCount, int successDayCount){
+    return (calculateWeeksBetween(endDttm) * weeklyGoalCount) -  successDayCount;
+  }
+
+  int lastDays(){
+    final today = DateTime.now();
+    Duration difference = this.difference(today);
+    return difference.inDays;
   }
 }

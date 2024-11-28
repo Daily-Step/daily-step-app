@@ -1,25 +1,37 @@
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
-class WScrollPickerModal extends StatefulWidget {
+class WScrollPicker extends StatefulWidget {
   final int value;
+  final int childCount;
+  final String? subText;
   final Function(int) onSelected;
+  final List? childList;
 
-  const WScrollPickerModal({
+  final Widget Function(BuildContext, int, bool)? itemBuilder;
+
+  const WScrollPicker({
     Key? key,
     required this.value,
     required this.onSelected,
+    required this.childCount,
+    this.subText,
+    this.childList,
+    this.itemBuilder,
   }) : super(key: key);
 
   @override
-  State<WScrollPickerModal> createState() => _WeekPickerModalState();
+  State<WScrollPicker> createState() => _WeekPickerModalState();
 }
 
-class _WeekPickerModalState extends State<WScrollPickerModal> {
+class _WeekPickerModalState extends State<WScrollPicker> {
   late FixedExtentScrollController _controller;
+  late int _selectedValue;
 
   @override
   void initState() {
     super.initState();
+    _selectedValue = widget.value;
     _controller = FixedExtentScrollController(
       initialItem: widget.value - 1,
     );
@@ -29,6 +41,14 @@ class _WeekPickerModalState extends State<WScrollPickerModal> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onItemSelected(int value) {
+    setState(() {
+      _selectedValue = value;
+    });
+    widget.onSelected(value);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -47,36 +67,50 @@ class _WeekPickerModalState extends State<WScrollPickerModal> {
               children: [
                 SizedBox(
                   width: 100,
-                  child: ListWheelScrollView.useDelegate(
-                    controller: _controller,
-                    itemExtent: 50,
-                    perspective: 0.005,
-                    diameterRatio: 1.2,
-                    physics: const FixedExtentScrollPhysics(),
-                    childDelegate: ListWheelChildBuilderDelegate(
-                      childCount: 4,
-                      builder: (context, index) {
-                        return InkWell(
-                          onTap: () => widget.onSelected(index),
-                          child: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: _controller.selectedItem == index
-                                    ? Colors.black
-                                    : Colors.grey,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification is ScrollEndNotification) {
+                        setState(() {
+                          _selectedValue = _controller.selectedItem + 1;
+                        });
+                      }
+                      return true;
+                    },
+                    child: ListWheelScrollView.useDelegate(
+                      controller: _controller,
+                      itemExtent: 50,
+                      perspective: 0.005,
+                      diameterRatio: 1.2,
+                      physics: const FixedExtentScrollPhysics(),
+                      childDelegate: ListWheelChildBuilderDelegate(
+                        childCount: widget.childCount,
+                        builder: (context, index) {
+                          return InkWell(
+                            onTap: () => _onItemSelected(index),
+                            child: Center(
+                              child: widget.itemBuilder != null
+                                  ? widget.itemBuilder!(context, index, _selectedValue == index + 1)
+                                  : Text(
+                                widget.childList != null
+                                    ? '${widget.childList?[index]}'
+                                    : '${index + 1}',
+                                style: TextStyle(
+                                  fontSize: pickerFontSize,
+                                  color: _selectedValue == index + 1
+                                      ? Colors.black
+                                      : Colors.grey,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-                const Text(
-                  '주',
-                  style: TextStyle(fontSize: 24),
+                Text(
+                  widget.subText != null ? widget.subText! : '',
+                  style: const TextStyle(fontSize: 24),
                 ),
               ],
             ),

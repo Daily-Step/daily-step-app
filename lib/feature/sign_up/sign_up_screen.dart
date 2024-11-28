@@ -1,12 +1,17 @@
+import 'package:dailystep/feature/sign_up/birthdate_fragment.dart';
+import 'package:dailystep/feature/sign_up/job_fragment.dart';
+import 'package:dailystep/feature/sign_up/jobtenure_fragment.dart';
+import 'package:dailystep/feature/sign_up/nickname_fragment.dart';
+import 'package:dailystep/feature/sign_up/progress_bar.dart';
+import 'package:dailystep/feature/sign_up/sex_fragment.dart';
 import 'package:dailystep/feature/sign_up/sign_up_provider.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
-import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_svg/svg.dart';
 import '../../config/route/auth_redirection.dart';
-import '../../widgets/wigdet_date_picker.dart';
+import 'end_fragment.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   final DailyStepAuth auth;
@@ -27,150 +32,112 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final signUpViewModel = ref.read(signUpProvider.notifier);
 
     return Scaffold(
+      appBar: AppBar(
+        leading: signUpState.step != 1
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: signUpViewModel.beforeStep,
+              )
+            : const SizedBox.shrink(),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(24),
+          child: ProgressStepper(currentStep: signUpState.step),
+        ),
+      ),
       body: Stack(
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              height60,
               Center(
-                child: Icon(
-                  Icons.check_circle,
-                  size: 100,
-                ),
-              ),
+                  child: buildCheckIcon(
+                      signUpState.step == 6, signUpViewModel.checkValid())),
               SizedBox(height: 10),
-              if (signUpState.step == 0)
-                NickNameField(
+              if (signUpState.step == 1)
+                NickNameFragment(
                   controller: nickNameController,
                   onChanged: (text) {
                     signUpViewModel.setNickName(text);
                   },
+                  validation: signUpState.nickNameValidation,
                 )
-              else if (signUpState.step == 1)
-                BirthDateField(
+              else if (signUpState.step == 2)
+                BirthDateFragment(
                   controller: birthDateController,
-                  selectedDate: signUpState.selectedDate,
+                  selectedDate: signUpState.birthDate,
                   onDateSelected: (date) {
+                    print(date);
                     signUpViewModel.setBirthDate(date);
                     birthDateController.text =
                         date.toLocal().toString().split(' ')[0];
                   },
                 )
-              else if (signUpState.step == 2)
-                SexField(
-                  selectedSex: signUpState.selectedSex,
-                  onChanged: (String? value) {
-                    signUpViewModel.setSex(value ?? '');
+              else if (signUpState.step == 3)
+                SexFragment(
+                  selectedSex: signUpState.sex,
+                  onChanged: (int? value) {
+                    if (value == null) return;
+                    signUpViewModel.setSex(value);
                   },
-                ),
+                )
+              else if (signUpState.step == 4)
+                JobFragment(
+                  job: signUpState.job,
+                  onChanged: (int? value) {
+                    if (value == null) return;
+                    signUpViewModel.setJob(value);
+                  },
+                )
+              else if (signUpState.step == 5)
+                JobTenureFragment(
+                  jobTenure: signUpState.jobTenure,
+                  onChanged: (int? value) {
+                    print('value: ' + value.toString());
+                    if (value == null) return;
+                    signUpViewModel.setJobTenure(value);
+                  },
+                )
+              else if (signUpState.step == 6)
+                EndFragment()
             ],
           ),
           WCtaFloatingButton(
-            '입력완료',
-            onPressed: signUpViewModel.canMoveToNextStep(widget.auth, context),
+            signUpState.step == 6 ? '시작하기' : '다음',
+            onPressed: signUpState.step == 6
+                ? signUpViewModel.saveUserInfo(widget.auth,context)
+                : signUpViewModel.canMoveToNextStep(),
+            gradient: signUpState.step == 6 ? mainGradient : null,
           ),
         ],
       ),
     );
   }
-}
 
-class NickNameField extends StatelessWidget {
-  const NickNameField({
-    super.key,
-    required this.controller,
-    required this.onChanged,
-  });
-
-  final TextEditingController controller;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          '닉네임을 입력해 주세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        height30,
-        WTextField(
-          controller,
-          hintText: '닉네임을 입력해 주세요',
-          onChanged: onChanged,
-        )
-      ],
-    );
-  }
-}
-
-class BirthDateField extends StatelessWidget {
-  const BirthDateField({
-    super.key,
-    required this.controller,
-    required this.selectedDate,
-    required this.onDateSelected,
-  });
-
-  final TextEditingController controller;
-  final DateTime? selectedDate;
-  final Function(DateTime) onDateSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          '생년월일을 입력해 주세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        height20,
-        WDatePicker(
-          controller: controller,
-          onChanged: onDateSelected,
-          value: selectedDate,
-        ),
-      ],
-    );
-  }
-}
-
-class SexField extends StatelessWidget {
-  const SexField({
-    super.key,
-    required this.selectedSex,
-    required this.onChanged,
-  });
-
-  final String? selectedSex;
-  final Function(String?) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          '성별을 입력해 주세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        height20,
-        ListTile(
-          title: const Text('남성'),
-          leading: Radio<String>(
-            value: 'M',
-            groupValue: selectedSex, // 현재 선택된 값을 지정
-            onChanged: onChanged, // 값이 변경될 때 호출
-          ),
-        ),
-        ListTile(
-          title: const Text('여성'),
-          leading: Radio<String>(
-            value: 'F',
-            groupValue: selectedSex,
-            onChanged: onChanged,
-          ),
-        ),
-      ],
+  Widget buildCheckIcon(bool isLastPage, bool isAvailable) {
+    if (isLastPage) {
+      return SvgPicture.asset(
+        'assets/logo.svg',
+        width: 80,
+        height: 80,
+        allowDrawingOutsideViewBox: true,
+        cacheColorFilter: false,
+      );
+    }
+    if (!isAvailable) {
+      return Icon(
+        Icons.check_circle,
+        size: 80,
+        color: Colors.grey[300],
+      );
+    }
+    return ShaderMask(
+      shaderCallback: (Rect bounds) => mainGradient.createShader(bounds),
+      blendMode: BlendMode.srcIn,
+      child: Icon(
+        Icons.check_circle,
+        size: 80,
+        color: Colors.white,
+      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/edit_my_info_provider.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
-import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

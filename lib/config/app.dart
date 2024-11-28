@@ -1,37 +1,34 @@
 import 'package:dailystep/config/route/fade_transition_page.dart';
 import 'package:dailystep/data/api/login_api.dart';
-import 'package:dailystep/feature/mypage/mypage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../feature/auth/login_provider.dart';
 import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
+import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_screen.dart';
+import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
+import '../widgets/widget_constant.dart';
 import 'route/auth_redirection.dart';
 
-class App extends ConsumerStatefulWidget {
+class App extends ConsumerWidget with WidgetsBindingObserver{
+
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
-  const App({super.key});
-
-  @override
-  ConsumerState<App> createState() => AppState();
-}
-
-class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   final DailyStepAuth _auth = DailyStepAuth(
       socialLoginRepository: SocialLoginRepository(),
       loginApi: LoginApi.instance);
 
+  App({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref)  {
     return DailyStepAuthScope(
       notifier: _auth,
       child: MaterialApp.router(
@@ -48,6 +45,10 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
           )
         ),
         routerConfig: _router,
+          theme: ThemeData(
+            scaffoldBackgroundColor: backgroundColor,
+            primaryColor: Colors.black,
+          ),
       ),
     );
   }
@@ -79,12 +80,38 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
           key: state.pageKey,
-          child:
-              MainScreen(firstTab: TabItem.find(state.pathParameters['kind'])),
+          child: MainScreen(
+            firstTab: TabItem.find(state.pathParameters['kind']),
+          ),
         ),
         routes: <GoRoute>[
           GoRoute(
-            path: 'account_settings/:account',
+            path: 'challenge/new',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+              key: state.pageKey,
+              child: ChallengeEditScreen(null),
+            ),
+          ),
+          GoRoute(
+            path: 'challenge/edit/:id',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              final String id = state.pathParameters['id']!;
+              return FadeTransitionPage(
+                key: state.pageKey,
+                child: ChallengeEditScreen(int.parse(id)),
+              );
+            },
+          ),
+          GoRoute(
+            path: ':postId',
+            builder: (BuildContext context, GoRouterState state) {
+              final String postId = state.pathParameters['postId']!;
+              return ChallengeDetailScreen(int.parse(postId));
+            },
+          ),
+          GoRoute(
+            path: 'category_settings/:category',
             pageBuilder: (BuildContext context, GoRouterState state) =>
                 FadeTransitionPage(
                     key: state.pageKey, child: AccountSettingScreen()),
@@ -98,7 +125,6 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 return FadeTransitionPage(
                     key: state.pageKey, child: VersionInfoScreen());
               }
-
               try {
                 final int versionNumber = int.parse(version);
                 return FadeTransitionPage(
@@ -129,23 +155,10 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
                 FadeTransitionPage(
                     key: state.pageKey, child: EditMyInfoScreen()),
           ),
-          GoRoute(
-            path: 'edit',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
-                    key: state.pageKey, child: ChallengeEditScreen()),
-          ),
-          GoRoute(
-            path: ':postId',
-            builder: (BuildContext context, GoRouterState state) {
-              final String postId = state.pathParameters['postId']!;
-              return ChallengeDetailScreen(int.parse(postId));
-            },
-          ),
         ],
       ),
     ],
-    // redirect: _auth.guard,
+    redirect: _auth.guard,
     refreshListenable: _auth,
     debugLogDiagnostics: true,
   );

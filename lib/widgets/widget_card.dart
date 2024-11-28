@@ -1,3 +1,4 @@
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
 class WCard extends StatelessWidget {
@@ -11,6 +12,10 @@ class WCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: globalBorderRadius,
+      ),
       elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(16.0),

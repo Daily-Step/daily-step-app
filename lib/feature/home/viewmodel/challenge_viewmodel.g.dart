@@ -7,7 +7,7 @@ part of 'challenge_viewmodel.dart';
 // **************************************************************************
 
 String _$challengeViewModelHash() =>
-    r'5ca94d36bbcca1905f449789f3a544353142cad9';
+    r'80be319b54b6625b30895f37a079206c75cc15ce';
 
 /// See also [ChallengeViewModel].
 @ProviderFor(ChallengeViewModel)
@@ -24,4 +24,4 @@ final challengeViewModelProvider =
 
 typedef _$ChallengeViewModel = AutoDisposeNotifier<ChallengesState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
