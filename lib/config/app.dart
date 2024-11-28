@@ -45,10 +45,6 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
           )
         ),
         routerConfig: _router,
-          theme: ThemeData(
-            scaffoldBackgroundColor: backgroundColor,
-            primaryColor: Colors.black,
-          ),
       ),
     );
   }
@@ -104,6 +100,12 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
             },
           ),
           GoRoute(
+            path: 'editMyInfo',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                    key: state.pageKey, child: EditMyInfoScreen()),
+          ),
+          GoRoute(
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
@@ -111,11 +113,18 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
             },
           ),
           GoRoute(
-            path: 'category_settings/:category',
+            path: 'account_settings/:account',
             pageBuilder: (BuildContext context, GoRouterState state) =>
                 FadeTransitionPage(
                     key: state.pageKey, child: AccountSettingScreen()),
           ),
+// todo : 디자인 나오면 해야함
+/*          GoRoute(
+            path: 'category_settings/:category',
+            pageBuilder: (BuildContext context, GoRouterState state) =>
+                FadeTransitionPage(
+                    key: state.pageKey, child: AccountSettingScreen()),
+          ),*/
           GoRoute(
             path: 'version/:version',
             pageBuilder: (BuildContext context, GoRouterState state) {
@@ -148,12 +157,6 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
                 );
               }
             },
-          ),
-          GoRoute(
-            path: 'editMyInfo',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
-                    key: state.pageKey, child: EditMyInfoScreen()),
           ),
         ],
       ),
