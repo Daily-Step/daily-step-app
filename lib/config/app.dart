@@ -9,6 +9,7 @@ import '../feature/auth/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
+import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
 import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_screen.dart';
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
@@ -37,6 +38,12 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+          )
+        ),
         routerConfig: _router,
           theme: ThemeData(
             scaffoldBackgroundColor: backgroundColor,
@@ -107,7 +114,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
             path: 'category_settings/:category',
             pageBuilder: (BuildContext context, GoRouterState state) =>
                 FadeTransitionPage(
-                    key: state.pageKey, child: CategorySettingsScreen()),
+                    key: state.pageKey, child: AccountSettingScreen()),
           ),
           GoRoute(
             path: 'version/:version',
