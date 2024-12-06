@@ -71,7 +71,7 @@ class MyInfoScreen extends ConsumerWidget {
                         Text('챌린지 123'),
                         IconButton(
                           onPressed: () {
-                            context.go('/main/myPage/myinfo/nickname');
+                            context.go('/main/myPage/myinfo/nickname/123');
                           },
                           icon: Icon(Icons.keyboard_arrow_right),
                         ),
@@ -92,7 +92,9 @@ class MyInfoScreen extends ConsumerWidget {
                       children: [
                         Text('1999.02.11'),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/main/myPage/myinfo/birthday/1999.01.01');
+                          },
                           icon: Icon(Icons.keyboard_arrow_right),
                         ),
                       ],

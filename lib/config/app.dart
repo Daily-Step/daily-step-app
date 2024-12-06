@@ -11,6 +11,7 @@ import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
 import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/birthday_settings/birthday_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/my_info_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/nickname_settings/nickname_screen.dart';
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
@@ -112,10 +113,17 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
                 FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
           ),
           GoRoute(
-            path: 'myinfo/:nickname',
+            path: '/myinfo/nickname/:nickname',
             pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
               key: state.pageKey,
               child: NickNameScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/birthday/:birthday',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: BirthdayScreen(),
             ),
           ),
           GoRoute(
