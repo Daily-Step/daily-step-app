@@ -138,7 +138,9 @@ class MyInfoScreen extends ConsumerWidget {
                       children: [
                         Text('없음'),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/main/myPage/myinfo/job');
+                          },
                           icon: Icon(Icons.keyboard_arrow_right),
                         ),
                       ],
