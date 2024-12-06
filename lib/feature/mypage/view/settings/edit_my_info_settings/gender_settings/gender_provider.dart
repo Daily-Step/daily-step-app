@@ -6,8 +6,14 @@ class GenderProvider extends StateNotifier<int> {
   void selectGender(int index) {
     state = index;
   }
+
+  bool get isDataEntered => state != -1;
 }
 
 final genderProvider = StateNotifierProvider<GenderProvider, int>((ref) {
   return GenderProvider();
+});
+
+final isDataEnteredProvider = Provider<bool>((ref) {
+  return ref.watch(genderProvider) != -1;
 });

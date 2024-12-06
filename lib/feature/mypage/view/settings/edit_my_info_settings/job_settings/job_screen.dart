@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_provider.dart';
 
+import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../sign_up/job_dummies.dart'; // 생성한 JobProvider import
 
@@ -11,11 +12,16 @@ class JobScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedJob = ref.watch(jobProvider); // 현재 선택된 직업 상태 가져오기
+    final selectedJob = ref.watch(jobProvider);
+    final isDataEntered = ref.watch(isDataEnteredProvider);
+
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('직무'),
+        title: const Text(
+          '직무',
+          style: TextStyle(fontSize: 25),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -23,6 +29,12 @@ class JobScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
+        actions: [
+          WConfirmButton(
+            onPressed: () {},
+            isValidProvider: isDataEntered,
+          )
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

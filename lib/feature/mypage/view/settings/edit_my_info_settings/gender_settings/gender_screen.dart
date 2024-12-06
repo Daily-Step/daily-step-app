@@ -3,16 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_provider.dart';
 
+import '../../../../../../widgets/widget_confirm_text.dart';
+
 class GenderScreen extends ConsumerWidget {
   const GenderScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGender = ref.watch(genderProvider);
+    final isDataEntered = ref.watch(isDataEnteredProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('성별'),
+        title: const Text(
+          '성별',
+          style: TextStyle(fontSize: 25),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -20,6 +26,12 @@ class GenderScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
+        actions: [
+          WConfirmButton(
+            onPressed: () {},
+            isValidProvider: isDataEntered,
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

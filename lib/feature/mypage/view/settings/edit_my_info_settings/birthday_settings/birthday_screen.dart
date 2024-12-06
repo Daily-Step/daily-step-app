@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/wigdet_date_picker.dart';
 import 'birthday_provider.dart';
 
@@ -20,6 +21,8 @@ class BirthdayScreen extends ConsumerWidget {
         : '';
 
     final controller = TextEditingController(text: formattedDate);
+    final isValid = birthdayState.birthDate != DateTime.now();
+
 
     return Scaffold(
       appBar: AppBar(
@@ -31,13 +34,19 @@ class BirthdayScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
+        actions: [
+          WConfirmButton(
+            onPressed: () {},
+            isValidProvider: isValid,
+          )
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           WDatePicker(
             onChanged: (selectedDate) {
-              birthdayNotifier.updateBirthDate(selectedDate); // 날짜 선택 시 상태 업데이트
+              birthdayNotifier.updateBirthDate(selectedDate);
             },
             controller: controller,
             value: birthdayState.birthDate,

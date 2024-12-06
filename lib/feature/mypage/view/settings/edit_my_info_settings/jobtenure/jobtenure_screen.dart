@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_scroll_picker.dart';
 import '../../../../../sign_up/jobtenure_dummies.dart';
@@ -14,10 +15,14 @@ class JobTenureScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 선택된 연차 값 가져오기
     final jobTenure = ref.watch(jobTenureProvider);
+    final isDataEntered = ref.watch(isDataEnteredProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('연차'),
+        title: const Text(
+          '연차',
+          style: TextStyle(fontSize: 25),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -25,6 +30,12 @@ class JobTenureScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
+        actions: [
+          WConfirmButton(
+            onPressed: () {},
+            isValidProvider: isDataEntered,
+          )
+        ],
       ),
       body: Padding(
         padding: globalMargin,
@@ -34,9 +45,7 @@ class JobTenureScreen extends ConsumerWidget {
             TextField(
               readOnly: true,
               decoration: InputDecoration(
-                hintText: jobTenure != 0
-                    ? dummyJobTenure[jobTenure - 1].name
-                    : '선택',
+                hintText: jobTenure != 0 ? dummyJobTenure[jobTenure - 1].name : '선택',
                 hintStyle: hintTextStyle,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.keyboard_arrow_down),

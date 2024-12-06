@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../../widgets/widget_confirm_text.dart';
+import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_textfield.dart';
 
 class NickNameScreen extends ConsumerWidget {
@@ -13,10 +15,14 @@ class NickNameScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nickNameState = ref.watch(nickNameProvider);
     final nickNameNotifier = ref.read(nickNameProvider.notifier);
+    final isNickNameValid = ref.watch(isNickNameValidProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('닉네임'),
+        title: const Text(
+          '닉네임',
+          style: TextStyle(fontSize: 25),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -24,10 +30,17 @@ class NickNameScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
+        actions: [
+          WConfirmButton(
+            onPressed: () {},
+            isValidProvider: isNickNameValid,
+          )
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          height20,
           WTextField(
             controller: TextEditingController(text: nickNameState.nickName)
               ..selection = TextSelection.collapsed(

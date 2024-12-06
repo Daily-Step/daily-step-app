@@ -15,21 +15,26 @@ class NickNameState {
 }
 
 class NickNameProvider extends StateNotifier<NickNameState> {
-  NickNameProvider() : super(NickNameState(nickName: '', isValid: false));
+  NickNameProvider(this.ref) : super(NickNameState(nickName: '', isValid: false));
+
+  final Ref ref;
 
   bool _validateNickName(String nickName) {
     return nickName.isNotEmpty;
   }
 
   void updateNickName(String nickName) {
-    bool isValid = nickName.isNotEmpty;
+    bool isValid = _validateNickName(nickName);
     if (nickName != state.nickName || isValid != state.isValid) {
       state = state.copyWith(nickName: nickName, isValid: isValid);
+      // 유효성 상태를 갱신
+      ref.read(isNickNameValidProvider.notifier).state = isValid;
     }
   }
 }
 
-final nickNameProvider =
-StateNotifierProvider<NickNameProvider, NickNameState>(
-      (ref) => NickNameProvider(),
+final isNickNameValidProvider = StateProvider<bool>((ref) => false);
+
+final nickNameProvider = StateNotifierProvider<NickNameProvider, NickNameState>(
+      (ref) => NickNameProvider(ref),
 );
