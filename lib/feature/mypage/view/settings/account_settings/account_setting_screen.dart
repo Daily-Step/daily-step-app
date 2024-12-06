@@ -13,7 +13,7 @@ class AccountSettingScreen extends StatelessWidget {
         title: Text('계정 설정'),
         leading: IconButton(
           onPressed: () {
-            context.go('/main/myPage'); // 이전 페이지로 가는 대신 올바른 경로로 이동
+            context.go('/main/myPage');
           },
           icon: Icon(Icons.arrow_back),
         ),

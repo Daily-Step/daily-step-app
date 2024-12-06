@@ -1,8 +1,8 @@
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../viewmodel/mypage_viewmodel.dart';
 
@@ -58,7 +58,7 @@ class MyPageScreen extends ConsumerWidget {
                               SizedBox(height: 4),
                               TextButton(
                                 onPressed: () {
-                                  context.go('/main/myPage/editMyInfo');
+                                  context.go('/main/myPage/myinfo');
                                 },
                                 style: TextButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -180,7 +180,7 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("계정 설정"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                context.go('/main/myPage/account_settings/account');
+                context.go('/main/myPage/myinfo/account_settings/account');
               },
             ),
             Divider(),
@@ -188,8 +188,16 @@ class MyPageScreen extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text("문의하기"),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                context.go('/main/myPage/category_settings/category');
+              onTap: () async {
+                const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
+
+                final Uri uri = Uri.parse(url);
+
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                } else {
+                  throw '해당 주소를 가져올 수 없습니다.';
+                }
               },
             ),
             Divider(),

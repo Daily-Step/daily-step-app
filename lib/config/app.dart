@@ -1,5 +1,8 @@
 import 'package:dailystep/config/route/fade_transition_page.dart';
 import 'package:dailystep/data/api/login_api.dart';
+import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_screen.dart';
+import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_screen.dart';
+import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/jobtenure/jobtenure_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,24 +14,23 @@ import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
 import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
-import '../feature/mypage/view/settings/edit_my_info_settings/edit_my_info_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/birthday_settings/birthday_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/my_info_screen.dart';
+import '../feature/mypage/view/settings/edit_my_info_settings/nickname_settings/nickname_screen.dart';
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
 import '../widgets/widget_constant.dart';
 import 'route/auth_redirection.dart';
 
-class App extends ConsumerWidget with WidgetsBindingObserver{
-
+class App extends ConsumerWidget with WidgetsBindingObserver {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-  final DailyStepAuth _auth = DailyStepAuth(
-      socialLoginRepository: SocialLoginRepository(),
-      loginApi: LoginApi.instance);
+  final DailyStepAuth _auth = DailyStepAuth(socialLoginRepository: SocialLoginRepository(), loginApi: LoginApi.instance);
 
   App({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref)  {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DailyStepAuthScope(
       notifier: _auth,
       child: MaterialApp.router(
@@ -50,7 +52,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
   }
 
   late final GoRouter _router = GoRouter(
-    navigatorKey: App.navigatorKey,
+    navigatorKey: navigatorKey,
     routes: <GoRoute>[
       GoRoute(
         path: '/',
@@ -58,23 +60,27 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
       ),
       GoRoute(
         path: '/signIn',
-        pageBuilder: (BuildContext context, GoRouterState state) =>
-            FadeTransitionPage(
-                key: state.pageKey, child: LoginScreen(auth: _auth)),
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: LoginScreen(auth: _auth)),
       ),
       GoRoute(
         path: '/signUp',
-        pageBuilder: (BuildContext context, GoRouterState state) =>
-            FadeTransitionPage(
-                key: state.pageKey,
-                child: SignUpScreen(
-                  auth: _auth,
-                )),
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+          key: state.pageKey,
+          child: SignUpScreen(
+            auth: _auth,
+          ),
+        ),
       ),
       GoRoute(
-        path: '/main/:kind(home|calendar|chart|myPage)',
-        pageBuilder: (BuildContext context, GoRouterState state) =>
-            FadeTransitionPage(
+        path: '/main/home',
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+          key: state.pageKey,
+          child: MainScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/main/:kind(challenge|myPage)',
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
           key: state.pageKey,
           child: MainScreen(
             firstTab: TabItem.find(state.pathParameters['kind']),
@@ -83,8 +89,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
         routes: <GoRoute>[
           GoRoute(
             path: 'challenge/new',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
               key: state.pageKey,
               child: ChallengeEditScreen(null),
             ),
@@ -100,39 +105,64 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
             },
           ),
           GoRoute(
-            path: 'editMyInfo',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
-                    key: state.pageKey, child: EditMyInfoScreen()),
-          ),
-          GoRoute(
-            path: ':postId',
+            path: 'challenge:postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
               return ChallengeDetailScreen(int.parse(postId));
             },
           ),
           GoRoute(
-            path: 'account_settings/:account',
+            path: '/myinfo',
             pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
-                    key: state.pageKey, child: AccountSettingScreen()),
+                FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
           ),
-// todo : 디자인 나오면 해야함
-/*          GoRoute(
-            path: 'category_settings/:category',
+          GoRoute(
+            path: '/myinfo/nickname/:nickname',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: NickNameScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/birthday/:birthday',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: BirthdayScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/gender',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: GenderScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/job',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: JobScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/jobTenure',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: JobTenureScreen(),
+            ),
+          ),
+          GoRoute(
+            path: 'myinfo/account_settings/:account',
             pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(
-                    key: state.pageKey, child: AccountSettingScreen()),
-          ),*/
+                FadeTransitionPage(key: state.pageKey, child: AccountSettingScreen()),
+          ),
           GoRoute(
             path: 'version/:version',
             pageBuilder: (BuildContext context, GoRouterState state) {
               final String version = state.pathParameters['version']!;
 
               if (version == 'version_info') {
-                return FadeTransitionPage(
-                    key: state.pageKey, child: VersionInfoScreen());
+                return FadeTransitionPage(key: state.pageKey, child: VersionInfoScreen());
               }
               try {
                 final int versionNumber = int.parse(version);
