@@ -116,7 +116,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             height20,
             WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
-                value: challengeWeeks != null ? challengeWeeks! : 1,
+                value: challengeWeeks != null ? challengeWeeks! - 1 : 1,
                 subText: '주',
                 childCount: 4,
                 onSelected: (int) {
@@ -142,7 +142,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             height20,
             WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
-                value: weeklyGoal != null ? weeklyGoal! : 1,
+                value: weeklyGoal != null ? weeklyGoal! - 1 : 1,
                 subText: '회',
                 childCount: 7,
                 onSelected: (int) {

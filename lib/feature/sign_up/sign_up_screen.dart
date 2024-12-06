@@ -66,7 +66,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   controller: birthDateController,
                   selectedDate: signUpState.birthDate,
                   onDateSelected: (date) {
-                    print(date);
                     signUpViewModel.setBirthDate(date);
                     birthDateController.text =
                         date.toLocal().toString().split(' ')[0];
@@ -92,7 +91,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 JobTenureFragment(
                   jobTenure: signUpState.jobTenure,
                   onChanged: (int? value) {
-                    print('value: ' + value.toString());
                     if (value == null) return;
                     signUpViewModel.setJobTenure(value);
                   },

@@ -39,9 +39,9 @@ class App extends ConsumerWidget with WidgetsBindingObserver{
           GlobalCupertinoLocalizations.delegate,
         ],
         theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: backgroundColor,
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
+            backgroundColor: backgroundColor,
           )
         ),
         routerConfig: _router,

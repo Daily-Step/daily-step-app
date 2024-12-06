@@ -1,14 +1,14 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/widgets/widget_month_calendar.dart';
-import 'package:dailystep/feature/home/view/home/week_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../model/challenge/challenge_dummies.dart';
 import '../../../../widgets/widget_constant.dart';
-import '../../../../widgets/widget_dashed_border.dart';
 import '../../action/challenge_list_action.dart';
+import 'challenge_empty.dart';
 import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
+import 'expandable_calendar.dart';
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});
@@ -18,9 +18,23 @@ class HomeFragment extends ConsumerStatefulWidget {
 }
 
 class _HomeFragmentState extends ConsumerState<HomeFragment> {
+  bool _isExpanded = false;
+  DateTime currentDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
+  PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = _isExpanded
+        ? DateTime(selectedDate.year, selectedDate.month, 1)
+        : selectedDate.getStartOfWeek();
+    _pageController =
+        PageController(initialPage: _isExpanded ? 6 : 26);
+  }
+
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
     final state = ref.watch(challengeViewModelProvider);
     final notifier = ref.read(challengeViewModelProvider.notifier);
 
@@ -33,13 +47,16 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             children: [
               Row(children: [
                 Text(
-                  today.formattedMonth,
+                  selectedDate.formattedMonth,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
                 IconButton(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: () =>
-                      showCalendarModal(context, _generateDummySuccessDates()),
+                  icon: Icon(_isExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+                  onPressed: () => setState(() {
+                    _isExpanded = !_isExpanded;
+                  }),
                 ),
               ]),
               Spacer(),
@@ -51,36 +68,30 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             ],
           ),
         ),
-        WeekCalendar(challengeList: state.challengeList),
+        ExpandableCalendar(
+          successList: dummySuccessList,
+          isExpanded: _isExpanded,
+          selectedDate: selectedDate,
+          pageController: _pageController,
+            onPageChanged:(page) {
+              setState(() {
+                if (_isExpanded) {
+                  selectedDate = DateTime(
+                    currentDate.year,
+                    currentDate.month + (page - 26),
+                    1,
+                  );
+                } else {
+                  selectedDate = currentDate
+                      .add(Duration(days: (page - 26) * 7))
+                      .getStartOfWeek();
+                }
+              });
+            }
+        ),
         height20,
         state.challengeList.length == 0
-            ? Padding(
-                padding: globalMargin,
-                child: CustomPaint(
-                  painter: DashedBorderPainter(),
-                  child: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40)
-                    ),
-                    padding: EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle_outline,color: Colors.grey.shade300,),
-                        width5,
-                        Text(
-                          '새 챌린지를 등록해보세요',
-                          style: TextStyle(
-                            color: Colors.grey.shade300,
-                            fontWeight: FontWeight.w600
-                          ),
-                        )
-                      ],
-                    ), // 원하는 위젯 배치
-                  ),
-                ),
-              )
+            ? ChallengeEmpty()
             : Expanded(
                 child: ListView.builder(
                     itemCount: state.challengeList.length,
@@ -113,17 +124,5 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               ),
       ],
     );
-  }
-
-  List<DateTime> _generateDummySuccessDates() {
-    final now = DateTime.now();
-    final oneMonthAgo = now.subtract(Duration(days: 30));
-
-    List<DateTime> successDates = [];
-    for (int i = 0; i <= 10; i++) {
-      successDates.add(oneMonthAgo.add(Duration(days: i)));
-    }
-
-    return successDates;
   }
 }

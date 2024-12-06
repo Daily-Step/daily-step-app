@@ -20,6 +20,9 @@ extension DateTimeExtension on DateTime {
   bool isSameDate(DateTime date){
     return this.year == date.year && this.month == date.month && this.day == date.day;
   }
+  bool isSameMonth(DateTime date){
+    return this.year == date.year && this.month == date.month;
+  }
   List<int> getDaysInMonth(int year, int month) {
     final lastDay = DateTime(year, month + 1, 0).day;
     return List.generate(lastDay, (index) => index + 1);
@@ -37,5 +40,9 @@ extension DateTimeExtension on DateTime {
     final today = DateTime.now();
     Duration difference = this.difference(today);
     return difference.inDays;
+  }
+
+  DateTime getStartOfWeek(){
+    return this.subtract(Duration(days: this.weekday % 7));
   }
 }

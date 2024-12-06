@@ -1,106 +1,61 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/model/challenge/challenge_model.dart';
+import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class WeekCalendar extends StatelessWidget {
-  final List<ChallengeModel> challengeList;
+import 'calendar_label.dart';
 
-  WeekCalendar({super.key, required this.challengeList});
+class WeekCalendar extends StatefulWidget {
+  final List<DateTime> successDates;
+  final DateTime selectedWeek;
+
+  WeekCalendar({
+    super.key,
+    required this.successDates,
+    required this.selectedWeek,
+  });
+
+  @override
+  State<WeekCalendar> createState() => _WeekCalendarState();
+}
+
+class _WeekCalendarState extends State<WeekCalendar> {
+  List<DateTime> _getWeekDays(DateTime startOfWeek) {
+    return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    DateTime startOfWeek = now.subtract(Duration(days: now.weekday % 7));
-    List<DateTime> daysOfWeek =
-        List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: daysOfWeek.map((date) {
-          String day = DateFormat('E').format(date);
-          String dayNumber = DateFormat('d').format(date);
-          bool isSelected = date.day == now.day &&
-              date.month == now.month &&
-              date.year == now.year;
-
-          // 해당 날짜에 모든 챌린지를 달성했는지 확인
-          bool isAllAchieved = _isAllChallengesAchieved(date, challengeList);
-          bool isAnyAchieved = _isAnyChallengesAchieved(date, challengeList);
-
-          Color indicatorColor;
-          indicatorColor = Colors.transparent;
-          if (isSelected) {
-            // 오늘 날짜는 검은색 원
-            indicatorColor = Colors.black;
-          } else if (date.isBefore(now) && challengeList.length != 0) {
-            if (isAllAchieved) {
-              // 모든 챌린지가 달성된 날짜는 파란색 원
-              indicatorColor = Colors.blue;
-            } else if (isAnyAchieved) {
-              // 일부만 달성된 날짜는 회색 원
-              indicatorColor = Colors.grey;
-            }
-          }
-          return _buildDay(day, dayNumber, isSelected, indicatorColor);
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildDay(
-      String day, String date, bool isSelected, Color indicatorColor) {
-    return Column(
-      children: [
-        Text(
-          day,
-          style: TextStyle(
-              color: day == "Sun"
-                  ? Colors.red
-                  : (day == "Sat" ? Colors.blue : Colors.black)),
-        ),
-        SizedBox(height: 4),
-        Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: indicatorColor,
-            borderRadius:  BorderRadius.circular(10)
+    List<DateTime> weekDays = _getWeekDays(widget.selectedWeek);
+    return Column(children: [
+      CalendarLabel(),
+      SizedBox(height: 4),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            mainAxisSpacing: 6,
+            crossAxisSpacing: 20,
           ),
-          child: Text(
-            date,
-            style: TextStyle(
-              color: indicatorColor == Colors.transparent
-                  ? Colors.black
-                  : Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          itemCount: 7,
+          itemBuilder: (context, index) {
+            final date = weekDays[index];
+            final isToday = date.isSameDate(DateTime.now());
+            final isCurrentPeriod = date.isSameMonth(widget.selectedWeek);
+            final isSuccess = widget.successDates
+                .any((successDate) => successDate.isSameDate(date));
+
+            return CalendarDayContainer(
+              isToday: isToday,
+              isSuccess: isSuccess,
+              date: date,
+              isCurrentPeriod: isCurrentPeriod,
+            );
+          },
         ),
-      ],
-    );
-  }
-
-  bool _isAllChallengesAchieved(
-      DateTime date, List<ChallengeModel> challengeList) {
-    for (ChallengeModel challenge in challengeList) {
-      if (!challenge.successList
-          .any((successDate) => successDate.isSameDate(date))) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool _isAnyChallengesAchieved(
-      DateTime date, List<ChallengeModel> challengeList) {
-    for (ChallengeModel challenge in challengeList) {
-      if (challenge.successList
-          .any((successDate) => successDate.isSameDate(date))) {
-        return true;
-      }
-    }
-    return false;
+      )
+    ]);
   }
 }
