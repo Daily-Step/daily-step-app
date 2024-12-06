@@ -115,7 +115,9 @@ class MyInfoScreen extends ConsumerWidget {
                       children: [
                         Text('남성'),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/main/myPage/myinfo/gender');
+                          },
                           icon: Icon(Icons.keyboard_arrow_right),
                         ),
                       ],
