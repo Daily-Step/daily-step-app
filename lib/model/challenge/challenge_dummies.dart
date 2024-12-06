@@ -13,8 +13,8 @@ var dummyChallenges = [
     totalGoalCount: 28,
     // 7의 배수
     // totalGoalCount보다 작음
-    startDatetime: DateTime(2024, 11, 1),
-    endDatetime: DateTime(2024, 11, 28),
+    startDatetime: DateTime(2024, 11, 20),
+    endDatetime: DateTime(2024, 12, 28),
     createdAt: DateTime(2023, 11, 1),
     updatedAt: DateTime(2024, 1, 10),
       successList: [
@@ -27,7 +27,8 @@ var dummyChallenges = [
         DateTime(2024, 11, 16),
         DateTime(2024, 11, 17),
         DateTime(2024, 11, 18),
-        DateTime(2024, 11, 19)
+        DateTime(2024, 11, 19),
+        DateTime(2024, 11, 24)
       ]
 
   ),
@@ -43,14 +44,16 @@ var dummyChallenges = [
     totalGoalCount: 7,
     // 7의 배수
     // totalGoalCount보다 작음
-    startDatetime: DateTime(2024, 11, 1),
-    endDatetime: DateTime(2024, 11, 28),
+    startDatetime: DateTime(2024, 11, 20),
+    endDatetime: DateTime(2024, 12, 28),
     createdAt: DateTime(2024, 1, 25),
     updatedAt: DateTime(2024, 2, 5),
     successList: [
+      DateTime(2024, 11, 22),
       DateTime(2024, 11, 17),
       DateTime(2024, 11, 18),
-      DateTime(2024, 11, 19)
+      DateTime(2024, 11, 19),
+      DateTime(2024, 11, 24)
     ],
   ),
   ChallengeModel(
@@ -65,21 +68,30 @@ var dummyChallenges = [
     totalGoalCount: 42,
     // 7의 배수
     // totalGoalCount보다 작음
-    startDatetime: DateTime(2024, 11, 1),
-    endDatetime: DateTime(2024, 11, 28),
+    startDatetime: DateTime(2024, 11, 20),
+    endDatetime: DateTime(2024, 12, 28),
     createdAt: DateTime(2024, 2, 20),
     updatedAt: DateTime(2024, 3, 10),
     successList: [
+      DateTime(2024, 11, 22),
       DateTime(2024, 11, 10),
       DateTime(2024, 11, 11),
       DateTime(2024, 11, 12),
       DateTime(2024, 11, 13),
       DateTime(2024, 11, 14),
-      DateTime(2024, 11, 15),
-      DateTime(2024, 11, 16),
       DateTime(2024, 11, 17),
-      DateTime(2024, 11, 18),
-      DateTime(2024, 11, 19)
+      DateTime(2024, 11, 24),
+      DateTime(2024, 11, 25),
     ],
   ),
+];
+
+var dummySuccessList = [
+  DateTime(2024, 11, 22),
+  DateTime(2024, 11, 25),
+  DateTime(2024, 11, 28),
+  DateTime(2024, 11, 29),
+  DateTime(2024, 11, 30),
+  DateTime(2024, 12, 1),
+  DateTime(2024, 12, 2),
 ];

@@ -33,7 +33,7 @@ class _WeekPickerModalState extends State<WScrollPicker> {
     super.initState();
     _selectedValue = widget.value;
     _controller = FixedExtentScrollController(
-      initialItem: widget.value - 1,
+      initialItem: widget.value,
     );
   }
 
@@ -89,18 +89,19 @@ class _WeekPickerModalState extends State<WScrollPicker> {
                             onTap: () => _onItemSelected(index),
                             child: Center(
                               child: widget.itemBuilder != null
-                                  ? widget.itemBuilder!(context, index, _selectedValue == index + 1)
+                                  ? widget.itemBuilder!(
+                                      context, index, _selectedValue == index)
                                   : Text(
-                                widget.childList != null
-                                    ? '${widget.childList?[index]}'
-                                    : '${index + 1}',
-                                style: TextStyle(
-                                  fontSize: pickerFontSize,
-                                  color: _selectedValue == index + 1
-                                      ? Colors.black
-                                      : Colors.grey,
-                                ),
-                              ),
+                                      widget.childList != null
+                                          ? '${widget.childList?[index]}'
+                                          : '${index + 1}',
+                                      style: TextStyle(
+                                        fontSize: pickerFontSize,
+                                        color: _selectedValue == index
+                                            ? Colors.black
+                                            : Colors.grey,
+                                      ),
+                                    ),
                             ),
                           );
                         },

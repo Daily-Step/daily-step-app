@@ -240,9 +240,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       ),
                       IconButton(
                         icon: Icon(Icons.calendar_today_outlined),
-                        onPressed: () =>
-                            showCalendarModal(
-                                context, selectedTask.successList),
+                        onPressed: () =>  showDialog(
+                            context: context,
+                            builder: (context) {
+                              return WMonthModal( successList: selectedTask.successList,);
+                            })
                       )
                     ],
                   )),
