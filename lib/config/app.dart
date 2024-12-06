@@ -20,6 +20,7 @@ import '../feature/mypage/view/settings/edit_my_info_settings/nickname_settings/
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
 import '../feature/sign_up/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
+import '../feature/splash/splash_screen.dart';
 import '../widgets/widget_constant.dart';
 import 'route/auth_redirection.dart';
 
@@ -56,7 +57,10 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
     routes: <GoRoute>[
       GoRoute(
         path: '/',
-        redirect: (_, __) => '/main/home',
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+          key: state.pageKey,
+          child: SplashScreen(),
+        ),
       ),
       GoRoute(
         path: '/signIn',
