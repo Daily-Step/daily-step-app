@@ -2,6 +2,7 @@ import 'package:dailystep/config/route/fade_transition_page.dart';
 import 'package:dailystep/data/api/login_api.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_screen.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_screen.dart';
+import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/jobtenure/jobtenure_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,6 +141,13 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
             pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
               key: state.pageKey,
               child: JobScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/myinfo/jobTenure',
+            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+              key: state.pageKey,
+              child: JobTenureScreen(),
             ),
           ),
           GoRoute(

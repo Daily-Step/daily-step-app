@@ -26,7 +26,7 @@ class GenderScreen extends ConsumerWidget {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _buildToggleButton('남성', 0, selectedGender, ref),
                 const SizedBox(width: 12),
