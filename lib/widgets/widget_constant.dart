@@ -17,6 +17,8 @@ const height20 = Height(20);
 const height30 = Height(30);
 const height40 = Height(40);
 const height60 = Height(60);
+const height70 = Height(70);
+const height80 = Height(80);
 
 const pickerFontSize = 24.0;
 const detailDataFontSize = 18.0;
