@@ -5,6 +5,48 @@ import 'package:flutter/material.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
 
+
+class WMonthPageView extends StatefulWidget {
+  final List<DateTime> successList;
+  final DateTime selectedDate;
+  final void Function(int) onPageChanged;
+
+  const WMonthPageView(
+      {super.key,
+        required this.successList,
+        required this.selectedDate,
+        required this.onPageChanged,});
+
+  @override
+  State<WMonthPageView> createState() => _WMonthPageViewState();
+}
+
+class _WMonthPageViewState extends State<WMonthPageView> {
+  final PageController _pageController = PageController(initialPage: 6);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: _pageController,
+      onPageChanged: widget.onPageChanged,
+      itemCount: 7,
+      itemBuilder: (context, index) {
+        return WMonthCalendar(
+          successDates: widget.successList,
+          selectedMonth: widget.selectedDate,
+          isModal: false,
+        );
+      },
+    );
+  }
+}
+
 class WMonthModal extends StatefulWidget {
   final List<DateTime> successList;
 
@@ -109,30 +151,32 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
     return Column(children: [
       CalendarLabel(),
       SizedBox(height: 4),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 6,
-            crossAxisSpacing: widget.isModal ? 10 : 20,
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              mainAxisSpacing: 6,
+              crossAxisSpacing: widget.isModal ? 10 : 20,
+            ),
+            itemCount: 35,
+            itemBuilder: (context, index) {
+              final date = firstDayOfCalendar.add(Duration(days: index));
+              final isToday = date.isSameDate(DateTime.now());
+              final isCurrentPeriod = date.isSameMonth(widget.selectedMonth);
+              final isSuccess = widget.successDates
+                  .any((successDate) => successDate.isSameDate(date));
+        
+              return CalendarDayContainer(
+                  isToday: isToday,
+                  isSuccess: isSuccess,
+                  date: date,
+                  isCurrentPeriod: isCurrentPeriod);
+            },
           ),
-          itemCount: 35,
-          itemBuilder: (context, index) {
-            final date = firstDayOfCalendar.add(Duration(days: index));
-            final isToday = date.isSameDate(DateTime.now());
-            final isCurrentPeriod = date.isSameMonth(widget.selectedMonth);
-            final isSuccess = widget.successDates
-                .any((successDate) => successDate.isSameDate(date));
-
-            return CalendarDayContainer(
-                isToday: isToday,
-                isSuccess: isSuccess,
-                date: date,
-                isCurrentPeriod: isCurrentPeriod);
-          },
         ),
       ),
     ]);

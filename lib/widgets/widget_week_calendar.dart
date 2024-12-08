@@ -2,23 +2,62 @@ import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
 import 'package:flutter/material.dart';
 
-import 'calendar_label.dart';
+import '../feature/home/view/home/calendar_label.dart';
 
-class WeekCalendar extends StatefulWidget {
+class WWeekPageView extends StatefulWidget {
+  final List<DateTime> successList;
+  final DateTime selectedDate;
+  final void Function(int) onPageChanged;
+
+  const WWeekPageView(
+      {super.key,
+        required this.successList,
+        required this.selectedDate,
+        required this.onPageChanged,});
+
+  @override
+  State<WWeekPageView> createState() => _WWeekPageViewState();
+}
+
+class _WWeekPageViewState extends State<WWeekPageView> {
+  final PageController _pageController = PageController(initialPage: 26);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: _pageController,
+      onPageChanged: widget.onPageChanged,
+      itemCount: 27,
+      itemBuilder: (context, index) {
+        return WWeekCalendar(
+          successDates: widget.successList,
+          selectedWeek: widget.selectedDate,
+        );
+      },
+    );
+  }
+}
+class WWeekCalendar extends StatefulWidget {
   final List<DateTime> successDates;
   final DateTime selectedWeek;
 
-  WeekCalendar({
+  WWeekCalendar({
     super.key,
     required this.successDates,
     required this.selectedWeek,
   });
 
   @override
-  State<WeekCalendar> createState() => _WeekCalendarState();
+  State<WWeekCalendar> createState() => _WWeekCalendarState();
 }
 
-class _WeekCalendarState extends State<WeekCalendar> {
+class _WWeekCalendarState extends State<WWeekCalendar> {
   List<DateTime> _getWeekDays(DateTime startOfWeek) {
     return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
   }
