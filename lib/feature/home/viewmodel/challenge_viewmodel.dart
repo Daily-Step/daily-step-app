@@ -84,26 +84,38 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       selectedTask: selectedTask,
     );
   }
+
+  Future<void> _handleCheckFirstAchieve(FindTaskAction action) async {
+    final tasks = List.of(state.challengeList);
+    final selectedTask = tasks.firstWhere((task) => task.id == action.id);
+    state = state.copyWith(
+      selectedTask: selectedTask,
+    );
+  }
 }
 
 class ChallengesState {
   final List<ChallengeModel> challengeList;
   final ChallengeModel? selectedTask;
+  final bool? firstAchieve;
 
   const ChallengesState({
     required this.challengeList,
     this.selectedTask,
+    this.firstAchieve,
   });
 
   ChallengesState copyWith({
     List<ChallengeModel>? tasks,
     ChallengeModel? selectedTask,
+    bool? firstAchieve,
   }) {
     return ChallengesState(
       challengeList: tasks != null
           ? List<ChallengeModel>.from(tasks.map((task) => task.copyWith()))
           : this.challengeList,
       selectedTask: selectedTask ?? this.selectedTask,
+      firstAchieve: firstAchieve ?? this.firstAchieve,
     );
   }
 }

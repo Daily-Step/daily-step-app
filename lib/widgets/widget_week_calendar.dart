@@ -3,54 +3,57 @@ import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
 import 'package:flutter/material.dart';
 
 import '../feature/home/view/home/calendar_label.dart';
+import '../feature/home/view/home/home_fragment.dart';
 
 class WWeekPageView extends StatefulWidget {
   final List<DateTime> successList;
+  final DateTime firstDateOfRange;
   final DateTime selectedDate;
   final void Function(int) onPageChanged;
+  final PageController weekPageController;
 
-  const WWeekPageView(
-      {super.key,
-        required this.successList,
-        required this.selectedDate,
-        required this.onPageChanged,});
+  const WWeekPageView({
+    super.key,
+    required this.successList,
+    required this.firstDateOfRange,
+    required this.onPageChanged,
+    required this.selectedDate,
+    required this.weekPageController,
+  });
 
   @override
   State<WWeekPageView> createState() => _WWeekPageViewState();
 }
 
 class _WWeekPageViewState extends State<WWeekPageView> {
-  final PageController _pageController = PageController(initialPage: 26);
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-      controller: _pageController,
+      controller: widget.weekPageController,
       onPageChanged: widget.onPageChanged,
-      itemCount: 27,
+      itemCount: WEEK_TOTAL_PAGE + 1,
       itemBuilder: (context, index) {
         return WWeekCalendar(
           successDates: widget.successList,
-          selectedWeek: widget.selectedDate,
+          firstDateOfRange: widget.firstDateOfRange,
+          selectedDate: widget.selectedDate,
         );
       },
     );
   }
 }
+
 class WWeekCalendar extends StatefulWidget {
   final List<DateTime> successDates;
-  final DateTime selectedWeek;
+  final DateTime firstDateOfRange;
+  final DateTime selectedDate;
 
   WWeekCalendar({
     super.key,
     required this.successDates,
-    required this.selectedWeek,
+    required this.firstDateOfRange,
+    required this.selectedDate,
   });
 
   @override
@@ -64,7 +67,7 @@ class _WWeekCalendarState extends State<WWeekCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> weekDays = _getWeekDays(widget.selectedWeek);
+    List<DateTime> weekDays = _getWeekDays(widget.firstDateOfRange);
     return Column(children: [
       CalendarLabel(),
       SizedBox(height: 4),
@@ -81,8 +84,8 @@ class _WWeekCalendarState extends State<WWeekCalendar> {
           itemCount: 7,
           itemBuilder: (context, index) {
             final date = weekDays[index];
-            final isToday = date.isSameDate(DateTime.now());
-            final isCurrentPeriod = date.isSameMonth(widget.selectedWeek);
+            final isToday = date.isSameDate(widget.selectedDate);
+            final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
             final isSuccess = widget.successDates
                 .any((successDate) => successDate.isSameDate(date));
 
