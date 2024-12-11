@@ -1,43 +1,46 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../feature/home/action/calendar_action.dart';
 import '../feature/home/view/home/calendar_label.dart';
 import '../feature/home/view/home/home_fragment.dart';
+import '../feature/home/viewmodel/calendar_viewmodel.dart';
 
-class WWeekPageView extends StatefulWidget {
-  final List<DateTime> successList;
-  final DateTime firstDateOfRange;
-  final DateTime selectedDate;
-  final void Function(int) onPageChanged;
+class WWeekPageView extends ConsumerStatefulWidget {
   final PageController weekPageController;
+  final List<DateTime> successList;
 
   const WWeekPageView({
     super.key,
-    required this.successList,
-    required this.firstDateOfRange,
-    required this.onPageChanged,
-    required this.selectedDate,
     required this.weekPageController,
+    required this.successList,
   });
 
   @override
-  State<WWeekPageView> createState() => _WWeekPageViewState();
+  _WWeekPageViewState createState() => _WWeekPageViewState();
 }
 
-class _WWeekPageViewState extends State<WWeekPageView> {
-
+class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
   @override
   Widget build(BuildContext context) {
+    final calendarState = ref.watch(calendarViewModelProvider);
+    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+
     return PageView.builder(
       controller: widget.weekPageController,
-      onPageChanged: widget.onPageChanged,
+      onPageChanged: (page) {
+        calendarNotifier.handleAction(ChangeFirstDateOfWeekAction(
+          addPage: (page - WEEK_TOTAL_PAGE) * 7,
+        ));
+      },
       itemCount: WEEK_TOTAL_PAGE + 1,
       itemBuilder: (context, index) {
         return WWeekCalendar(
           successDates: widget.successList,
-          firstDateOfRange: widget.firstDateOfRange,
-          selectedDate: widget.selectedDate,
+          firstDateOfRange: calendarState.firstDateOfWeek,
+          selectedDate: calendarState.selectedDate,
         );
       },
     );

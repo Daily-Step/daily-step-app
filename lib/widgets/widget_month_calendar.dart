@@ -1,41 +1,46 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../feature/home/action/calendar_action.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
 import '../feature/home/view/home/home_fragment.dart';
+import '../feature/home/viewmodel/calendar_viewmodel.dart';
 
-class WMonthPageView extends StatefulWidget {
+class WMonthPageView extends ConsumerStatefulWidget {
   final List<DateTime> successList;
-  final DateTime firstDateOfRange;
-  final void Function(int) onPageChanged;
   final PageController monthPageController;
 
   const WMonthPageView({
     super.key,
     required this.successList,
-    required this.firstDateOfRange,
-    required this.onPageChanged,
     required this.monthPageController,
   });
 
   @override
-  State<WMonthPageView> createState() => _WMonthPageViewState();
+  _WMonthPageViewState createState() => _WMonthPageViewState();
 }
 
-class _WMonthPageViewState extends State<WMonthPageView> {
-
+class _WMonthPageViewState extends ConsumerState<WMonthPageView> {
   @override
   Widget build(BuildContext context) {
+    final calendarState = ref.watch(calendarViewModelProvider);
+    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+
     return PageView.builder(
       controller: widget.monthPageController,
-      onPageChanged: widget.onPageChanged,
+      onPageChanged: (page) {
+        calendarNotifier.handleAction(
+            ChangeFirstDateOfMonthAction(addPage: page - MONTH_TOTAL_PAGE));
+      },
       itemCount: MONTH_TOTAL_PAGE + 1,
       itemBuilder: (context, index) {
         return WMonthCalendar(
           successDates: widget.successList,
-          firstDateOfRange: widget.firstDateOfRange,
+          firstDateOfRange: calendarState.firstDateOfMonth,
+          selectedDate: calendarState.selectedDate,
           isModal: false,
         );
       },
@@ -110,6 +115,7 @@ class _WMonthModalState extends State<WMonthModal> {
               successDates: widget.successList,
               firstDateOfRange: selectedMonth,
               isModal: true,
+              selectedDate: DateTime.now(),
             ),
             height20,
           ],
@@ -123,12 +129,14 @@ class WMonthCalendar extends StatefulWidget {
   final List<DateTime> successDates;
   final DateTime firstDateOfRange;
   final bool isModal;
+  final DateTime selectedDate;
 
   const WMonthCalendar({
     super.key,
     required this.successDates,
     required this.firstDateOfRange,
     required this.isModal,
+    required this.selectedDate,
   });
 
   @override
@@ -157,7 +165,7 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
         itemCount: 35,
         itemBuilder: (context, index) {
           final date = firstDayOfCalendar.add(Duration(days: index));
-          final isToday = date.isSameDate(DateTime.now());
+          final isToday = date.isSameDate(widget.selectedDate);
           final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
           final isSuccess = widget.successDates
               .any((successDate) => successDate.isSameDate(date));
