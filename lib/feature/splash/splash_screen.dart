@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(Duration(milliseconds: 1500), () {
       if (mounted) { // 위젯이 활성 상태일 때만 실행
-        context.go('/signIn');
+        context.go('/main/home');
       }
     });
   }

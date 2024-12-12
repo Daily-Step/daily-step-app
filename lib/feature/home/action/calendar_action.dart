@@ -23,8 +23,7 @@ class ChangeFirstDateOfMonthAction extends CustomCalendarAction {
 }
 
 class ChangeExpandAction extends CustomCalendarAction {
-  final bool isExpanded;
-
-  const ChangeExpandAction(this.isExpanded);
+  final PageController controller;
+  const ChangeExpandAction({required this.controller});
 }
 

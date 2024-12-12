@@ -12,7 +12,7 @@ class CalendarViewModel extends _$CalendarViewModel {
       firstDateOfWeek: DateTime.now().getStartOfWeek(),
       firstDateOfMonth: DateTime(DateTime.now().year, DateTime.now().month, 1),
       selectedDate: DateTime.now(),
-      isUserTriggeredPageChange: false,
+      isUserTriggeredPageChange: true,
       isBeforePage: true,
     );
   }
@@ -58,7 +58,7 @@ class CalendarViewModel extends _$CalendarViewModel {
 
   void _handleChangeFirstDateOfWeekAction(ChangeFirstDateOfWeekAction action) {
     DateTime newFirstDateOfWeek = state.isUserTriggeredPageChange
-        ? state.selectedDate.add(Duration(days: action.addPage!))
+        ? DateTime.now().add(Duration(days: action.addPage!))
         : state.selectedDate.add(Duration(days: state.isBeforePage ? -1 : 1));
     state = state.copyWith(
         firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
@@ -71,20 +71,45 @@ class CalendarViewModel extends _$CalendarViewModel {
         ? DateTime(
             DateTime.now().year, DateTime.now().month + action.addPage!, 1)
         : DateTime(state.selectedDate.year, state.selectedDate.month, 1);
-    state = state.copyWith(firstDateOfMonth: newFirstDateOfMonth);
+    state = state.copyWith(
+        firstDateOfMonth: newFirstDateOfMonth, isUserTriggeredPageChange: true);
   }
 
   Future<void> _handleChangeExpandAction(ChangeExpandAction action) async {
-    state = state.copyWith(isExpanded: action.isExpanded);
-    if(action.isExpanded){
-      DateTime firstDateOfMonth = DateTime(state.firstDateOfWeek.year, state.firstDateOfWeek.month, 1);
-      state = state.copyWith(firstDateOfMonth: firstDateOfMonth);
-    } else {
-      DateTime firstDateOfWeek = state.selectedDate.getStartOfWeek();
-      state = state.copyWith(firstDateOfWeek: firstDateOfWeek);
-    }
-  }
+    state = state.copyWith(isExpanded: !state.isExpanded);
+    if (state.isExpanded) {
+      ///week -> month로 전환시
+      ///현재 firstDateOfWeek의 month가 현재 month로부터 얼마나 떨어져 있는지 확인한 후 해당 month로 컨트롤러 이동
+      ///firstDateOfMonth - currentMonth = -1
+      // DateTime firstDateOfMonth =
+      //     DateTime(state.firstDateOfWeek.year, state.firstDateOfWeek.month, 1);
+      // state = state.copyWith(firstDateOfMonth: firstDateOfMonth);
 
+      ///page [1,2,3,4,5,6]
+    } else {
+      ///month -> week로 전환시
+      ///현재 시간 기준 첫번째 week로부터 selected week가 얼마나 떨어져 있는지 계산 후 해당 week로 컨트롤러 이동
+      DateTime currentFirstDateOfWeek = state.firstDateOfWeek;
+      DateTime selectedDateOfWeek = state.selectedDate.getStartOfWeek();
+      Duration weeksBetween =
+          selectedDateOfWeek.difference(currentFirstDateOfWeek);
+      int calcWeeks = (weeksBetween.inDays / 7).floor();
+      print(currentFirstDateOfWeek);
+      print(selectedDateOfWeek);
+      print(calcWeeks);
+
+      ///현재 시점을 기준으로 몇페이지나 뒤로 이동 했는지 역산하여 날짜를 계산함
+      ///max 페이지를 고정해야 현재 페이지 이후로 이동하지 못하게 막을 수 있음
+      ///캘린더 타입을 바꿀 때 역산이 제대로 동작하려면 화면에 렌더링하는 날짜들만 바꿔주는 게 아니라 페이지 컨트롤러 자체를 이동시켜야 함
+      ///expanded로 인해 화면이 새로 그려지는 시점에서 컨트롤러를 조작하면 해당 pageView가 생성되기전에 page가 그려져 에러가 나기 때문에
+      ///아래와 같이 delayed로 처리함
+      Future.delayed(Duration(seconds: 1), () {
+        int currentPage = action.controller.page?.round() ?? 0;
+        action.controller.jumpToPage(currentPage + calcWeeks);
+      });
+    }
+
+  }
 }
 
 class CalendarState {
