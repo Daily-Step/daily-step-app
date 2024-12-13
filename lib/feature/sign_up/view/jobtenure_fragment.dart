@@ -1,8 +1,8 @@
 import 'package:dailystep/widgets/widget_scroll_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/widget_constant.dart';
-import '../../widgets/widget_select_input.dart';
+import '../../../widgets/widget_constant.dart';
+import '../../../widgets/widget_select_input.dart';
 import 'jobtenure_dummies.dart';
 
 class JobTenureFragment extends StatelessWidget {

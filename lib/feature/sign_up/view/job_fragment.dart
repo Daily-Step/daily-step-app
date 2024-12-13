@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/widget_constant.dart';
+import '../../../widgets/widget_constant.dart';
 import 'job_dummies.dart';
 
 class JobFragment extends StatelessWidget {

@@ -12,8 +12,9 @@ final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
 class MainScreen extends ConsumerStatefulWidget {
   final TabItem firstTab;
+  final int? id;
 
-  const MainScreen({super.key, this.firstTab = TabItem.home});
+  const MainScreen({super.key, this.firstTab = TabItem.home, this.id,});
 
   @override
   ConsumerState<MainScreen> createState() => MainScreenState();
@@ -67,7 +68,7 @@ class MainScreenState extends ConsumerState<MainScreen>
             bottomNavigationBar: _buildBottomNavigationBar(context),
             floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  context.go('/main/home/challenge/new');
+                  context.go('/main/challenge/challenge/new');
                 },
                 shape: const CircleBorder(),
                 backgroundColor: Colors.black,

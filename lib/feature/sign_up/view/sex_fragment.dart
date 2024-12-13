@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/widget_constant.dart';
+import '../../../widgets/widget_constant.dart';
+
 
 class SexFragment extends StatelessWidget {
   const SexFragment({

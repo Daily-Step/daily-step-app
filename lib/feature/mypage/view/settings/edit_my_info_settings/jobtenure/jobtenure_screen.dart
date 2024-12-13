@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_scroll_picker.dart';
-import '../../../../../sign_up/jobtenure_dummies.dart';
+import '../../../../../sign_up/view/jobtenure_dummies.dart';
 
 class JobTenureScreen extends ConsumerWidget {
   const JobTenureScreen({super.key});

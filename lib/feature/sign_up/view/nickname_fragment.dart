@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import '../../widgets/widget_buttons.dart';
-import '../../widgets/widget_constant.dart';
-import '../../widgets/widget_textfield.dart';
+import '../../../widgets/widget_buttons.dart';
+import '../../../widgets/widget_constant.dart';
+import '../../../widgets/widget_textfield.dart';
 
 class NickNameFragment extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final VoidCallback onCheckNickname;
   final String validation;
+  final Color validationColor;
+  final bool isNicknameCheckInProgress;
 
   const NickNameFragment({
     super.key,
     required this.controller,
     required this.onChanged,
+    required this.onCheckNickname,
     required this.validation,
+    required this.validationColor,
+    this.isNicknameCheckInProgress = false,
   });
 
   @override
@@ -28,13 +34,18 @@ class NickNameFragment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             WTextField(
-              controller: controller,
+              controller: controller
+                ..selection = TextSelection.collapsed(
+                  offset: controller.text.length,
+                ),
               hintText: '사용하실 닉네임을 입력하세요',
-              onChanged: onChanged,
-              isEnable: validation == '',
+              onChanged: (text) {
+                onChanged(text);
+              },
+              isEnable: true,
               suffixButton: WRoundButton(
-                isEnabled: controller.text != '' && validation == '',
-                onPressed: () {},
+                isEnabled: !isNicknameCheckInProgress && controller.text.isNotEmpty && validation.isEmpty,
+                onPressed: onCheckNickname,
                 text: '중복확인',
               ),
             ),
@@ -42,7 +53,7 @@ class NickNameFragment extends StatelessWidget {
               padding: globalMargin,
               child: Text(
                 validation,
-                style: TextStyle(fontSize: 14, color: Colors.red),
+                style: TextStyle(fontSize: 14, color: validationColor),
               ),
             )
           ],
@@ -51,3 +62,4 @@ class NickNameFragment extends StatelessWidget {
     );
   }
 }
+

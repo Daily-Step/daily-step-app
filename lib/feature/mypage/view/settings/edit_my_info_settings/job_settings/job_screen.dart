@@ -5,7 +5,7 @@ import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job
 
 import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
-import '../../../../../sign_up/job_dummies.dart'; // 생성한 JobProvider import
+import '../../../../../sign_up/view/job_dummies.dart';
 
 class JobScreen extends ConsumerWidget {
   const JobScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/api/login_api.dart';
-import '../../feature/auth/login_provider.dart';
+import '../../feature/auth/social_login_repository.dart';
 import '../../model/user/user_model.dart';
 
 class DailyStepAuth extends ChangeNotifier {

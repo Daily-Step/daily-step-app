@@ -107,7 +107,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                         onTap: () async {
                           await notifier
                               .handleAction(FindTaskAction(challenge.id));
-                          context.push('/main/home/${challenge.id}');
+                          context.push('/main/challenge/challenge/${challenge.id}');
                         },
                         onClickAchieveButton: () async {
                           if (isAchieved == false) {

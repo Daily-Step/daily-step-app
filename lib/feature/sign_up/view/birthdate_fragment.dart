@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../widgets/widget_constant.dart';
-import '../../widgets/wigdet_date_picker.dart';
+import '../../../widgets/widget_constant.dart';
+import '../../../widgets/wigdet_date_picker.dart';
 
 class BirthDateFragment extends StatelessWidget {
   const BirthDateFragment({

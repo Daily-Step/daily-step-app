@@ -1,35 +1,29 @@
-import 'package:dailystep/feature/sign_up/birthdate_fragment.dart';
-import 'package:dailystep/feature/sign_up/job_fragment.dart';
-import 'package:dailystep/feature/sign_up/jobtenure_fragment.dart';
-import 'package:dailystep/feature/sign_up/nickname_fragment.dart';
-import 'package:dailystep/feature/sign_up/progress_bar.dart';
-import 'package:dailystep/feature/sign_up/sex_fragment.dart';
-import 'package:dailystep/feature/sign_up/sign_up_provider.dart';
+import 'package:dailystep/feature/sign_up/view/birthdate_fragment.dart';
+import 'package:dailystep/feature/sign_up/view/job_fragment.dart';
+import 'package:dailystep/feature/sign_up/view/jobtenure_fragment.dart';
+import 'package:dailystep/feature/sign_up/view/nickname_fragment.dart';
+import 'package:dailystep/feature/sign_up/view/progress_bar.dart';
+import 'package:dailystep/feature/sign_up/viewmodel/sign_up_provider.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../config/route/auth_redirection.dart';
+import '../../../config/route/auth_redirection.dart';
 import 'end_fragment.dart';
+import 'sex_fragment.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
+class SignUpScreen extends ConsumerWidget {
   final DailyStepAuth auth;
 
   const SignUpScreen({super.key, required this.auth});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
-  TextEditingController nickNameController = TextEditingController();
-  TextEditingController birthDateController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final signUpState = ref.watch(signUpProvider);
     final signUpViewModel = ref.read(signUpProvider.notifier);
+
+    final TextEditingController controller = TextEditingController(text: signUpState.nickName ?? '');
 
     return Scaffold(
       appBar: AppBar(
@@ -40,8 +34,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               )
             : const SizedBox.shrink(),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(24),
-          child: ProgressStepper(currentStep: signUpState.step),
+          preferredSize: const Size.fromHeight(24),
+          child: ProgressStepper(
+            currentStep: signUpState.step,
+          ),
         ),
       ),
       body: Stack(
@@ -50,60 +46,71 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             children: [
               height60,
               Center(
-                  child: buildCheckIcon(
-                      signUpState.step == 6, signUpViewModel.checkValid())),
-              SizedBox(height: 10),
+                child: buildCheckIcon(
+                  signUpState.step == 6,
+                  signUpViewModel.checkValid(),
+                ),
+              ),
+              const SizedBox(height: 10),
               if (signUpState.step == 1)
                 NickNameFragment(
-                  controller: nickNameController,
+                  controller: controller,
                   onChanged: (text) {
-                    signUpViewModel.setNickName(text);
+                    signUpViewModel.setNickName(text, ref);
+                  },
+                  onCheckNickname: () {
+                    signUpViewModel.checkNicknameAvailability(controller.text, ref);
                   },
                   validation: signUpState.nickNameValidation,
+                  validationColor: signUpState.nickNameValidationColor ?? Colors.red,
+                  isNicknameCheckInProgress: signUpState.isNicknameCheckInProgress,
                 )
               else if (signUpState.step == 2)
                 BirthDateFragment(
-                  controller: birthDateController,
+                  controller: TextEditingController(),
                   selectedDate: signUpState.birthDate,
                   onDateSelected: (date) {
                     signUpViewModel.setBirthDate(date);
-                    birthDateController.text =
-                        date.toLocal().toString().split(' ')[0];
                   },
                 )
               else if (signUpState.step == 3)
                 SexFragment(
                   selectedSex: signUpState.sex,
                   onChanged: (int? value) {
-                    if (value == null) return;
-                    signUpViewModel.setSex(value);
+                    if (value != null) {
+                      signUpViewModel.setSex(value);
+                    }
                   },
                 )
               else if (signUpState.step == 4)
                 JobFragment(
                   job: signUpState.job,
                   onChanged: (int? value) {
-                    if (value == null) return;
-                    signUpViewModel.setJob(value);
+                    if (value != null) {
+                      signUpViewModel.setJob(value);
+                    }
                   },
                 )
               else if (signUpState.step == 5)
                 JobTenureFragment(
                   jobTenure: signUpState.jobTenure,
                   onChanged: (int? value) {
-                    if (value == null) return;
-                    signUpViewModel.setJobTenure(value);
+                    if (value != null) {
+                      signUpViewModel.setJobTenure(value);
+                    }
                   },
                 )
               else if (signUpState.step == 6)
-                EndFragment()
+                const EndFragment(),
             ],
           ),
           WCtaFloatingButton(
             signUpState.step == 6 ? '시작하기' : '다음',
             onPressed: signUpState.step == 6
-                ? signUpViewModel.saveUserInfo(widget.auth,context)
-                : signUpViewModel.canMoveToNextStep(),
+                ? signUpViewModel.saveUserInfo(auth, context)
+                : (signUpState.isNicknameCheckInProgress || !signUpViewModel.checkValid()
+                ? null
+                : signUpViewModel.nextStep),
             gradient: signUpState.step == 6 ? mainGradient : null,
           ),
         ],
@@ -122,6 +129,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
     }
     if (!isAvailable) {
+      print('isAvaliable ${isAvailable}');
       return Icon(
         Icons.check_circle,
         size: 80,
@@ -131,7 +139,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     return ShaderMask(
       shaderCallback: (Rect bounds) => mainGradient.createShader(bounds),
       blendMode: BlendMode.srcIn,
-      child: Icon(
+      child: const Icon(
         Icons.check_circle,
         size: 80,
         color: Colors.white,

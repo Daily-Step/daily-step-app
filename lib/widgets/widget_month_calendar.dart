@@ -38,8 +38,7 @@ class _WMonthModalState extends State<WMonthModal> {
                   ),
                   onPressed: () {
                     setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month - 1, 1);
+                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month - 1, 1);
                     });
                   },
                 ),
@@ -53,15 +52,12 @@ class _WMonthModalState extends State<WMonthModal> {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.isSameMonth(DateTime.now())
-                        ? backgroundColor
-                        : subTextColor,
+                    color: selectedMonth.isSameMonth(DateTime.now()) ? backgroundColor : subTextColor,
                   ),
                   onPressed: () {
                     if (selectedMonth.isSameMonth(DateTime.now())) return;
                     setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month + 1, 1);
+                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month + 1, 1);
                     });
                   },
                 ),
@@ -100,17 +96,18 @@ class WMonthCalendar extends StatefulWidget {
 class _WMonthCalendarState extends State<WMonthCalendar> {
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth =
-        DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
+    final firstDayOfMonth = DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
     final firstDayOfCalendar = firstDayOfMonth.subtract(
       Duration(days: firstDayOfMonth.weekday % 7),
     );
 
-    return Column(children: [
+    return Column(mainAxisSize: MainAxisSize.max, children: [
       CalendarLabel(),
-      SizedBox(height: 4),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      SizedBox(),
+
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
         child: GridView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -124,17 +121,14 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
             final date = firstDayOfCalendar.add(Duration(days: index));
             final isToday = date.isSameDate(DateTime.now());
             final isCurrentPeriod = date.isSameMonth(widget.selectedMonth);
-            final isSuccess = widget.successDates
-                .any((successDate) => successDate.isSameDate(date));
+            final isSuccess = widget.successDates.any((successDate) => successDate.isSameDate(date));
 
-            return CalendarDayContainer(
-                isToday: isToday,
-                isSuccess: isSuccess,
-                date: date,
-                isCurrentPeriod: isCurrentPeriod);
+            return CalendarDayContainer(isToday: isToday, isSuccess: isSuccess, date: date, isCurrentPeriod: isCurrentPeriod);
           },
         ),
       ),
+    ),
+
     ]);
   }
 }

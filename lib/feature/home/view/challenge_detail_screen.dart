@@ -40,7 +40,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
             icon: Icon(Icons.more_vert),
             onSelected: (String value) {
               if (value == '수정하기') {
-                context.go('/main/home/challenge/edit/${id}');
+                context.go('/main/challenge/challenge/edit/${id}');
               } else if (value == '삭제하기') {
                 showConfirmModal(
                   context: context,
