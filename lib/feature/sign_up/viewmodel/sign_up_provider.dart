@@ -1,45 +1,65 @@
+import 'dart:convert';
+
 import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:dailystep/feature/sign_up/viewmodel/validation_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../config/route/auth_redirection.dart';
+import 'package:intl/intl.dart';
 import '../../../data/api/api_client.dart';
 import '../../../data/api/result/api_error.dart';
 import '../../../data/api/result/simple_result.dart';
 import '../model/nickname_validation_response.dart';
+import '../model/sign_up_request.dart';
 import '../repository/nickname_repository.dart';
 import '../state/sign_up_state.dart';
+import '../view/job_dummies.dart';
+import '../view/jobtenure_dummies.dart';
 
 class SignUpViewModel extends StateNotifier<SignUpState> {
   final NicknameRepository _nicknameRepository = NicknameRepository();
 
   SignUpViewModel() : super(SignUpState());
 
-  Future<void> signUpWithKakao(String accessToken) async {
-    state = state.copyWith();
-
+  Future<void> saveUserInfo(String accessToken, BuildContext context) async {
     try {
-      // 카카오 로그인 후 받은 accessToken을 사용하여 회원가입 정보 요청
-      final signUpData = getSignUpData(state);
-      final requestData = {
-        ...signUpData,
-        "accessToken": accessToken,
-      };
+      setAccessToken(accessToken);
 
-      final response = await ApiClient().post('/api/v1/auth/signin/kakao', data: requestData);
+      print('saveUserInfo 호출, accessToken: $accessToken');
+      final signUpData = getSignUpData(state);
+
+      final signUpRequest = SignUpRequest(
+        accessToken: accessToken,
+        nickname: signUpData['nickname'],
+        birth: signUpData['birth'],
+        gender: signUpData['gender'],
+        jobId: signUpData['jobId'],
+        yearId: signUpData['yearId'],
+      );
+
+      // requestData를 JSON으로 직렬화
+      final requestData = signUpRequest.toJson();
+      print('서버 응답 데이터: ${requestData}');
+
+
+      // 서버 요청 URL이 맞는지 확인
+      final url = 'auth/signin/kakao';
+      print('POST 요청 URL: $url');
+      print('요청 데이터: ${jsonEncode(requestData)}');
+
+      final response = await ApiClient().post(url, data: requestData);
 
       if (response.statusCode == 200) {
-        // 회원가입 성공 처리
-        state = state.copyWith();
+        // 회원가입 성공 시 처리
         print('회원가입 성공');
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
-        // 회원가입 실패 처리
-        state = state.copyWith();
+        // 실패 시 처리
+        print('회원가입 실패, 상태 코드: ${response.statusCode}');
       }
     } catch (e) {
-      state = state.copyWith();
-      print('회원가입 오류: $e');
+      // 예외 처리
+      print('서버 오류: $e');
     }
   }
 
@@ -48,15 +68,19 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     return {
       "accessToken": signUpState.accessToken,
       "nickname": signUpState.nickName ?? '',
-      "birth": signUpState.birthDate != null ? signUpState.birthDate!.toIso8601String() : '',
+      "birth": signUpState.birthDate != null
+          ? DateFormat('yyyy-MM-dd').format(signUpState.birthDate!)
+          : '',
       "gender": signUpState.sex == 0 ? "MALE" : "FEMALE",
-      "jobId": signUpState.job ?? 0,
-      "yearId": signUpState.jobTenure ?? 0,
+      "jobId": signUpState.job,
+      "yearId": signUpState.jobTenure,
     };
   }
 
-  void setAccessToken(String token) {
-    state = state.copyWith(accessToken: token);
+  void setAccessToken(String accessToken) {
+    print('AccessToken 설정: $accessToken');
+    state = state.copyWith(accessToken: accessToken);
+    print('현재 state.accessToken: ${state.accessToken}');  // 상태 확인
   }
 
   void setNickName(String nickName, WidgetRef ref) {
@@ -135,13 +159,40 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     state = state.copyWith(selectedSex: sex);
   }
 
+/*  String? getSelectedJobName() {
+    return getJobName(state.job); // 상태에서 jobId를 가져와 이름을 반환
+  }
+
+  String? getJobName(int? jobId) {
+    if (jobId == null) return null;
+
+    final jobCategory = jobCategories.firstWhere(
+          (category) => int.parse(category.id) == jobId,
+      orElse: () => JobCategory(id: '0', name: '선택되지 않음'), // 기본값 설정
+    );
+
+    return jobCategory.name;
+  }*/
   void setJob(int job) {
     state = state.copyWith(selectedJob: job);
     print('riverpod job ${state.job}');
   }
 
+/*  String? getJobTenureName(int? jobTenure) {
+    if (jobTenure == null) return null;
+
+    // jobTenure 값을 기준으로 이름 반환
+    final jobTenureItem = dummyJobTenure.firstWhere(
+          (tenure) => int.parse(tenure.id) == jobTenure,
+      orElse: () => JobTenure(id: '0', name: '선택되지 않음'),
+    );
+
+    return jobTenureItem.name;
+  }*/
+
   void setJobTenure(int jobTenure) {
     state = state.copyWith(selectedJobTenure: jobTenure);
+    print('riverpod JobTenure ${state.jobTenure}');
   }
 
   void nextStep() {
@@ -180,12 +231,6 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
 
   bool _validateNickname() {
     return state.nickName?.isNotEmpty == true && state.nickNameValidation == '사용 가능한 닉네임입니다. :)';
-  }
-
-  VoidCallback saveUserInfo(DailyStepAuth auth, BuildContext context) {
-    return () {
-      auth.signUp(context);
-    };
   }
 }
 

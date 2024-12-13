@@ -107,12 +107,19 @@ class SignUpScreen extends ConsumerWidget {
           WCtaFloatingButton(
             signUpState.step == 6 ? '시작하기' : '다음',
             onPressed: signUpState.step == 6
-                ? signUpViewModel.saveUserInfo(auth, context)
+                ? () {
+              final accessToken = signUpState.accessToken;
+              if (accessToken != null) {
+                signUpViewModel.saveUserInfo(accessToken, context);
+              } else {
+                print("AccessToken이 없습니다.");
+              }
+            }
                 : (signUpState.isNicknameCheckInProgress || !signUpViewModel.checkValid()
                 ? null
                 : signUpViewModel.nextStep),
             gradient: signUpState.step == 6 ? mainGradient : null,
-          ),
+          )
         ],
       ),
     );

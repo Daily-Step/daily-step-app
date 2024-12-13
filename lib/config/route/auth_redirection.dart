@@ -7,27 +7,22 @@ import '../../feature/auth/social_login_repository.dart';
 import '../../model/user/user_model.dart';
 
 class DailyStepAuth extends ChangeNotifier {
-  bool _signedIn = true;
-  bool _signedUp = true;
-  SocialLoginRepository socialLoginRepository;
-  LoginApi loginApi;
+  bool _signedIn = false;
+  bool _signedUp = false;
+  final SocialLoginRepository socialLoginRepository;
+  final LoginApi loginApi;
 
   UserModel? user;
 
   DailyStepAuth({required this.socialLoginRepository, required this.loginApi});
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   bool get signedIn => _signedIn;
-
   bool get signedUp => _signedUp;
 
   Future<void> signOut() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     _signedIn = false;
+    _signedUp = false;
     notifyListeners();
   }
 

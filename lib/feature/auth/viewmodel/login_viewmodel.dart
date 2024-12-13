@@ -1,5 +1,6 @@
 import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/auth/service/kakao_auth_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../sign_up/viewmodel/sign_up_provider.dart';
 import '../state/login_state.dart';
@@ -15,7 +16,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
   LoginViewModel(this._ref) : super(LoginState());
 
   /// Kakao 로그인 로직
-  Future<void> loginWithKakao() async {
+  Future<void> loginWithKakao(BuildContext context) async {  // context 매개변수 추가
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
@@ -38,7 +39,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
         state = state.copyWith(isLoading: false, isLoggedIn: true);
       } else {
         // 로그인 실패 시, SignUpViewModel을 통해 회원가입 처리
-        _ref.read(signUpProvider.notifier).signUpWithKakao(accessToken);  // 회원가입 처리
+        _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);  // 수정된 부분
       }
     } catch (e) {
       print('Kakao 로그인 중 에러: $e');
@@ -48,7 +49,6 @@ class LoginViewModel extends StateNotifier<LoginState> {
       );
     }
   }
-
 
   /// 서버 API로 Kakao AccessToken 전송
   Future<bool> _loginToServer(String accessToken) async {

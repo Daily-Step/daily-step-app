@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../viewmodel/login_provider.dart';
+import '../viewmodel/login_viewmodel.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -44,7 +44,7 @@ class LoginScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                   child: ElevatedButton(
                     onPressed: () async {
-                      await viewModel.loginWithKakao();
+                      await viewModel.loginWithKakao(context);
                       if (loginState.isLoggedIn == false) {
                         context.go('/signUp');
                       } else {

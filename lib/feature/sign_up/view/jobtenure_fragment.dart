@@ -1,11 +1,13 @@
 import 'package:dailystep/widgets/widget_scroll_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../widgets/widget_constant.dart';
 import '../../../widgets/widget_select_input.dart';
+import '../viewmodel/sign_up_provider.dart';
 import 'jobtenure_dummies.dart';
 
-class JobTenureFragment extends StatelessWidget {
+class JobTenureFragment extends ConsumerWidget {
   const JobTenureFragment({
     super.key,
     required this.jobTenure,
@@ -16,7 +18,7 @@ class JobTenureFragment extends StatelessWidget {
   final Function(int?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text(
@@ -38,7 +40,7 @@ class JobTenureFragment extends StatelessWidget {
                     value: jobTenure != null ? jobTenure! : 1,
                     childCount: dummyJobTenure.length,
                     onSelected: (int) {
-                      onChanged(int + 1);
+                      ref.read(signUpProvider.notifier).setJobTenure(int+1);
                     },
                     itemBuilder: (context, index, bool) {
                       return Text(

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'dio/dio_set.dart';
 
-class ApiClient {
+class ApiClient{
   final Dio _dio = dioSet;
 
   Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters}) async {
