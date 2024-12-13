@@ -1,17 +1,9 @@
 import 'package:dio/dio.dart';
 
+import 'dio/dio_set.dart';
+
 class ApiClient {
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'https://dailystep.shop/api',
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 5),
-      headers: {
-        'Content-Type': 'application/json', // 요청 헤더 설정
-        'Accept': 'application/json',
-      },
-    ),
-  );
+  final Dio _dio = dioSet;
 
   Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters}) async {
     try {

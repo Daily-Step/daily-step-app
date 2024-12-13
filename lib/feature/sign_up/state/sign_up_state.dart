@@ -11,6 +11,7 @@ class SignUpState {
   final Color? nickNameValidationColor;
   final bool isNicknameCheckInProgress;
   final bool isAvailable;
+  final String? accessToken;
 
   SignUpState({
     this.step = 1,
@@ -23,6 +24,7 @@ class SignUpState {
     this.nickNameValidationColor,
     this.isNicknameCheckInProgress = false,
     this.isAvailable = false,
+    this.accessToken,
   });
 
   SignUpState copyWith({
@@ -36,6 +38,7 @@ class SignUpState {
     Color? nickNameValidationColor,
     bool? isNicknameCheckInProgress,
     bool? isAvailable,
+    String? accessToken,
   }) {
     return SignUpState(
       step: step ?? this.step,
@@ -48,6 +51,7 @@ class SignUpState {
       nickNameValidationColor: nickNameValidationColor ?? this.nickNameValidationColor,
       isNicknameCheckInProgress: isNicknameCheckInProgress ?? this.isNicknameCheckInProgress,
       isAvailable: isAvailable ?? this.isAvailable,
+      accessToken: accessToken ?? this.accessToken,
     );
   }
 }

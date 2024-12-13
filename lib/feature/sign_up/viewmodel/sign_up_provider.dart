@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/route/auth_redirection.dart';
+import '../../../data/api/api_client.dart';
 import '../../../data/api/result/api_error.dart';
 import '../../../data/api/result/simple_result.dart';
 import '../model/nickname_validation_response.dart';
@@ -14,6 +15,49 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
   final NicknameRepository _nicknameRepository = NicknameRepository();
 
   SignUpViewModel() : super(SignUpState());
+
+  Future<void> signUpWithKakao(String accessToken) async {
+    state = state.copyWith();
+
+    try {
+      // 카카오 로그인 후 받은 accessToken을 사용하여 회원가입 정보 요청
+      final signUpData = getSignUpData(state);
+      final requestData = {
+        ...signUpData,
+        "accessToken": accessToken,
+      };
+
+      final response = await ApiClient().post('/api/v1/auth/signin/kakao', data: requestData);
+
+      if (response.statusCode == 200) {
+        // 회원가입 성공 처리
+        state = state.copyWith();
+        print('회원가입 성공');
+      } else {
+        // 회원가입 실패 처리
+        state = state.copyWith();
+      }
+    } catch (e) {
+      state = state.copyWith();
+      print('회원가입 오류: $e');
+    }
+  }
+
+  // 데이터를 서버에 보낼 형식으로 변환하는 메서드
+  Map<String, dynamic> getSignUpData(SignUpState signUpState) {
+    return {
+      "accessToken": signUpState.accessToken,
+      "nickname": signUpState.nickName ?? '',
+      "birth": signUpState.birthDate != null ? signUpState.birthDate!.toIso8601String() : '',
+      "gender": signUpState.sex == 1 ? "MALE" : "FEMALE",
+      "jobId": signUpState.job ?? 0,
+      "yearId": signUpState.jobTenure ?? 0,
+    };
+  }
+
+  void setAccessToken(String token) {
+    state = state.copyWith(accessToken: token);
+  }
 
   void setNickName(String nickName, WidgetRef ref) {
     String nickNameValidation = '';
@@ -78,7 +122,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     state = state.copyWith(
       nickNameValidation: validationMessage,
       nickNameValidationColor: validationColor,
-      isAvailable: isAvailable, // 이 부분을 추가하여 isAvailable 상태도 업데이트
+      isAvailable: isAvailable,
     );
     ref.read(nicknameValidationColorProvider.notifier).state = validationColor;
   }

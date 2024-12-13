@@ -1,16 +1,18 @@
 import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/auth/service/kakao_auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../sign_up/viewmodel/sign_up_provider.dart';
 import '../state/login_state.dart';
 
 final loginViewModelProvider = StateNotifierProvider<LoginViewModel, LoginState>(
-      (ref) => LoginViewModel(),
+      (ref) => LoginViewModel(ref),
 );
 
 class LoginViewModel extends StateNotifier<LoginState> {
   final KakaoAuthService _kakaoAuthService = KakaoAuthService();
+  final Ref _ref;
 
-  LoginViewModel() : super(LoginState());
+  LoginViewModel(this._ref) : super(LoginState());
 
   /// Kakao 로그인 로직
   Future<void> loginWithKakao() async {
@@ -18,6 +20,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
     try {
       final accessToken = await _kakaoAuthService.getKakaoAccessToken();
+
       print('카카오 토큰 : ${accessToken}');
       if (accessToken == null) {
         state = state.copyWith(
@@ -27,11 +30,16 @@ class LoginViewModel extends StateNotifier<LoginState> {
         return;
       }
 
-      // 서버 API로 AccessToken을 전달하는 작업
-      await _loginToServer(accessToken);
+      // 서버에서 로그인 시도
+      final loginSuccess = await _loginToServer(accessToken);
 
-      // 상태 업데이트
-      state = state.copyWith(isLoading: false, isLoggedIn: true);
+      if (loginSuccess) {
+        // 로그인 성공
+        state = state.copyWith(isLoading: false, isLoggedIn: true);
+      } else {
+        // 로그인 실패 시, SignUpViewModel을 통해 회원가입 처리
+        _ref.read(signUpProvider.notifier).signUpWithKakao(accessToken);  // 회원가입 처리
+      }
     } catch (e) {
       print('Kakao 로그인 중 에러: $e');
       state = state.copyWith(
@@ -41,24 +49,30 @@ class LoginViewModel extends StateNotifier<LoginState> {
     }
   }
 
+
   /// 서버 API로 Kakao AccessToken 전송
-  Future<void> _loginToServer(String accessToken) async {
-    // 예제: 서버 API 호출 로직 (여기에서 성공/실패 처리 가능)
+  Future<bool> _loginToServer(String accessToken) async {
     try {
       final requestData = {'accessToken': accessToken};
       print('요청 데이터: $requestData');
 
-      print('AccessToken 서버로 전송: $requestData');
       final response = await ApiClient().post(
-        '/api/v1/auth/login/kakao',
+        'login/kakao',
         data: requestData,
       );
 
-      // 응답 성공 로그
       print('서버 응답 성공: ${response.statusCode}');
       print('서버 응답 데이터: ${response.data}');
+
+      // 로그인 성공 시 true 반환, 실패 시 false 반환
+      if (response.statusCode == 200) {
+        return true; // 로그인 성공
+      } else {
+        return false; // 로그인 실패
+      }
     } catch (e) {
-      print('서버 요청 실패');
+      print('서버 요청 실패: $e');
+      return false; // 예외 발생 시 실패로 처리
     }
   }
 

@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+import 'package:dailystep/data/api/dio/dio_set.dart';
 import 'dart:convert';
 import 'package:dailystep/data/api/result/simple_result.dart';
 import '../../../data/api/result/api_error.dart';
@@ -6,25 +6,29 @@ import '../model/nickname_validation_response.dart';
 
 class NicknameRepository {
   Future<SimpleResult<NicknameValidationResponse, ApiError>> checkNickname(String nickname) async {
-    final url = Uri.parse('https://dailystep.shop/api/v1/member/nickname/valid');
+    final url = 'member/nickname/valid';
 
     try {
       print('POST 요청 URL: $url');
       print('요청 데이터: $nickname');
 
-      final response = await http.post(
+      final response = await dioSet.post(
         url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'nickname': nickname}),
+        data: jsonEncode({'nickname': nickname}),
       );
 
       if (response.statusCode == 200) {
-        // UTF-8로 응답 데이터 디코딩
-        String decodedBody = utf8.decode(response.body.runes.toList(), allowMalformed: true);
-        print('응답 데이터: ${decodedBody}');
+        dynamic responseData = response.data;
 
+        if (responseData is String) {
+          String decodedBody = utf8.decode(responseData.runes.toList(), allowMalformed: true);
+          print('응답 데이터: ${decodedBody}');
+          responseData = json.decode(decodedBody);
+        } else {
+          print('응답 데이터: ${responseData}');
+        }
 
-        final jsonResponse = json.decode(decodedBody) as Map<String, dynamic>;
+        final jsonResponse = responseData as Map<String, dynamic>;
 
         return SimpleResult.success(NicknameValidationResponse.fromJson(jsonResponse));
       } else {
@@ -41,3 +45,4 @@ class NicknameRepository {
     }
   }
 }
+
