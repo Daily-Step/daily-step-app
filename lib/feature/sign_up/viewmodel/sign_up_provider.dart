@@ -49,7 +49,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
       "accessToken": signUpState.accessToken,
       "nickname": signUpState.nickName ?? '',
       "birth": signUpState.birthDate != null ? signUpState.birthDate!.toIso8601String() : '',
-      "gender": signUpState.sex == 1 ? "MALE" : "FEMALE",
+      "gender": signUpState.sex == 0 ? "MALE" : "FEMALE",
       "jobId": signUpState.job ?? 0,
       "yearId": signUpState.jobTenure ?? 0,
     };
@@ -133,6 +133,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
 
   void setSex(int sex) {
     state = state.copyWith(selectedSex: sex);
+    print('riverpod sex ${state.sex}');
   }
 
   void setJob(int job) {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../widgets/widget_constant.dart';
+import '../viewmodel/sign_up_provider.dart';
 
 
-class SexFragment extends StatelessWidget {
+class SexFragment extends ConsumerWidget  {
   const SexFragment({
     super.key,
     required this.selectedSex,
@@ -14,7 +16,7 @@ class SexFragment extends StatelessWidget {
   final Function(int?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text(
@@ -25,20 +27,23 @@ class SexFragment extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildToggleButton('남성', 0),
+            _buildToggleButton('남성', 0, ref),
             SizedBox(width: 12),
-            _buildToggleButton('여성', 1),
+            _buildToggleButton('여성', 1, ref),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildToggleButton(String text, int index) {
+  Widget _buildToggleButton(String text, int index, WidgetRef ref) {
     bool isSelected = selectedSex == index;
 
     return GestureDetector(
-      onTap: () => onChanged(index),
+      onTap:() {
+        onChanged(index);
+        ref.read(signUpProvider.notifier).setSex(index);
+      },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
         decoration: BoxDecoration(
