@@ -133,11 +133,11 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
 
   void setSex(int sex) {
     state = state.copyWith(selectedSex: sex);
-    print('riverpod sex ${state.sex}');
   }
 
   void setJob(int job) {
     state = state.copyWith(selectedJob: job);
+    print('riverpod job ${state.job}');
   }
 
   void setJobTenure(int jobTenure) {

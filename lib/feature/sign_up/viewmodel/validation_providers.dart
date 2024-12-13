@@ -11,3 +11,5 @@ final isNicknameCheckInProgressProvider = StateProvider<bool>((ref) => false);
 final birthDateValidationProvider = StateProvider<DateTime?>((ref) {
   return null;
 });
+
+final jobProvider = StateProvider<int?>((ref) => null);
