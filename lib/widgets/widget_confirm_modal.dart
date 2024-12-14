@@ -36,7 +36,6 @@ void showConfirmModal({
                           ),
                           onPressed: () {
                             Navigator.pop(context);
-                            onClickConfirm();
                           },
                           child: Text(
                             '닫기',

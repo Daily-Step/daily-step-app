@@ -1,9 +1,52 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../feature/home/action/calendar_action.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
+import '../feature/home/view/home/home_fragment.dart';
+import '../feature/home/viewmodel/calendar_viewmodel.dart';
+
+class WMonthPageView extends ConsumerStatefulWidget {
+  final List<DateTime> successList;
+  final PageController monthPageController;
+
+  const WMonthPageView({
+    super.key,
+    required this.successList,
+    required this.monthPageController,
+  });
+
+  @override
+  _WMonthPageViewState createState() => _WMonthPageViewState();
+}
+
+class _WMonthPageViewState extends ConsumerState<WMonthPageView> {
+  @override
+  Widget build(BuildContext context) {
+    final calendarState = ref.watch(calendarViewModelProvider);
+    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+
+    return PageView.builder(
+      controller: widget.monthPageController,
+      onPageChanged: (page) {
+        calendarNotifier.handleAction(
+            ChangeFirstDateOfMonthAction(addPage: page - MONTH_TOTAL_PAGE));
+      },
+      itemCount: MONTH_TOTAL_PAGE + 1,
+      itemBuilder: (context, index) {
+        return WMonthCalendar(
+          successDates: widget.successList,
+          firstDateOfRange: calendarState.firstDateOfMonth,
+          selectedDate: calendarState.selectedDate,
+          isModal: false,
+        );
+      },
+    );
+  }
+}
 
 class WMonthModal extends StatefulWidget {
   final List<DateTime> successList;
@@ -66,8 +109,9 @@ class _WMonthModalState extends State<WMonthModal> {
             height10,
             WMonthCalendar(
               successDates: widget.successList,
-              selectedMonth: selectedMonth,
+              firstDateOfRange: selectedMonth,
               isModal: true,
+              selectedDate: DateTime.now(),
             ),
             height20,
           ],
@@ -79,14 +123,16 @@ class _WMonthModalState extends State<WMonthModal> {
 
 class WMonthCalendar extends StatefulWidget {
   final List<DateTime> successDates;
-  final DateTime selectedMonth;
+  final DateTime firstDateOfRange;
   final bool isModal;
+  final DateTime selectedDate;
 
   const WMonthCalendar({
     super.key,
     required this.successDates,
-    required this.selectedMonth,
+    required this.firstDateOfRange,
     required this.isModal,
+    required this.selectedDate,
   });
 
   @override
@@ -96,39 +142,44 @@ class WMonthCalendar extends StatefulWidget {
 class _WMonthCalendarState extends State<WMonthCalendar> {
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth = DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
+    final firstDayOfMonth = DateTime(
+        widget.firstDateOfRange.year, widget.firstDateOfRange.month, 1);
     final firstDayOfCalendar = firstDayOfMonth.subtract(
       Duration(days: firstDayOfMonth.weekday % 7),
     );
-
-    return Column(mainAxisSize: MainAxisSize.max, children: [
-      CalendarLabel(),
-      SizedBox(),
-
-    Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 6,
-            crossAxisSpacing: widget.isModal ? 10 : 20,
-          ),
-          itemCount: 35,
-          itemBuilder: (context, index) {
-            final date = firstDayOfCalendar.add(Duration(days: index));
-            final isToday = date.isSameDate(DateTime.now());
-            final isCurrentPeriod = date.isSameMonth(widget.selectedMonth);
-            final isSuccess = widget.successDates.any((successDate) => successDate.isSameDate(date));
-
-            return CalendarDayContainer(isToday: isToday, isSuccess: isSuccess, date: date, isCurrentPeriod: isCurrentPeriod);
-          },
+    final calendarGrid = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          mainAxisSpacing: 6,
+          crossAxisSpacing: widget.isModal ? 10 : 20,
         ),
-      ),
-    ),
+        itemCount: 35,
+        itemBuilder: (context, index) {
+          final date = firstDayOfCalendar.add(Duration(days: index));
+          final isToday = date.isSameDate(widget.selectedDate);
+          final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
+          final isSuccess = widget.successDates
+              .any((successDate) => successDate.isSameDate(date));
 
-    ]);
+          return CalendarDayContainer(
+              isToday: isToday,
+              isSuccess: isSuccess,
+              date: date,
+              isCurrentPeriod: isCurrentPeriod);
+        },
+      ),
+    );
+
+    return Column(
+      children: [
+        CalendarLabel(),
+        SizedBox(height: 4),
+        widget.isModal ? calendarGrid : Expanded(child: calendarGrid),
+      ],
+    );
   }
 }

@@ -1,14 +1,19 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/feature/home/viewmodel/calendar_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../model/challenge/challenge_dummies.dart';
 import '../../../../widgets/widget_constant.dart';
-import '../../action/challenge_list_action.dart';
+import '../../../../widgets/widget_month_calendar.dart';
+import '../../../../widgets/widget_week_calendar.dart';
+import '../../action/calendar_action.dart';
 import 'challenge_empty.dart';
-import 'challenge_item.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
-import 'expandable_calendar.dart';
+import 'challenge_list.dart';
+
+const int DAY_TOTAL_PAGE = 180;
+const int WEEK_TOTAL_PAGE = 26;
+const int MONTH_TOTAL_PAGE = 6;
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});
@@ -18,25 +23,24 @@ class HomeFragment extends ConsumerStatefulWidget {
 }
 
 class _HomeFragmentState extends ConsumerState<HomeFragment> {
-  bool _isExpanded = false;
-  DateTime currentDate = DateTime.now();
-  DateTime selectedDate = DateTime.now();
-  PageController _pageController = PageController();
+  final PageController weekPageController =
+      PageController(initialPage: WEEK_TOTAL_PAGE);
+  final PageController monthPageController =
+      PageController(initialPage: MONTH_TOTAL_PAGE);
 
   @override
-  void initState() {
-    super.initState();
-    selectedDate = _isExpanded
-        ? DateTime(selectedDate.year, selectedDate.month, 1)
-        : selectedDate.getStartOfWeek();
-    _pageController =
-        PageController(initialPage: _isExpanded ? 6 : 26);
+  void dispose() {
+    weekPageController.dispose();
+    monthPageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(challengeViewModelProvider);
-    final notifier = ref.read(challengeViewModelProvider.notifier);
+    final challengeState = ref.watch(challengeViewModelProvider);
+    final calendarState = ref.watch(calendarViewModelProvider);
+    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+    final isExpanded = calendarState.isExpanded;
 
     return Column(
       children: [
@@ -47,15 +51,18 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             children: [
               Row(children: [
                 Text(
-                  selectedDate.formattedMonth,
+                  calendarState.selectedDate.formattedMonth,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
                 IconButton(
-                  icon: Icon(_isExpanded
+                  icon: Icon(isExpanded
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down),
                   onPressed: () => setState(() {
-                    _isExpanded = !_isExpanded;
+                    calendarNotifier.handleAction(ChangeExpandAction(
+                        controller: isExpanded
+                            ? weekPageController
+                            : monthPageController));
                   }),
                 ),
               ]),
@@ -70,59 +77,35 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             ],
           ),
         ),
-        ExpandableCalendar(
-          successList: dummySuccessList,
-          isExpanded: _isExpanded,
-          selectedDate: selectedDate,
-          pageController: _pageController,
-            onPageChanged:(page) {
-              setState(() {
-                if (_isExpanded) {
-                  selectedDate = DateTime(
-                    currentDate.year,
-                    currentDate.month + (page - 26),
-                    1,
-                  );
-                } else {
-                  selectedDate = currentDate
-                      .add(Duration(days: (page - 26) * 7))
-                      .getStartOfWeek();
-                }
-              });
-            }
+        AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: isExpanded ? 240 : 80,
+          curve: Curves.easeInOut,
+          child: isExpanded
+              ? WMonthPageView(
+                  monthPageController: monthPageController,
+                  successList: dummySuccessList,
+                )
+              : WWeekPageView(
+                  weekPageController: weekPageController,
+                  successList: dummySuccessList,
+                ),
         ),
         height20,
-        state.challengeList.length == 0
+        challengeState.challengeList.length == 0
             ? ChallengeEmpty()
             : Expanded(
-                child: ListView.builder(
-                    itemCount: state.challengeList.length,
-                    itemBuilder: (context, index) {
-                      final challenge = state.challengeList[index];
-                      final bool isAchieved = challenge.successList
-                          .any((date) => date.isSameDate(DateTime.now()));
-                      return ChallengeItem(
-                        task: challenge,
-                        index: index,
-                        onTap: () async {
-                          await notifier
-                              .handleAction(FindTaskAction(challenge.id));
-                          context.push('/main/challenge/challenge/${challenge.id}');
-                        },
-                        onClickAchieveButton: () async {
-                          if (isAchieved == false) {
-                            List<DateTime> copiedChallengeSuccessList =
-                                List<DateTime>.from(challenge.successList);
-                            copiedChallengeSuccessList.add(DateTime.now());
-                            final newChallenge = challenge.copyWith(
-                                successList: copiedChallengeSuccessList);
-                            await notifier.handleAction(
-                                UpdateTaskAction(challenge.id, newChallenge));
-                          }
-                        },
-                        isAchieved: isAchieved,
-                      );
-                    }),
+                child: ChallengeListPageView(
+                  onPageChanged: (page) {
+                    setState(() {
+                      calendarNotifier.handleAction(ChangeSelectedDateAction(
+                          addPage: page - DAY_TOTAL_PAGE,
+                          controller: isExpanded
+                              ? monthPageController
+                              : weekPageController));
+                    });
+                  },
+                ),
               ),
       ],
     );

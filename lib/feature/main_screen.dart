@@ -68,7 +68,7 @@ class MainScreenState extends ConsumerState<MainScreen>
             bottomNavigationBar: _buildBottomNavigationBar(context),
             floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  context.go('/main/challenge/challenge/new');
+                  context.go('/main/challenge/new');
                 },
                 shape: const CircleBorder(),
                 backgroundColor: Colors.black,

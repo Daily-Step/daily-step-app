@@ -27,9 +27,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   Future<void> handleAction(ChallengeListAction action) async {
-    if (action is ReorderTasksAction) {
-      _handleReorderTasks(action);
-    } else if (action is AddTaskAction) {
+    if (action is AddTaskAction) {
       _handleAddTask(action);
     } else if (action is UpdateTaskAction) {
       _handleUpdateTask(action);
@@ -38,16 +36,6 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     } else if (action is FindTaskAction) {
       _handleFindTask(action);
     }
-  }
-
-  void _handleReorderTasks(ReorderTasksAction action) {
-    if (action.oldIndex == action.newIndex) return;
-
-    final newTasks = List.of(state.challengeList);
-    final item = newTasks.removeAt(action.oldIndex);
-    newTasks.insert(action.newIndex, item);
-
-    state = state.copyWith(tasks: newTasks);
   }
 
   void _handleAddTask(AddTaskAction action) {
@@ -84,26 +72,38 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       selectedTask: selectedTask,
     );
   }
+
+  Future<void> _handleCheckFirstAchieve(FindTaskAction action) async {
+    final tasks = List.of(state.challengeList);
+    final selectedTask = tasks.firstWhere((task) => task.id == action.id);
+    state = state.copyWith(
+      selectedTask: selectedTask,
+    );
+  }
 }
 
 class ChallengesState {
   final List<ChallengeModel> challengeList;
   final ChallengeModel? selectedTask;
+  final bool? firstAchieve;
 
   const ChallengesState({
     required this.challengeList,
     this.selectedTask,
+    this.firstAchieve,
   });
 
   ChallengesState copyWith({
     List<ChallengeModel>? tasks,
     ChallengeModel? selectedTask,
+    bool? firstAchieve,
   }) {
     return ChallengesState(
       challengeList: tasks != null
           ? List<ChallengeModel>.from(tasks.map((task) => task.copyWith()))
           : this.challengeList,
       selectedTask: selectedTask ?? this.selectedTask,
+      firstAchieve: firstAchieve ?? this.firstAchieve,
     );
   }
 }

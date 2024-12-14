@@ -13,7 +13,6 @@ import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
 import '../feature/mypage/view/settings/account_settings/account_setting_screen.dart';
-import '../feature/mypage/view/settings/category_settings/category_settings_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/birthday_settings/birthday_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/my_info_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/nickname_settings/nickname_screen.dart';
@@ -99,14 +98,14 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
         ),
         routes: <GoRoute>[
           GoRoute(
-            path: '/challenge/new',
+            path: '/new',
             pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
               key: state.pageKey,
               child: ChallengeEditScreen(null),
             ),
           ),
           GoRoute(
-            path: 'challenge/edit/:id',
+            path: '/edit/:id',
             pageBuilder: (BuildContext context, GoRouterState state) {
               final String id = state.pathParameters['id']!;
               return FadeTransitionPage(
@@ -116,7 +115,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
             },
           ),
           GoRoute(
-            path: '/challenge/:postId',
+            path: '/:postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
               return ChallengeDetailScreen(int.parse(postId));

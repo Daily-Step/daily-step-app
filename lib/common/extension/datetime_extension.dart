@@ -45,4 +45,8 @@ extension DateTimeExtension on DateTime {
   DateTime getStartOfWeek(){
     return this.subtract(Duration(days: this.weekday % 7));
   }
+
+  DateTime getLastDayOfMonth(){
+    return DateTime(this.year, this.month + 1, 0);
+  }
 }
