@@ -59,7 +59,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
       }
     } catch (e) {
       // 예외 처리
-      print('서버 오류: $e');
+      print('saveUserInfo 서버 오류: $e');
     }
   }
 

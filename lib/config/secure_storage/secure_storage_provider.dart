@@ -1,69 +1,73 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dailystep/config/secure_storage/secure_storage_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 part 'secure_storage_provider.g.dart';
 
-@Riverpod(keepAlive: true)
-FlutterSecureStorage storage(StorageRef ref) {
-  return const FlutterSecureStorage();
-}
-
-@Riverpod(keepAlive: true)
-SecureStorage secureStorage(SecureStorageRef ref) {
-  final FlutterSecureStorage storage = ref.read(storageProvider);
-  return SecureStorage(storage: storage);
+@riverpod
+SecureStorageService secureStorageService(SecureStorageServiceRef ref) {
+  return SecureStorageService();
 }
 
 class SecureStorage {
-  static const REFRESH_TOKEN = 'refresh_token';
   static const ACCESS_TOKEN = 'access_token';
-  final FlutterSecureStorage storage;
+  static const ACCESS_TOKEN_EXPIRATION = 'access_token_expiration';
+
+  final SecureStorageService secureStorageService;
+
   SecureStorage({
-    required this.storage,
+    required this.secureStorageService,
   });
 
-  //  리프레시 토큰 저장
-  Future<void> saveRefreshToken(String refreshToken) async {
+  // 엑세스 토큰 저장 (만료 시간도 함께 저장)
+  Future<void> saveAccessToken(String accessToken, dynamic expiresInSeconds) async {
     try {
-      print('[SECURE_STORAGE] saveRefreshToken: $refreshToken');
-      await storage.write(key: REFRESH_TOKEN, value: refreshToken);
-    } catch (e) {
-      print("[ERR] RefreshToken 저장 실패: $e");
-    }
-  }
-
-  // 리프레시 토큰 불러오기
-  Future<String?> readRefreshToken() async {
-    try {
-      final refreshToken = await storage.read(key: REFRESH_TOKEN);
-      print('[SECURE_STORAGE] readRefreshToken: $refreshToken');
-      return refreshToken;
-    } catch (e) {
-      print("[ERR] RefreshToken 불러오기 실패: $e");
-      return null;
-    }
-  }
-
-  // 엑세스 토큰 저장
-  Future<void> saveAccessToken(String accessToken) async {
-    try {
-      print('[SECURE_STORAGE] saveAccessToken: $accessToken');
-      await storage.write(key: ACCESS_TOKEN, value: accessToken);
+      final expirationTime = DateTime.now().add(Duration(seconds: expiresInSeconds));
+      await secureStorageService.saveAccessToken(accessToken, expiresInSeconds);
+      await secureStorageService.saveAccessToken(ACCESS_TOKEN_EXPIRATION, expirationTime.toIso8601String());
+      print('[SECURE_STORAGE] saveAccessToken: $accessToken, expires at: $expirationTime');
     } catch (e) {
       print("[ERR] AccessToken 저장 실패: $e");
     }
   }
 
-  // 에세스 토큰 불러오기
+  // 엑세스 토큰 불러오기 시 만료 여부 체크
   Future<String?> readAccessToken() async {
     try {
-      final accessToken = await storage.read(key: ACCESS_TOKEN);
-      print('[SECURE_STORAGE] readAccessToken: $accessToken');
-      final refreshToken = await storage.read(key: REFRESH_TOKEN);
-      print('[SECURE_STORAGE] readRefreshToken: $refreshToken');
+      final expirationTimeString = await secureStorageService.getAccessToken();
+      if (expirationTimeString != null) {
+        final expirationTime = DateTime.parse(expirationTimeString);
+        if (expirationTime.isBefore(DateTime.now())) {
+          // 만료된 토큰은 삭제
+          await secureStorageService.deleteTokens();
+          await secureStorageService.deleteTokens();
+          print('[SECURE_STORAGE] Access Token expired, deleted.');
+
+          // 만료된 토큰은 null 반환 (새로운 토큰을 받아야 함)
+          return null;
+        }
+      }
+
+      final accessToken = await secureStorageService.getAccessToken();
       return accessToken;
     } catch (e) {
       print("[ERR] AccessToken 불러오기 실패: $e");
       return null;
     }
   }
+
+  // 엑세스 토큰 삭제
+  Future<void> deleteAccessToken() async {
+    try {
+      await secureStorageService.deleteTokens();
+      await secureStorageService.deleteTokens();
+      print('[SECURE_STORAGE] AccessToken 삭제 완료');
+    } catch (e) {
+      print("[ERR] AccessToken 삭제 실패: $e");
+    }
+  }
 }
+
+final savedTokenProvider = FutureProvider<String?>((ref) async {
+  final secureStorageService = ref.read(secureStorageServiceProvider);
+  return await secureStorageService.getAccessToken();
+});

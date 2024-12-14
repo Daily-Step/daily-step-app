@@ -2,6 +2,7 @@ import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/auth/service/kakao_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../../sign_up/viewmodel/sign_up_provider.dart';
 import '../state/login_state.dart';
 
@@ -17,12 +18,22 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   /// Kakao 로그인 로직
   Future<void> loginWithKakao(BuildContext context) async {  // context 매개변수 추가
+    await _ref.read(secureStorageServiceProvider).deleteTokens();
+
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
+      final savedToken = await _ref.read(secureStorageServiceProvider).getAccessToken();
+
+      if (savedToken != null) {
+        print('유효한 저장된 토큰: $savedToken');
+        // 유효한 토큰이 있으면 바로 로그인 상태로 전환
+        state = state.copyWith(isLoading: false, isLoggedIn: true);
+        return;
+      }
+
       final accessToken = await _kakaoAuthService.getKakaoAccessToken();
 
-      print('카카오 토큰 : ${accessToken}');
       if (accessToken == null) {
         state = state.copyWith(
           isLoading: false,
@@ -30,6 +41,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
         );
         return;
       }
+      await _saveAccessToken(accessToken);
 
       // 서버에서 로그인 시도
       final loginSuccess = await _loginToServer(accessToken);
@@ -39,7 +51,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
         state = state.copyWith(isLoading: false, isLoggedIn: true);
       } else {
         // 로그인 실패 시, SignUpViewModel을 통해 회원가입 처리
-        _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);  // 수정된 부분
+        _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);
       }
     } catch (e) {
       print('Kakao 로그인 중 에러: $e');
@@ -73,6 +85,17 @@ class LoginViewModel extends StateNotifier<LoginState> {
     } catch (e) {
       print('서버 요청 실패: $e');
       return false; // 예외 발생 시 실패로 처리
+    }
+  }
+
+  Future<void> _saveAccessToken(String accessToken) async {
+    try {
+      // SecureStorageService를 사용하여 토큰 저장
+      await _ref.read(secureStorageServiceProvider).saveAccessToken(accessToken, 2592000);
+    } catch (e) {
+      print("토큰 저장 중 오류 발생: $e");
+      // 필요 시 에러 상태 업데이트
+      state = state.copyWith(errorMessage: '토큰 저장 중 오류가 발생했습니다.');
     }
   }
 
