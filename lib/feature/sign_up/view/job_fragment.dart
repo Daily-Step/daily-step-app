@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../widgets/widget_constant.dart';
+import '../../../widgets/widget_constant.dart';
+import '../viewmodel/sign_up_provider.dart';
 import 'job_dummies.dart';
 
-class JobFragment extends StatelessWidget {
+class JobFragment extends ConsumerWidget {
   const JobFragment({
     super.key,
     required this.job,
@@ -14,7 +16,7 @@ class JobFragment extends StatelessWidget {
   final Function(int?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text(
@@ -52,7 +54,8 @@ class JobFragment extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
                       onPressed: () {
-                        onChanged(int.parse(jobItem.id));
+                        final signUpViewModel = ref.read(signUpProvider.notifier);
+                        signUpViewModel.setJob(int.parse(jobItem.id));
                       },
                       child: Text(
                         jobItem.name,

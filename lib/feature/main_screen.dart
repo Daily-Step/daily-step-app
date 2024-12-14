@@ -12,8 +12,9 @@ final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
 class MainScreen extends ConsumerStatefulWidget {
   final TabItem firstTab;
+  final int? id;
 
-  const MainScreen({super.key, this.firstTab = TabItem.home});
+  const MainScreen({super.key, this.firstTab = TabItem.home, this.id,});
 
   @override
   ConsumerState<MainScreen> createState() => MainScreenState();

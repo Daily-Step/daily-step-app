@@ -81,8 +81,7 @@ class _WMonthModalState extends State<WMonthModal> {
                   ),
                   onPressed: () {
                     setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month - 1, 1);
+                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month - 1, 1);
                     });
                   },
                 ),
@@ -96,15 +95,12 @@ class _WMonthModalState extends State<WMonthModal> {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.isSameMonth(DateTime.now())
-                        ? backgroundColor
-                        : subTextColor,
+                    color: selectedMonth.isSameMonth(DateTime.now()) ? backgroundColor : subTextColor,
                   ),
                   onPressed: () {
                     if (selectedMonth.isSameMonth(DateTime.now())) return;
                     setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month + 1, 1);
+                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month + 1, 1);
                     });
                   },
                 ),
@@ -151,7 +147,6 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
     final firstDayOfCalendar = firstDayOfMonth.subtract(
       Duration(days: firstDayOfMonth.weekday % 7),
     );
-
     final calendarGrid = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GridView.builder(

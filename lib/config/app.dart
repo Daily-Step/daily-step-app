@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../feature/auth/login_provider.dart';
-import '../feature/auth/login_screen.dart';
+import '../feature/auth/social_login_repository.dart';
+import '../feature/auth/view/login_screen.dart';
 import '../feature/home/view/challenge_detail_screen.dart';
 import '../feature/home/view/challenge_edit_screen.dart';
 import '../feature/main_screen.dart';
@@ -17,7 +17,7 @@ import '../feature/mypage/view/settings/edit_my_info_settings/birthday_settings/
 import '../feature/mypage/view/settings/edit_my_info_settings/my_info_screen.dart';
 import '../feature/mypage/view/settings/edit_my_info_settings/nickname_settings/nickname_screen.dart';
 import '../feature/mypage/view/settings/version_info/version_info_screen.dart';
-import '../feature/sign_up/sign_up_screen.dart';
+import '../feature/sign_up/view/sign_up_screen.dart';
 import '../feature/nav/nav_item.dart';
 import '../feature/splash/splash_screen.dart';
 import '../widgets/widget_constant.dart';
@@ -63,7 +63,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
       ),
       GoRoute(
         path: '/signIn',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: LoginScreen(auth: _auth)),
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: LoginScreen()),
       ),
       GoRoute(
         path: '/signUp',
@@ -79,6 +79,13 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
         pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
           key: state.pageKey,
           child: MainScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/main/home/:id',
+        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+          key: state.pageKey,
+          child: MainScreen(id: int.parse(state.pathParameters['id']!)), // id를 MainScreen에 전달
         ),
       ),
       GoRoute(

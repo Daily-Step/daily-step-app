@@ -34,6 +34,7 @@ class WDatePicker extends StatelessWidget {
                 WDateScrollPicker(
                   onDateSelected: (DateTime date) {
                     selectedDate = date; // 날짜가 선택되면 selectedDate를 업데이트
+                    controller.text = _formatDate(selectedDate);
                     onChanged(selectedDate); // 선택된 날짜 바로 반영
                     setModalState(() {}); // 상태를 갱신하여 UI가 반영되도록 처리
                   },
@@ -44,6 +45,10 @@ class WDatePicker extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
   }
 
   @override
