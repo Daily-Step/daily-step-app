@@ -9,6 +9,7 @@ import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import '../../../config/route/auth_redirection.dart';
 import 'end_fragment.dart';
 import 'sex_fragment.dart';
@@ -108,16 +109,14 @@ class SignUpScreen extends ConsumerWidget {
             signUpState.step == 6 ? '시작하기' : '다음',
             onPressed: signUpState.step == 6
                 ? () {
-              final accessToken = signUpState.accessToken;
-              if (accessToken != null) {
-                signUpViewModel.saveUserInfo(accessToken, context);
-              } else {
-                print("AccessToken이 없습니다.");
-              }
-            }
-                : (signUpState.isNicknameCheckInProgress || !signUpViewModel.checkValid()
-                ? null
-                : signUpViewModel.nextStep),
+                    final accessToken = signUpState.accessToken;
+                    if (accessToken != null) {
+                      GoRouter.of(context).go('/main/home');
+                    } else {
+                      print("AccessToken이 없습니다.");
+                    }
+                  }
+                : (signUpState.isNicknameCheckInProgress || !signUpViewModel.checkValid() ? null : signUpViewModel.nextStep),
             gradient: signUpState.step == 6 ? mainGradient : null,
           )
         ],

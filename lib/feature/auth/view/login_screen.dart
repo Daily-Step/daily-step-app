@@ -46,6 +46,7 @@ class LoginScreen extends ConsumerWidget {
                       padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                       child: ElevatedButton(
                         onPressed: () async {
+
 /*                          if (savedToken != null) {
                             // 저장된 토큰이 유효하면 서버 요청 없이 바로 로그인 처리
                             print('유효한 저장된 토큰이 있습니다. 서버 요청을 건너뜁니다.');
@@ -55,8 +56,9 @@ class LoginScreen extends ConsumerWidget {
                           }*/
 
                           await viewModel.loginWithKakao(context);
+                          final isLoggedIn = viewModel.state.isLoggedIn;
 
-                          if (loginState.isLoggedIn) {
+                          if (isLoggedIn) {
                             context.go('/main/home');
                           } else {
                             context.go('/signUp');

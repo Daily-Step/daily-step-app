@@ -1,5 +1,6 @@
 import 'package:dailystep/config/route/fade_transition_page.dart';
 import 'package:dailystep/data/api/login_api.dart';
+import 'package:dailystep/feature/auth/viewmodel/login_viewmodel.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_screen.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_screen.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/jobtenure/jobtenure_screen.dart';
@@ -31,6 +32,8 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoggedIn = ref.watch(loginViewModelProvider).isLoggedIn;
+
     return DailyStepAuthScope(
       notifier: _auth,
       child: MaterialApp.router(
@@ -46,163 +49,167 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
             backgroundColor: backgroundColor,
           )
         ),
-        routerConfig: _router,
+        routerConfig: _router(isLoggedIn),
       ),
     );
   }
 
-  late final GoRouter _router = GoRouter(
-    navigatorKey: navigatorKey,
-    routes: <GoRoute>[
-      GoRoute(
-        path: '/',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: SplashScreen(),
-        ),
-      ),
-      GoRoute(
-        path: '/signIn',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: LoginScreen()),
-      ),
-      GoRoute(
-        path: '/signUp',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: SignUpScreen(
-            auth: _auth,
+  GoRouter _router(bool isLoggedIn) {
+    return GoRouter(
+      navigatorKey: navigatorKey,
+      routes: <GoRoute>[
+        GoRoute(
+          path: '/',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: SplashScreen(),
           ),
         ),
-      ),
-      GoRoute(
-        path: '/main/home',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: MainScreen(),
+        GoRoute(
+          path: '/signIn',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: LoginScreen()),
         ),
-      ),
-      GoRoute(
-        path: '/main/home/:id',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: MainScreen(id: int.parse(state.pathParameters['id']!)), // id를 MainScreen에 전달
-        ),
-      ),
-      GoRoute(
-        path: '/main/:kind(challenge|myPage)',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: MainScreen(
-            firstTab: TabItem.find(state.pathParameters['kind']),
-          ),
-        ),
-        routes: <GoRoute>[
-          GoRoute(
-            path: '/new',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: ChallengeEditScreen(null),
+        GoRoute(
+          path: '/signUp',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: SignUpScreen(
+              auth: _auth,
             ),
           ),
-          GoRoute(
-            path: '/edit/:id',
-            pageBuilder: (BuildContext context, GoRouterState state) {
-              final String id = state.pathParameters['id']!;
-              return FadeTransitionPage(
+        ),
+        GoRoute(
+          path: '/main/home',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: MainScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/main/home/:id',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: MainScreen(id: int.parse(state.pathParameters['id']!)), // id를 MainScreen에 전달
+          ),
+        ),
+        GoRoute(
+          path: '/main/:kind(challenge|myPage)',
+          pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: MainScreen(
+              firstTab: TabItem.find(state.pathParameters['kind']),
+            ),
+          ),
+          routes: <GoRoute>[
+            GoRoute(
+              path: '/new',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
                 key: state.pageKey,
-                child: ChallengeEditScreen(int.parse(id)),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/:postId',
-            builder: (BuildContext context, GoRouterState state) {
-              final String postId = state.pathParameters['postId']!;
-              return ChallengeDetailScreen(int.parse(postId));
-            },
-          ),
-          GoRoute(
-            path: '/myinfo',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
-          ),
-          GoRoute(
-            path: '/myinfo/nickname/:nickname',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: NickNameScreen(),
+                child: ChallengeEditScreen(null),
+              ),
             ),
-          ),
-          GoRoute(
-            path: '/myinfo/birthday/:birthday',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: BirthdayScreen(),
+            GoRoute(
+              path: '/edit/:id',
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                final String id = state.pathParameters['id']!;
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: ChallengeEditScreen(int.parse(id)),
+                );
+              },
             ),
-          ),
-          GoRoute(
-            path: '/myinfo/gender',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: GenderScreen(),
+            GoRoute(
+              path: '/:postId',
+              builder: (BuildContext context, GoRouterState state) {
+                final String postId = state.pathParameters['postId']!;
+                return ChallengeDetailScreen(int.parse(postId));
+              },
             ),
-          ),
-          GoRoute(
-            path: '/myinfo/job',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: JobScreen(),
+            GoRoute(
+              path: '/myinfo',
+              pageBuilder: (BuildContext context, GoRouterState state) =>
+                  FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
             ),
-          ),
-          GoRoute(
-            path: '/myinfo/jobTenure',
-            pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-              key: state.pageKey,
-              child: JobTenureScreen(),
+            GoRoute(
+              path: '/myinfo/nickname/:nickname',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: NickNameScreen(),
+              ),
             ),
-          ),
-          GoRoute(
-            path: 'myinfo/account_settings/:account',
-            pageBuilder: (BuildContext context, GoRouterState state) =>
-                FadeTransitionPage(key: state.pageKey, child: AccountSettingScreen()),
-          ),
-          GoRoute(
-            path: 'version/:version',
-            pageBuilder: (BuildContext context, GoRouterState state) {
-              final String version = state.pathParameters['version']!;
+            GoRoute(
+              path: '/myinfo/birthday/:birthday',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: BirthdayScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/myinfo/gender',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: GenderScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/myinfo/job',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: JobScreen(),
+              ),
+            ),
+            GoRoute(
+              path: '/myinfo/jobTenure',
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
+                key: state.pageKey,
+                child: JobTenureScreen(),
+              ),
+            ),
+            GoRoute(
+              path: 'myinfo/account_settings/:account',
+              pageBuilder: (BuildContext context, GoRouterState state) =>
+                  FadeTransitionPage(key: state.pageKey, child: AccountSettingScreen()),
+            ),
+            GoRoute(
+              path: 'version/:version',
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                final String version = state.pathParameters['version']!;
 
-              if (version == 'version_info') {
-                return FadeTransitionPage(key: state.pageKey, child: VersionInfoScreen());
-              }
-              try {
-                final int versionNumber = int.parse(version);
-                return FadeTransitionPage(
-                  key: state.pageKey,
-                  child: Scaffold(
-                    appBar: AppBar(title: Text('버전: $version')),
-                    body: Center(
-                      child: Text('버전 정보: $versionNumber'),
+                if (version == 'version_info') {
+                  return FadeTransitionPage(key: state.pageKey, child: VersionInfoScreen());
+                }
+                try {
+                  final int versionNumber = int.parse(version);
+                  return FadeTransitionPage(
+                    key: state.pageKey,
+                    child: Scaffold(
+                      appBar: AppBar(title: Text('버전: $version')),
+                      body: Center(
+                        child: Text('버전 정보: $versionNumber'),
+                      ),
                     ),
-                  ),
-                );
-              } catch (e) {
-                return FadeTransitionPage(
-                  key: state.pageKey,
-                  child: Scaffold(
-                    appBar: AppBar(title: Text('잘못된 버전')),
-                    body: Center(
-                      child: Text('처리할 수 없는 버전입니다: $version'),
+                  );
+                } catch (e) {
+                  return FadeTransitionPage(
+                    key: state.pageKey,
+                    child: Scaffold(
+                      appBar: AppBar(title: Text('잘못된 버전')),
+                      body: Center(
+                        child: Text('처리할 수 없는 버전입니다: $version'),
+                      ),
                     ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    ],
-    redirect: _auth.guard,
-    refreshListenable: _auth,
-    debugLogDiagnostics: true,
-  );
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+      redirect: (BuildContext context, GoRouterState state) {
+        return _auth.guard(state, isLoggedIn);
+      },
+      refreshListenable: _auth,
+      debugLogDiagnostics: true,
+    );
+  }
 }

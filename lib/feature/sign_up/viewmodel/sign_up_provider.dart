@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:dailystep/common/extension/string_extension.dart';
+import 'package:dailystep/config/app.dart';
+import 'package:dailystep/config/secure_storage/secure_storage_provider.dart';
 import 'package:dailystep/feature/sign_up/viewmodel/validation_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../data/api/api_client.dart';
 import '../../../data/api/result/api_error.dart';
 import '../../../data/api/result/simple_result.dart';
+import '../../auth/viewmodel/login_viewmodel.dart';
 import '../model/nickname_validation_response.dart';
 import '../model/sign_up_request.dart';
 import '../repository/nickname_repository.dart';
@@ -18,29 +22,27 @@ import '../view/jobtenure_dummies.dart';
 
 class SignUpViewModel extends StateNotifier<SignUpState> {
   final NicknameRepository _nicknameRepository = NicknameRepository();
-
-  SignUpViewModel() : super(SignUpState());
+  final Ref ref;
+  SignUpViewModel(this.ref) : super(SignUpState());
 
   Future<void> saveUserInfo(String accessToken, BuildContext context) async {
     try {
       setAccessToken(accessToken);
 
       print('saveUserInfo 호출, accessToken: $accessToken');
-      final signUpData = getSignUpData(state);
 
       final signUpRequest = SignUpRequest(
         accessToken: accessToken,
-        nickname: signUpData['nickname'],
-        birth: signUpData['birth'],
-        gender: signUpData['gender'],
-        jobId: signUpData['jobId'],
-        yearId: signUpData['yearId'],
+        nickname: state.nickName ?? '',
+        birth: state.birthDate != null ? DateFormat('yyyy-MM-dd').format(state.birthDate!) : '',
+        gender: state.sex == 0 ? "MALE" : "FEMALE",
+        jobId: state.job ?? 0,
+        yearId: state.jobTenure ?? 0,
       );
 
       // requestData를 JSON으로 직렬화
       final requestData = signUpRequest.toJson();
       print('서버 응답 데이터: ${requestData}');
-
 
       // 서버 요청 URL이 맞는지 확인
       final url = 'auth/signin/kakao';
@@ -50,9 +52,30 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
       final response = await ApiClient().post(url, data: requestData);
 
       if (response.statusCode == 200) {
-        // 회원가입 성공 시 처리
-        print('회원가입 성공');
-        Navigator.pushReplacementNamed(context, '/home');
+        // 서버에서 반환된 데이터 처리
+        final responseData = response.data;
+        final newAccessToken = responseData['data']['accessToken'] ?? ''; // 새로운 accessToken
+        final accessTokenExpiresIn = responseData['data']['accessTokenExpiresIn'] ?? ''; // 새로운 accessToken
+
+
+        if (newAccessToken.isNotEmpty) {
+          // 새로운 accessToken으로 로그인 처리
+          final secureStorage = SecureStorage(secureStorageService: ref.read(secureStorageServiceProvider));
+
+          await secureStorage.saveAccessToken(newAccessToken, accessTokenExpiresIn); // 예: 1시간 후 만료
+          setAccessToken(newAccessToken);  // 새로운 토큰을 저장
+
+          // 로그인 상태 관리
+          final container = ProviderContainer();
+          container.read(isLoggedInProvider.notifier).state = true;
+
+          print('로그인 성공: 새로운 accessToken 저장');
+
+          // 홈 화면으로 이동
+          context.go('/main/home');
+        } else {
+          print('새로운 accessToken을 받지 못했습니다.');
+        }
       } else {
         // 실패 시 처리
         print('회원가입 실패, 상태 코드: ${response.statusCode}');
@@ -63,24 +86,10 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     }
   }
 
-  // 데이터를 서버에 보낼 형식으로 변환하는 메서드
-  Map<String, dynamic> getSignUpData(SignUpState signUpState) {
-    return {
-      "accessToken": signUpState.accessToken,
-      "nickname": signUpState.nickName ?? '',
-      "birth": signUpState.birthDate != null
-          ? DateFormat('yyyy-MM-dd').format(signUpState.birthDate!)
-          : '',
-      "gender": signUpState.sex == 0 ? "MALE" : "FEMALE",
-      "jobId": signUpState.job,
-      "yearId": signUpState.jobTenure,
-    };
-  }
-
   void setAccessToken(String accessToken) {
     print('AccessToken 설정: $accessToken');
     state = state.copyWith(accessToken: accessToken);
-    print('현재 state.accessToken: ${state.accessToken}');  // 상태 확인
+    print('현재 state.accessToken: ${state.accessToken}'); // 상태 확인
   }
 
   void setNickName(String nickName, WidgetRef ref) {
@@ -159,36 +168,10 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
     state = state.copyWith(selectedSex: sex);
   }
 
-/*  String? getSelectedJobName() {
-    return getJobName(state.job); // 상태에서 jobId를 가져와 이름을 반환
-  }
-
-  String? getJobName(int? jobId) {
-    if (jobId == null) return null;
-
-    final jobCategory = jobCategories.firstWhere(
-          (category) => int.parse(category.id) == jobId,
-      orElse: () => JobCategory(id: '0', name: '선택되지 않음'), // 기본값 설정
-    );
-
-    return jobCategory.name;
-  }*/
   void setJob(int job) {
     state = state.copyWith(selectedJob: job);
     print('riverpod job ${state.job}');
   }
-
-/*  String? getJobTenureName(int? jobTenure) {
-    if (jobTenure == null) return null;
-
-    // jobTenure 값을 기준으로 이름 반환
-    final jobTenureItem = dummyJobTenure.firstWhere(
-          (tenure) => int.parse(tenure.id) == jobTenure,
-      orElse: () => JobTenure(id: '0', name: '선택되지 않음'),
-    );
-
-    return jobTenureItem.name;
-  }*/
 
   void setJobTenure(int jobTenure) {
     state = state.copyWith(selectedJobTenure: jobTenure);
@@ -235,5 +218,5 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
 }
 
 final signUpProvider = StateNotifierProvider<SignUpViewModel, SignUpState>(
-  (ref) => SignUpViewModel(),
+  (ref) => SignUpViewModel(ref),
 );

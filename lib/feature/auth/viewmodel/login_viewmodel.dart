@@ -2,6 +2,7 @@ import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/auth/service/kakao_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../../sign_up/viewmodel/sign_up_provider.dart';
 import '../state/login_state.dart';
@@ -9,6 +10,8 @@ import '../state/login_state.dart';
 final loginViewModelProvider = StateNotifierProvider<LoginViewModel, LoginState>(
       (ref) => LoginViewModel(ref),
 );
+
+final isLoggedInProvider = StateProvider<bool>((ref) => false); // 기본값 false
 
 class LoginViewModel extends StateNotifier<LoginState> {
   final KakaoAuthService _kakaoAuthService = KakaoAuthService();
@@ -18,22 +21,22 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   /// Kakao 로그인 로직
   Future<void> loginWithKakao(BuildContext context) async {  // context 매개변수 추가
-    await _ref.read(secureStorageServiceProvider).deleteTokens();
+    //await _ref.read(secureStorageServiceProvider).deleteTokens();
 
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
+      // 저장된 토큰이 있으면 바로 로그인 상태로 전환
       final savedToken = await _ref.read(secureStorageServiceProvider).getAccessToken();
-
       if (savedToken != null) {
         print('유효한 저장된 토큰: $savedToken');
-        // 유효한 토큰이 있으면 바로 로그인 상태로 전환
         state = state.copyWith(isLoading: false, isLoggedIn: true);
+        GoRouter.of(context).go('/main/home');
         return;
       }
 
+      // 카카오 로그인 요청
       final accessToken = await _kakaoAuthService.getKakaoAccessToken();
-
       if (accessToken == null) {
         state = state.copyWith(
           isLoading: false,
@@ -41,7 +44,6 @@ class LoginViewModel extends StateNotifier<LoginState> {
         );
         return;
       }
-      await _saveAccessToken(accessToken);
 
       // 서버에서 로그인 시도
       final loginSuccess = await _loginToServer(accessToken);
@@ -49,6 +51,9 @@ class LoginViewModel extends StateNotifier<LoginState> {
       if (loginSuccess) {
         // 로그인 성공
         state = state.copyWith(isLoading: false, isLoggedIn: true);
+
+        // 로그인 후 홈으로 이동
+        GoRouter.of(context).go('/main/home');
       } else {
         // 로그인 실패 시, SignUpViewModel을 통해 회원가입 처리
         _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);
@@ -104,3 +109,4 @@ class LoginViewModel extends StateNotifier<LoginState> {
     state = state.copyWith(isLoggedIn: false);
   }
 }
+
