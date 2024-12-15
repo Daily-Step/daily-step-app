@@ -25,7 +25,6 @@ class WWeekPageView extends ConsumerStatefulWidget {
 class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
   @override
   Widget build(BuildContext context) {
-    final calendarState = ref.watch(calendarViewModelProvider);
     final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
 
     return PageView.builder(
@@ -39,38 +38,31 @@ class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
       itemBuilder: (context, index) {
         return WWeekCalendar(
           successDates: widget.successList,
-          firstDateOfRange: calendarState.firstDateOfWeek,
-          selectedDate: calendarState.selectedDate,
         );
       },
     );
   }
 }
 
-class WWeekCalendar extends StatefulWidget {
+class WWeekCalendar extends ConsumerWidget {
   final List<DateTime> successDates;
-  final DateTime firstDateOfRange;
-  final DateTime selectedDate;
 
   WWeekCalendar({
     super.key,
     required this.successDates,
-    required this.firstDateOfRange,
-    required this.selectedDate,
   });
 
-  @override
-  State<WWeekCalendar> createState() => _WWeekCalendarState();
-}
-
-class _WWeekCalendarState extends State<WWeekCalendar> {
   List<DateTime> _getWeekDays(DateTime startOfWeek) {
     return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
   }
 
   @override
-  Widget build(BuildContext context) {
-    List<DateTime> weekDays = _getWeekDays(widget.firstDateOfRange);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final calendarState = ref.watch(calendarViewModelProvider);
+    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+    List<DateTime> weekDays = _getWeekDays(calendarState.firstDateOfWeek);
+
+
     return Column(children: [
       CalendarLabel(),
       SizedBox(height: 4),
@@ -87,16 +79,27 @@ class _WWeekCalendarState extends State<WWeekCalendar> {
           itemCount: 7,
           itemBuilder: (context, index) {
             final date = weekDays[index];
-            final isToday = date.isSameDate(widget.selectedDate);
-            final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
-            final isSuccess = widget.successDates
+            final isSelected = date.isSameDate(calendarState.selectedDate);
+            final isCurrentPeriod = date.isSameMonth(calendarState.firstDateOfWeek) &&
+                date.isBefore(DateTime.now());;
+            final isSuccess = successDates
                 .any((successDate) => successDate.isSameDate(date));
 
-            return CalendarDayContainer(
-              isToday: isToday,
-              isSuccess: isSuccess,
-              date: date,
-              isCurrentPeriod: isCurrentPeriod,
+            return InkWell(
+              onTap: (){
+                if(date.isAfter(DateTime.now())){
+                  return;
+                }
+                calendarNotifier.handleAction(ChangeSelectedDateAction(
+                  selectedDate: date,
+                ));
+              },
+              child: CalendarDayContainer(
+                isSelected: isSelected,
+                isSuccess: isSuccess,
+                date: date,
+                isCurrentPeriod: isCurrentPeriod,
+              ),
             );
           },
         ),

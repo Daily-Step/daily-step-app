@@ -1,52 +1,8 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../feature/home/action/calendar_action.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
-import '../feature/home/view/home/home_fragment.dart';
-import '../feature/home/viewmodel/calendar_viewmodel.dart';
-
-class WMonthPageView extends ConsumerStatefulWidget {
-  final List<DateTime> successList;
-  final PageController monthPageController;
-
-  const WMonthPageView({
-    super.key,
-    required this.successList,
-    required this.monthPageController,
-  });
-
-  @override
-  _WMonthPageViewState createState() => _WMonthPageViewState();
-}
-
-class _WMonthPageViewState extends ConsumerState<WMonthPageView> {
-  @override
-  Widget build(BuildContext context) {
-    final calendarState = ref.watch(calendarViewModelProvider);
-    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
-
-    return PageView.builder(
-      controller: widget.monthPageController,
-      onPageChanged: (page) {
-        calendarNotifier.handleAction(
-            ChangeFirstDateOfMonthAction(addPage: page - MONTH_TOTAL_PAGE));
-      },
-      itemCount: MONTH_TOTAL_PAGE + 1,
-      itemBuilder: (context, index) {
-        return WMonthCalendar(
-          successDates: widget.successList,
-          firstDateOfRange: calendarState.firstDateOfMonth,
-          selectedDate: calendarState.selectedDate,
-          isModal: false,
-        );
-      },
-    );
-  }
-}
 
 class WMonthModal extends StatefulWidget {
   final List<DateTime> successList;
@@ -81,7 +37,8 @@ class _WMonthModalState extends State<WMonthModal> {
                   ),
                   onPressed: () {
                     setState(() {
-                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month - 1, 1);
+                      selectedMonth = DateTime(
+                          selectedMonth.year, selectedMonth.month - 1, 1);
                     });
                   },
                 ),
@@ -95,12 +52,15 @@ class _WMonthModalState extends State<WMonthModal> {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.isSameMonth(DateTime.now()) ? backgroundColor : subTextColor,
+                    color: selectedMonth.isSameMonth(DateTime.now())
+                        ? backgroundColor
+                        : subTextColor,
                   ),
                   onPressed: () {
                     if (selectedMonth.isSameMonth(DateTime.now())) return;
                     setState(() {
-                      selectedMonth = DateTime(selectedMonth.year, selectedMonth.month + 1, 1);
+                      selectedMonth = DateTime(
+                          selectedMonth.year, selectedMonth.month + 1, 1);
                     });
                   },
                 ),
@@ -160,13 +120,14 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
         itemCount: 35,
         itemBuilder: (context, index) {
           final date = firstDayOfCalendar.add(Duration(days: index));
-          final isToday = date.isSameDate(widget.selectedDate);
-          final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
+          final isSelected = date.isSameDate(widget.selectedDate);
+          final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange) &&
+              date.isBefore(DateTime.now());
           final isSuccess = widget.successDates
               .any((successDate) => successDate.isSameDate(date));
 
           return CalendarDayContainer(
-              isToday: isToday,
+              isSelected: isSelected,
               isSuccess: isSuccess,
               date: date,
               isCurrentPeriod: isCurrentPeriod);

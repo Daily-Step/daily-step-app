@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CalendarDayContainer extends StatelessWidget {
-  final bool isToday;
+  final bool isSelected;
   final bool isSuccess;
   final bool isCurrentPeriod;
   final DateTime date;
 
   const CalendarDayContainer({
-    required this.isToday,
+    required this.isSelected,
     required this.isSuccess,
     required this.isCurrentPeriod,
     required this.date,
@@ -17,18 +17,18 @@ class CalendarDayContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isToday
+        color: isSelected
             ? Colors.black
-            : isSuccess
-                ? Colors.blue
-                : Colors.transparent,
+                : isSuccess
+                    ? Colors.blue
+                    : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
       child: Text(
         '${date.day}',
         style: TextStyle(
-          color: isToday || isSuccess
+          color: isSelected || isSuccess
               ? Colors.white
               : isCurrentPeriod
                   ? Colors.black

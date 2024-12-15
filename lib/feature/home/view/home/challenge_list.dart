@@ -6,38 +6,6 @@ import '../../../../widgets/widget_toast.dart';
 import '../../action/challenge_list_action.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_item.dart';
-import 'home_fragment.dart';
-
-class ChallengeListPageView extends StatefulWidget {
-  final void Function(int) onPageChanged;
-
-  const ChallengeListPageView({super.key, required this.onPageChanged});
-
-  @override
-  State<ChallengeListPageView> createState() => _ChallengeListPageViewState();
-}
-
-class _ChallengeListPageViewState extends State<ChallengeListPageView> {
-  final PageController _pageController = PageController(initialPage: DAY_TOTAL_PAGE);
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: _pageController,
-      onPageChanged: widget.onPageChanged,
-      itemCount: DAY_TOTAL_PAGE + 1,
-      itemBuilder: (context, index) {
-        return ChallengeList();
-      },
-    );
-  }
-}
 
 class ChallengeList extends ConsumerStatefulWidget {
   const ChallengeList({
