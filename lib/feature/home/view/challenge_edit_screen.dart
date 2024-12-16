@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/settings/category_dummies.dart';
+import 'package:dailystep/model/category/category_model.dart';
+import 'package:dailystep/model/record/record_model.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
@@ -71,9 +73,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           _titleController.text = state.selectedTask!.title;
           challengeWeeks = state.selectedTask!.startDatetime
               .calculateWeeksBetween(state.selectedTask!.endDatetime);
-          weeklyGoal = state.selectedTask!.weeklyGoalCount;
-          selectedCategory = state.selectedTask!.categoryId;
-          selectedColor = state.selectedTask!.colorId;
+          weeklyGoal = state.selectedTask!.weekGoalCount;
+          selectedCategory = state.selectedTask!.category.id;
+          selectedColor = int.parse(state.selectedTask!.color);
           _noteController.text = state.selectedTask!.content;
         });
       }
@@ -104,7 +106,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               hintText: '챌린지 이름을 입력하세요',
               label: '챌린지 이름',
               onChanged: (String value) {
-                if(value != '') {
+                if (value != '') {
                   setState(() {
                     errors['title'] = false;
                   });
@@ -212,7 +214,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                   ? Align(
                       alignment: Alignment.centerLeft,
                       child: customColors[selectedColor!].widget,
-                       )
+                    )
                   : Text(
                       '선택',
                       style: hintTextStyle,
@@ -257,20 +259,19 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             Random random = Random();
             final challenge = ChallengeModel(
               id: widget.id ?? random.nextInt(999999),
-              memberId: 0,
-              categoryId: selectedCategory!,
+              category: CategoryModel(id: 1, name: ''),
               title: _titleController.text,
               content: _noteController.text,
-              colorId: selectedColor!,
-              weeklyGoalCount: weeklyGoal!,
+              color: selectedColor.toString(),
+              weekGoalCount: weeklyGoal!,
               totalGoalCount: weeklyGoal! * challengeWeeks!,
               startDatetime: selectedChallenge?.startDatetime ?? DateTime.now(),
               endDatetime:
                   selectedChallenge?.startDatetime.add(challengeDays) ??
                       DateTime.now().add(challengeDays),
-              createdAt: selectedChallenge?.createdAt ?? DateTime.now(),
-              updatedAt: DateTime.now(),
-              successList: selectedChallenge?.successList ?? [],
+              record: RecordModel(
+                  successDates: selectedChallenge?.record.successDates ?? []),
+              durationInWeeks: challengeWeeks!,
             );
             if (widget.id != null) {
               notifier.handleAction(UpdateTaskAction(widget.id, challenge));
@@ -278,10 +279,14 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               context.push('/main/home/${widget.id}');
             } else {
               notifier.handleAction(AddTaskAction(challenge));
-              showConfirmModal(context: context,
+              showConfirmModal(
+                  context: context,
                   content: Column(
                     children: [
-                      Text('챌린지 등록이 완료되었습니다', style: boldTextStyle,),
+                      Text(
+                        '챌린지 등록이 완료되었습니다',
+                        style: boldTextStyle,
+                      ),
                       height5,
                       Text(
                         '닫기버튼을 누르면 홈으로 이동합니다',
@@ -290,7 +295,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     ],
                   ),
                   confirmText: '닫기',
-                  onClickConfirm: (){
+                  onClickConfirm: () {
                     Navigator.pop(context);
                   },
                   isCancelButton: false);

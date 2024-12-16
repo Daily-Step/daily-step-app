@@ -34,12 +34,12 @@ class ChallengeItem extends StatelessWidget {
             child: ListTile(
               leading: WProgressIndicator(
                 percentage: task.totalGoalCount
-                    .getProgress(task.successList.length),
+                    .getProgress(task.record.successDates.length),
                 width: 40,
                 height: 40,
                 strokeWidth: 6,
                 fontSize: 14,
-                color: customColors[task.colorId].color,
+                color: Color(int.parse(task.color)),
               ),
               title: Text(task.title),
               subtitle: Text(

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../widgets/widget_constant.dart';
 
 class CustomColor {
-  final Color color;
   final String name;
+  final String code;
 
-  CustomColor({required this.color, required this.name});
+  CustomColor({required this.name, required this.code,});
 
   Widget get widget => Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -15,7 +15,7 @@ class CustomColor {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: color,
+            color: Color(int.parse(code)),
             shape: BoxShape.circle,
           ),
         ),
@@ -28,9 +28,9 @@ class CustomColor {
 }
 
 List<CustomColor> customColors = [
-  CustomColor(color: Colors.red, name: '빨강'),
-  CustomColor(color: Colors.orange, name: '주황'),
-  CustomColor(color: Colors.lightGreen, name: '초록'),
-  CustomColor(color: Colors.blue, name: '파랑'),
-  CustomColor(color: Colors.purple, name: '보라'),
+  CustomColor( name: '빨강', code: '0xFFAF092A'),
+  CustomColor( name: '주황', code: '0xFFD3771B'),
+  CustomColor( name: '초록', code: '0xFF35B907'),
+  CustomColor( name: '파랑', code: '0xFF0765C4'),
+  CustomColor( name: '보라', code: '0xFFA606AB'),
 ];

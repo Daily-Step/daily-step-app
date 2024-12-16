@@ -15,7 +15,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       DateTime startDttm = challenge.startDatetime;
       DateTime endDttm = challenge.endDatetime;
 
-      return today.isAfter(startDttm) && today.isBefore(endDttm) ||
+      return (today.isAfter(startDttm) && today.isBefore(endDttm)) ||
           today.isAtSameMomentAs(startDttm) ||
           today.isAtSameMomentAs(endDttm);
     }).toList();

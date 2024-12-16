@@ -116,12 +116,12 @@ class ChallengeDetailScreen extends ConsumerWidget {
                             child: WProgressIndicator(
                                 percentage: selectedTask.totalGoalCount
                                     .getProgress(
-                                    selectedTask.successList.length),
+                                    selectedTask.record.successDates.length),
                                 width: 100,
                                 height: 100,
                                 strokeWidth: 12,
                                 fontSize: 26,
-                                color: customColors[selectedTask.colorId].color,
+                                color: Color(int.parse(selectedTask.color)),
                                 subString: '%'),
                           ),
                         ],
@@ -141,16 +141,14 @@ class ChallengeDetailScreen extends ConsumerWidget {
                             Text('챌린지 기간',
                                 style: TextStyle(color: Colors.grey)),
                             Text(
-                                selectedTask.startDatetime
-                                    .calculateWeeksBetween(
-                                    selectedTask.endDatetime)
+                                selectedTask.durationInWeeks
                                     .toString() +
                                     '주 챌린지',
                                 style: boldTextStyle),
                             height10,
                             Text('실천 횟수', style: TextStyle(color: Colors.grey)),
                             Text(
-                                selectedTask.weeklyGoalCount.toString() +
+                                selectedTask.weekGoalCount.toString() +
                                     '회 실천',
                                 style: boldTextStyle),
                             height10,
@@ -158,7 +156,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                             Text(
                                 dummyCategories
                                     .firstWhere((category) =>
-                                category.id == selectedTask.categoryId)
+                                category.id == selectedTask.category.id)
                                     .toString(),
                                 style: boldTextStyle),
                           ],
@@ -174,11 +172,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   _card(
                       '달성한 날',
                       _textWithSubText(
-                          selectedTask.successList.length.toString() + '일',
+                          selectedTask.record.successDates.length.toString() + '일',
                           ' /' +
                               (selectedTask.startDatetime
                                   .goalDays(selectedTask.endDatetime,
-                                  selectedTask.weeklyGoalCount)
+                                  selectedTask.weekGoalCount)
                                   .toString())),
                       'assets/icons/success.svg'),
                   width2,
@@ -188,14 +186,14 @@ class ChallengeDetailScreen extends ConsumerWidget {
                           selectedTask.startDatetime
                               .failDays(
                               selectedTask.endDatetime,
-                              selectedTask.weeklyGoalCount,
-                              selectedTask.successList.length)
+                              selectedTask.weekGoalCount,
+                              selectedTask.record.successDates.length)
                               .toString() +
                               '일',
                           ' /' +
                               (selectedTask.startDatetime
                                   .goalDays(selectedTask.endDatetime,
-                                  selectedTask.weeklyGoalCount)
+                                  selectedTask.weekGoalCount)
                                   .toString())),
                       'assets/icons/fail.svg'),
                 ],
@@ -206,7 +204,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   _card(
                       '최대 연속 성공 횟수',
                       Text(
-                          selectedTask.successList
+                          selectedTask.record.successDates
                               .countLongestSuccessDays()
                               .toString() +
                               '일',
@@ -243,7 +241,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         onPressed: () =>  showDialog(
                             context: context,
                             builder: (context) {
-                              return WMonthModal( successList: selectedTask.successList,);
+                              return WMonthModal( successList: selectedTask.record.successDates,);
                             })
                       )
                     ],
