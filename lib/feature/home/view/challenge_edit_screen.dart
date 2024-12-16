@@ -75,7 +75,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               .calculateWeeksBetween(state.selectedTask!.endDatetime);
           weeklyGoal = state.selectedTask!.weekGoalCount;
           selectedCategory = state.selectedTask!.category.id;
-          selectedColor = int.parse(state.selectedTask!.color);
+          selectedColor = customColors.firstWhere((el)=> el.code == state.selectedTask!.color).id;
           _noteController.text = state.selectedTask!.content;
         });
       }
@@ -262,7 +262,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               category: CategoryModel(id: 1, name: ''),
               title: _titleController.text,
               content: _noteController.text,
-              color: selectedColor.toString(),
+              color: customColors[selectedColor!].code.toString(),
               weekGoalCount: weeklyGoal!,
               totalGoalCount: weeklyGoal! * challengeWeeks!,
               startDatetime: selectedChallenge?.startDatetime ?? DateTime.now(),

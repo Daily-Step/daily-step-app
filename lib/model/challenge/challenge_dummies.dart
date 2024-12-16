@@ -21,7 +21,7 @@ final List<ChallengeModel> dummyChallenges = [
     durationInWeeks: 4,
     weekGoalCount: 5,
     totalGoalCount: 20,
-    color: "0xFFAF092A",
+    color: '0xFFD3771B',
     startDatetime: DateTime(2024, 11, 30), // 시작 날짜
     endDatetime: DateTime(2024, 12, 30), // 종료 날짜
   ),
@@ -43,7 +43,7 @@ final List<ChallengeModel> dummyChallenges = [
     durationInWeeks: 3,
     weekGoalCount: 4,
     totalGoalCount: 16,
-    color: "0xFFD3771B",
+    color: '0xFFAF092A',
     startDatetime: DateTime(2024, 11, 25), // 시작 날짜
     endDatetime: DateTime(2024, 12, 18), // 종료 날짜
   ),
@@ -65,7 +65,7 @@ final List<ChallengeModel> dummyChallenges = [
     durationInWeeks: 2,
     weekGoalCount: 3,
     totalGoalCount: 12,
-    color: "0xFF35B907",
+    color: '0xFFA606AB',
     startDatetime: DateTime(2024, 12, 2), // 시작 날짜
     endDatetime: DateTime(2024, 12, 20), // 종료 날짜
   ),
