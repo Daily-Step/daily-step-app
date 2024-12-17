@@ -50,6 +50,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   final TextEditingController _noteController = TextEditingController();
   final int maxCharacters = 500;
 
+  Color textColor () => widget.id != null ? disabledColor: Colors.grey.shade600;
+
   @override
   void initState() {
     super.initState();
@@ -75,7 +77,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               .calculateWeeksBetween(state.selectedTask!.endDatetime);
           weeklyGoal = state.selectedTask!.weekGoalCount;
           selectedCategory = state.selectedTask!.category.id;
-          selectedColor = customColors.firstWhere((el)=> el.code == state.selectedTask!.color).id;
+          selectedColor = customColors
+              .firstWhere((el) => el.code == state.selectedTask!.color)
+              .id;
           _noteController.text = state.selectedTask!.content;
         });
       }
@@ -132,7 +136,10 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               child: challengeWeeks != null
                   ? Text(
                       '${challengeWeeks}주',
-                      style: contentTextStyle,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: textColor(),
+                      ),
                     )
                   : Text(
                       '선택',
@@ -140,6 +147,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     ),
               hasError: errors['challengeWeeks']!,
               errorMessage: '챌린지 기간을 선택해주세요',
+              disabled: widget.id != null,
             ),
             height20,
             WSelectInputWithLabel(
@@ -158,7 +166,10 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               child: weeklyGoal != null
                   ? Text(
                       '주 ${weeklyGoal} 회',
-                      style: contentTextStyle,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: textColor(),
+                      ),
                     )
                   : Text(
                       '선택',
@@ -166,6 +177,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     ),
               hasError: errors['weeklyGoal']!,
               errorMessage: '실천 횟수를 선택해주세요',
+              disabled: widget.id != null,
             ),
             height20,
             WSelectInputWithLabel(

@@ -39,7 +39,7 @@ var boldTextStyle = TextStyle(fontSize: detailDataFontSize ,fontWeight: FontWeig
 
 /// 색상
 var blackColor = Color(0xFF000000);
-var disabledColor = Color(0xFFD8D8D8);
+var disabledColor = Color(0xFFAFAFAF);
 var subTextColor = Color(0xFF8E8E8E);
 var primaryColor = Color(0xFF2F41F2);
 var backgroundColor = Color(0xFFF8F8F8);

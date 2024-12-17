@@ -7,6 +7,7 @@ class WSelectInputWithLabel extends StatelessWidget {
   final String? label;
   final bool hasError;
   final String? errorMessage;
+  final bool disabled;
 
   const WSelectInputWithLabel({
     Key? key,
@@ -15,6 +16,7 @@ class WSelectInputWithLabel extends StatelessWidget {
     this.label,
     this.hasError = false,
     this.errorMessage,
+    this.disabled = false,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,10 @@ class WSelectInputWithLabel extends StatelessWidget {
             if (label != null)
               Text(
                 label!,
-                style: labelTextStyle,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: disabled ? Colors.grey : Colors.black),
               ),
             Spacer(),
             Column(
@@ -37,6 +42,7 @@ class WSelectInputWithLabel extends StatelessWidget {
                   onTap: onTap,
                   hasError: hasError,
                   width: 150,
+                  disabled: disabled,
                 ),
                 if (hasError && errorMessage != null)
                   Padding(
@@ -60,18 +66,20 @@ class WSelectInput extends StatelessWidget {
   final VoidCallback onTap;
   final bool hasError;
   final double width;
+  final bool disabled;
 
   const WSelectInput({
     required this.child,
     required this.onTap,
     this.hasError = false,
     this.width = double.infinity,
+    this.disabled = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: disabled ? null : onTap,
       child: Container(
         width: width,
         decoration: BoxDecoration(
@@ -88,7 +96,7 @@ class WSelectInput extends StatelessWidget {
                 Spacer(),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: subTextColor,
+                  color: disabled ? disabledColor : subTextColor,
                 )
               ],
             )),
