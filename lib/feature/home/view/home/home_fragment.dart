@@ -2,7 +2,6 @@ import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/viewmodel/calendar_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../model/challenge/challenge_dummies.dart';
 import '../../../../widgets/widget_constant.dart';
 import '../../../../widgets/widget_week_calendar.dart';
 import 'challenge_empty.dart';
@@ -63,7 +62,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
           curve: Curves.easeInOut,
           child: WWeekPageView(
                   weekPageController: weekPageController,
-                  successList: dummySuccessList,
+                  successList: challengeState.successList,
                 ),
         ),
         height20,

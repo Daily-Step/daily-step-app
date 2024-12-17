@@ -43,6 +43,7 @@ var disabledColor = Color(0xFFAFAFAF);
 var subTextColor = Color(0xFF8E8E8E);
 var primaryColor = Color(0xFF2F41F2);
 var backgroundColor = Color(0xFFF8F8F8);
+var bgGreyColor = Color(0xFFE0E0E0);
 
 /// 그라디언트
 const mainGradient = LinearGradient(

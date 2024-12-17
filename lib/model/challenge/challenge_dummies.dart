@@ -11,8 +11,9 @@ final List<ChallengeModel> dummyChallenges = [
     ),
     record: RecordModel(
       successDates: [
-        DateTime(2024, 12, 10), // 특정 날짜 지정
+        DateTime(2024, 12, 10),
         DateTime(2024, 12, 3),
+        DateTime(2024, 11, 25),
         DateTime(2024, 11, 28),
       ],
     ),
@@ -36,6 +37,8 @@ final List<ChallengeModel> dummyChallenges = [
         DateTime(2024, 12, 11),
         DateTime(2024, 12, 4),
         DateTime(2024, 11, 26),
+        DateTime(2024, 11, 25),
+        DateTime(2024, 11, 28),
       ],
     ),
     title: "Healthy Eating Challenge",
@@ -58,6 +61,7 @@ final List<ChallengeModel> dummyChallenges = [
         DateTime(2024, 12, 9),
         DateTime(2024, 12, 2),
         DateTime(2024, 11, 25),
+        DateTime(2024, 11, 28),
       ],
     ),
     title: "Weekly Reading Challenge",
@@ -69,15 +73,4 @@ final List<ChallengeModel> dummyChallenges = [
     startDatetime: DateTime(2024, 12, 2), // 시작 날짜
     endDatetime: DateTime(2024, 12, 20), // 종료 날짜
   ),
-];
-
-
-var dummySuccessList = [
-  DateTime(2024, 11, 22),
-  DateTime(2024, 11, 25),
-  DateTime(2024, 11, 28),
-  DateTime(2024, 11, 29),
-  DateTime(2024, 11, 30),
-  DateTime(2024, 12, 1),
-  DateTime(2024, 12, 2),
 ];

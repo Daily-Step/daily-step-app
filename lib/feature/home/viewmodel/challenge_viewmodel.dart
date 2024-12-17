@@ -1,3 +1,4 @@
+import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../model/challenge/challenge_dummies.dart';
 import '../../../model/challenge/challenge_model.dart';
@@ -8,6 +9,7 @@ part 'challenge_viewmodel.g.dart';
 @riverpod
 class ChallengeViewModel extends _$ChallengeViewModel {
   late final List<ChallengeModel> _initialTasks;
+  late List<DateTime> _initialSuccessList = [];
 
   ChallengesState build() {
     _initialTasks = dummyChallenges.where((challenge) {
@@ -16,12 +18,34 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       DateTime endDttm = challenge.endDatetime;
 
       return (today.isAfter(startDttm) && today.isBefore(endDttm)) ||
-          today.isAtSameMomentAs(startDttm) ||
-          today.isAtSameMomentAs(endDttm);
+          today.isSameDate(startDttm) ||
+          today.isSameDate(endDttm);
     }).toList();
 
+    DateTime today = DateTime.now();
+
+    for (int i = 1; i <= 60; i++) {
+      DateTime targetDate = today.subtract(Duration(days: i));
+      bool allChallengesSuccess = true;
+
+      for (int j = 0; j < _initialTasks.length; j++) {
+        bool hasSuccessDate = _initialTasks[j].record.successDates.any(
+              (el) => el.isSameDate(targetDate),
+        );
+
+        if (!hasSuccessDate) {
+          allChallengesSuccess = false;
+          break;
+        }
+      }
+
+      if (allChallengesSuccess) {
+        _initialSuccessList.add(targetDate);
+      }
+    }
     return ChallengesState(
       challengeList: _initialTasks,
+      successList: _initialSuccessList,
       selectedTask: null,
     );
   }
@@ -84,17 +108,20 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
 class ChallengesState {
   final List<ChallengeModel> challengeList;
+  final List<DateTime> successList;
   final ChallengeModel? selectedTask;
   final bool? firstAchieve;
 
   const ChallengesState({
     required this.challengeList,
+    required this.successList,
     this.selectedTask,
     this.firstAchieve,
   });
 
   ChallengesState copyWith({
     List<ChallengeModel>? tasks,
+    List<DateTime>? successList,
     ChallengeModel? selectedTask,
     bool? firstAchieve,
   }) {
@@ -102,6 +129,7 @@ class ChallengesState {
       challengeList: tasks != null
           ? List<ChallengeModel>.from(tasks.map((task) => task.copyWith()))
           : this.challengeList,
+      successList: successList ?? this.successList,
       selectedTask: selectedTask ?? this.selectedTask,
       firstAchieve: firstAchieve ?? this.firstAchieve,
     );

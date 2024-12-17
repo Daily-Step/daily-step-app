@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../../model/challenge/challenge_model.dart';
 import '../../../../widgets/widget_constant.dart';
 import '../../../../widgets/widget_progress_indicator.dart';
-import '../settings/custom_color_dummies.dart';
 
 class ChallengeItem extends StatelessWidget {
   final ChallengeModel task;
@@ -48,7 +47,7 @@ class ChallengeItem extends StatelessWidget {
                 index: index,
                 child: Container(
                         decoration: BoxDecoration(
-                            color: disabledColor, shape: BoxShape.circle),
+                            color: bgGreyColor, shape: BoxShape.circle),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Icon(Icons.arrow_forward_ios_outlined,
