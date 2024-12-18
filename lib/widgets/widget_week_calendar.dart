@@ -31,7 +31,7 @@ class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
       controller: widget.weekPageController,
       onPageChanged: (page) {
         calendarNotifier.handleAction(ChangeFirstDateOfWeekAction(
-          addPage: (page - WEEK_TOTAL_PAGE) * 7,
+          addPage: page - WEEK_TOTAL_PAGE,
         ));
       },
       itemCount: WEEK_TOTAL_PAGE + 1,

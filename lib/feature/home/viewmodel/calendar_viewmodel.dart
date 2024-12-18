@@ -27,8 +27,8 @@ class CalendarViewModel extends _$CalendarViewModel {
   }
 
   void _handleChangeFirstDateOfWeekAction(ChangeFirstDateOfWeekAction action) {
-    DateTime newFirstDateOfWeek = DateTime.now().add(Duration(days: action.addPage!));
-    int daysOff = state.selectedDate.difference(state.firstDateOfWeek).inDays - 1;
+    DateTime newFirstDateOfWeek = DateTime.now().getStartOfWeek().add(Duration(days: action.addPage! * 7));
+    int daysOff = state.selectedDate.difference(state.firstDateOfWeek).inDays;
     DateTime newSelectedDate = newFirstDateOfWeek.add(Duration(days: daysOff));
     if(newSelectedDate.isAfter(DateTime.now())){
       newSelectedDate = DateTime.now();

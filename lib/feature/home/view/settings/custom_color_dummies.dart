@@ -29,9 +29,9 @@ class CustomColor {
 }
 
 List<CustomColor> customColors = [
-  CustomColor( id: 0, name: '빨강', code: '0xFFAF092A'),
-  CustomColor( id: 1, name: '주황', code: '0xFFD3771B'),
-  CustomColor( id: 2, name: '초록', code: '0xFF35B907'),
-  CustomColor( id: 3, name: '파랑', code: '0xFF0765C4'),
-  CustomColor( id: 4, name: '보라', code: '0xFFA606AB'),
+  CustomColor( id: 0, name: '빨강', code: '0xFFFF3B30'),
+  CustomColor( id: 1, name: '주황', code: '0xFFFF9500'),
+  CustomColor( id: 2, name: '하늘', code: '0xFF30B0C7'),
+  CustomColor( id: 3, name: '파랑', code: '0xFF2257FF'),
+  CustomColor( id: 4, name: '보라', code: '0xFF8120FF'),
 ];

@@ -42,7 +42,9 @@ class ChallengeItem extends StatelessWidget {
               ),
               title: Text(task.title),
               subtitle: Text(
-                  '${task.startDatetime.formattedDate} ~ ${task.endDatetime.formattedDate}'),
+                '${task.startDatetime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
+                style: subTextStyle,
+              ),
               trailing: ReorderableDragStartListener(
                 index: index,
                 child: Container(
