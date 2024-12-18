@@ -1,31 +1,51 @@
 import 'package:dailystep/model/challenge/challenge_model.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class ChallengeListAction {
   const ChallengeListAction();
 }
 
-class AddTaskAction extends ChallengeListAction {
+class AddChallengeAction extends ChallengeListAction {
   final ChallengeModel challengeModel;
 
-  const AddTaskAction(this.challengeModel);
+  const AddChallengeAction(this.challengeModel);
 }
 
-class UpdateTaskAction extends ChallengeListAction {
+class UpdateChallengeAction extends ChallengeListAction {
   final id;
   final ChallengeModel challengeModel;
 
-  const UpdateTaskAction(this.id, this.challengeModel);
+  const UpdateChallengeAction(this.id, this.challengeModel);
 }
 
-class DeleteTaskAction extends ChallengeListAction {
-  final int id;
+class AchieveChallengeAction extends ChallengeListAction {
+  final id;
+  final ChallengeModel challengeModel;
+  final BuildContext context;
 
-  const DeleteTaskAction(this.id);
+  const AchieveChallengeAction(this.id, this.challengeModel,this.context);
 }
 
-class FindTaskAction extends ChallengeListAction {
+class DeleteChallengeAction extends ChallengeListAction {
   final int id;
 
-  const FindTaskAction(this.id);
+  const DeleteChallengeAction(this.id);
+}
+
+class FindChallengeAction extends ChallengeListAction {
+  final int id;
+
+  const FindChallengeAction(this.id);
+}
+
+class ChangeSelectedDateAction extends ChallengeListAction {
+  final DateTime selectedDate;
+  const ChangeSelectedDateAction({required this.selectedDate});
+}
+
+class ChangeFirstDateOfWeekAction extends ChallengeListAction {
+  final int? addPage;
+
+  const ChangeFirstDateOfWeekAction({this.addPage});
 }
 

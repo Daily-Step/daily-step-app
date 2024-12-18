@@ -69,18 +69,18 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   void _initializeData() async {
     if (widget.id != null) {
       final state = ref.watch(challengeViewModelProvider);
-      if (state.selectedTask != null) {
+      if (state.selectedChallenge != null) {
         setState(() {
-          selectedChallenge = state.selectedTask;
-          _titleController.text = state.selectedTask!.title;
-          challengeWeeks = state.selectedTask!.startDatetime
-              .calculateWeeksBetween(state.selectedTask!.endDatetime);
-          weeklyGoal = state.selectedTask!.weekGoalCount;
-          selectedCategory = state.selectedTask!.category.id;
+          selectedChallenge = state.selectedChallenge;
+          _titleController.text = state.selectedChallenge!.title;
+          challengeWeeks = state.selectedChallenge!.startDatetime
+              .calculateWeeksBetween(state.selectedChallenge!.endDatetime);
+          weeklyGoal = state.selectedChallenge!.weekGoalCount;
+          selectedCategory = state.selectedChallenge!.category.id;
           selectedColor = customColors
-              .firstWhere((el) => el.code == state.selectedTask!.color)
+              .firstWhere((el) => el.code == state.selectedChallenge!.color)
               .id;
-          _noteController.text = state.selectedTask!.content;
+          _noteController.text = state.selectedChallenge!.content;
         });
       }
     }
@@ -286,11 +286,11 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               durationInWeeks: challengeWeeks!,
             );
             if (widget.id != null) {
-              notifier.handleAction(UpdateTaskAction(widget.id, challenge));
+              notifier.handleAction(UpdateChallengeAction(widget.id, challenge));
               Navigator.pop(context);
               context.push('/main/home/${widget.id}');
             } else {
-              notifier.handleAction(AddTaskAction(challenge));
+              notifier.handleAction(AddChallengeAction(challenge));
               showConfirmModal(
                   context: context,
                   content: Column(

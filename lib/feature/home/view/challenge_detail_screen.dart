@@ -22,9 +22,9 @@ class ChallengeDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedTask = ref
+    final selectedChallenge = ref
         .watch(challengeViewModelProvider)
-        .selectedTask;
+        .selectedChallenge;
     final notifier = ref.read(challengeViewModelProvider.notifier);
 
     return Scaffold(
@@ -34,7 +34,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Align(
-            alignment: Alignment.center, child: Text(selectedTask!.title)),
+            alignment: Alignment.center, child: Text(selectedChallenge!.title)),
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert),
@@ -56,7 +56,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   ),
                   confirmText: '챌린지삭제',
                   onClickConfirm: () {
-                    notifier.handleAction(DeleteTaskAction(id));
+                    notifier.handleAction(DeleteChallengeAction(id));
                     Navigator.pop(context);
                     showConfirmModal(context: context,
                         content: Column(
@@ -114,14 +114,14 @@ class ChallengeDetailScreen extends ConsumerWidget {
                           Align(
                             alignment: Alignment.center,
                             child: WProgressIndicator(
-                                percentage: selectedTask.totalGoalCount
+                                percentage: selectedChallenge.totalGoalCount
                                     .getProgress(
-                                    selectedTask.record.successDates.length),
+                                    selectedChallenge.record.successDates.length),
                                 width: 100,
                                 height: 100,
                                 strokeWidth: 12,
                                 fontSize: 26,
-                                color: Color(int.parse(selectedTask.color)),
+                                color: Color(int.parse(selectedChallenge.color)),
                                 subString: '%'),
                           ),
                         ],
@@ -135,20 +135,20 @@ class ChallengeDetailScreen extends ConsumerWidget {
                           children: [
                             Text('챌린지 시작일',
                                 style: TextStyle(color: Colors.grey)),
-                            Text(selectedTask.startDatetime.formattedDate,
+                            Text(selectedChallenge.startDatetime.formattedDate,
                                 style: boldTextStyle),
                             height10,
                             Text('챌린지 기간',
                                 style: TextStyle(color: Colors.grey)),
                             Text(
-                                selectedTask.durationInWeeks
+                                selectedChallenge.durationInWeeks
                                     .toString() +
                                     '주 챌린지',
                                 style: boldTextStyle),
                             height10,
                             Text('실천 횟수', style: TextStyle(color: Colors.grey)),
                             Text(
-                                selectedTask.weekGoalCount.toString() +
+                                selectedChallenge.weekGoalCount.toString() +
                                     '회 실천',
                                 style: boldTextStyle),
                             height10,
@@ -156,7 +156,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                             Text(
                                 dummyCategories
                                     .firstWhere((category) =>
-                                category.id == selectedTask.category.id)
+                                category.id == selectedChallenge.category.id)
                                     .toString(),
                                 style: boldTextStyle),
                           ],
@@ -172,28 +172,28 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   _card(
                       '달성한 날',
                       _textWithSubText(
-                          selectedTask.record.successDates.length.toString() + '일',
+                          selectedChallenge.record.successDates.length.toString() + '일',
                           ' /' +
-                              (selectedTask.startDatetime
-                                  .goalDays(selectedTask.endDatetime,
-                                  selectedTask.weekGoalCount)
+                              (selectedChallenge.startDatetime
+                                  .goalDays(selectedChallenge.endDatetime,
+                                  selectedChallenge.weekGoalCount)
                                   .toString())),
                       'assets/icons/success.svg'),
                   width2,
                   _card(
                       '미달성한 날',
                       _textWithSubText(
-                          selectedTask.startDatetime
+                          selectedChallenge.startDatetime
                               .failDays(
-                              selectedTask.endDatetime,
-                              selectedTask.weekGoalCount,
-                              selectedTask.record.successDates.length)
+                              selectedChallenge.endDatetime,
+                              selectedChallenge.weekGoalCount,
+                              selectedChallenge.record.successDates.length)
                               .toString() +
                               '일',
                           ' /' +
-                              (selectedTask.startDatetime
-                                  .goalDays(selectedTask.endDatetime,
-                                  selectedTask.weekGoalCount)
+                              (selectedChallenge.startDatetime
+                                  .goalDays(selectedChallenge.endDatetime,
+                                  selectedChallenge.weekGoalCount)
                                   .toString())),
                       'assets/icons/fail.svg'),
                 ],
@@ -204,7 +204,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   _card(
                       '최대 연속 성공 횟수',
                       Text(
-                          selectedTask.record.successDates
+                          selectedChallenge.record.successDates
                               .countLongestSuccessDays()
                               .toString() +
                               '일',
@@ -213,7 +213,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                   width2,
                   _card(
                       '남은 기간',
-                      Text(selectedTask.endDatetime.lastDays().toString() + '일',
+                      Text(selectedChallenge.endDatetime.lastDays().toString() + '일',
                           style: boldTextStyle),
                       'assets/icons/calendar.svg'),
                 ],
@@ -241,7 +241,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         onPressed: () =>  showDialog(
                             context: context,
                             builder: (context) {
-                              return WMonthModal( successList: selectedTask.record.successDates,);
+                              return WMonthModal( successList: selectedChallenge.record.successDates,);
                             })
                       )
                     ],
@@ -252,7 +252,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                     children: [
                       Text('상세 내용', style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 8),
-                      Text(selectedTask.content),
+                      Text(selectedChallenge.content),
                     ],
                   )),
             ],

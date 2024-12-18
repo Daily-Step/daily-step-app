@@ -1,5 +1,4 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/feature/home/viewmodel/calendar_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../widgets/widget_constant.dart';
@@ -30,7 +29,6 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   @override
   Widget build(BuildContext context) {
     final challengeState = ref.watch(challengeViewModelProvider);
-    final calendarState = ref.watch(calendarViewModelProvider);
 
     return Column(
       children: [
@@ -41,7 +39,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
             children: [
               Row(children: [
                 Text(
-                  calendarState.selectedDate.formattedMonth,
+                  challengeState.selectedDate.formattedMonth,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
               ]),

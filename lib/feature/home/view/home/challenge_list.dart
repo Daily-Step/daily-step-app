@@ -33,7 +33,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
             task: challenge,
             index: index,
             onTap: () async {
-              await notifier.handleAction(FindTaskAction(challenge.id));
+              await notifier.handleAction(FindChallengeAction(challenge.id));
               context.push('/main/challenge/${challenge.id}');
             },
             onClickAchieveButton: () async {
@@ -47,7 +47,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               final newChallenge =
                   challenge.copyWith(record: RecordModel(successDates: copiedChallengeSuccessList));
               await notifier
-                  .handleAction(UpdateTaskAction(challenge.id, newChallenge));
+                  .handleAction(AchieveChallengeAction(challenge.id, newChallenge, context));
               if (isAchieved == false) {
                 WToast.show(context, '토스트메세지');
               }

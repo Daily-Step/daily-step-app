@@ -2,11 +2,10 @@ import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../feature/home/action/calendar_action.dart';
+import '../feature/home/action/challenge_list_action.dart';
 import '../feature/home/view/home/calendar_label.dart';
 import '../feature/home/view/home/home_fragment.dart';
-import '../feature/home/viewmodel/calendar_viewmodel.dart';
+import '../feature/home/viewmodel/challenge_viewmodel.dart';
 
 class WWeekPageView extends ConsumerStatefulWidget {
   final PageController weekPageController;
@@ -25,12 +24,12 @@ class WWeekPageView extends ConsumerStatefulWidget {
 class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
   @override
   Widget build(BuildContext context) {
-    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
+    final notifier = ref.read(challengeViewModelProvider.notifier);
 
     return PageView.builder(
       controller: widget.weekPageController,
       onPageChanged: (page) {
-        calendarNotifier.handleAction(ChangeFirstDateOfWeekAction(
+        notifier.handleAction(ChangeFirstDateOfWeekAction(
           addPage: page - WEEK_TOTAL_PAGE,
         ));
       },
@@ -58,9 +57,9 @@ class WWeekCalendar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calendarState = ref.watch(calendarViewModelProvider);
-    final calendarNotifier = ref.read(calendarViewModelProvider.notifier);
-    List<DateTime> weekDays = _getWeekDays(calendarState.firstDateOfWeek);
+    final state = ref.watch(challengeViewModelProvider);
+    final notifier = ref.read(challengeViewModelProvider.notifier);
+    List<DateTime> weekDays = _getWeekDays(state.firstDateOfWeek);
 
 
     return Column(children: [
@@ -79,8 +78,8 @@ class WWeekCalendar extends ConsumerWidget {
           itemCount: 7,
           itemBuilder: (context, index) {
             final date = weekDays[index];
-            final isSelected = date.isSameDate(calendarState.selectedDate);
-            final isCurrentPeriod = date.isSameMonth(calendarState.firstDateOfWeek) &&
+            final isSelected = date.isSameDate(state.selectedDate);
+            final isCurrentPeriod = date.isSameMonth(state.firstDateOfWeek) &&
                 date.isBefore(DateTime.now());;
             final isSuccess = successDates
                 .any((successDate) => successDate.isSameDate(date));
@@ -90,7 +89,7 @@ class WWeekCalendar extends ConsumerWidget {
                 if(date.isAfter(DateTime.now())){
                   return;
                 }
-                calendarNotifier.handleAction(ChangeSelectedDateAction(
+                notifier.handleAction(ChangeSelectedDateAction(
                   selectedDate: date,
                 ));
               },
