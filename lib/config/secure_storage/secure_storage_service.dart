@@ -11,6 +11,8 @@ class SecureStorageService {
     try {
       final expirationTime = DateTime.now().add(Duration(seconds: expiresInSeconds));
       await _storage.write(key: _accessTokenKey, value: token);
+      print('Saving Access Token: $token');
+
       await _storage.write(key: _accessTokenExpirationKey, value: expirationTime.toIso8601String());
       print('[SECURE_STORAGE] Access Token saved with expiration: $expirationTime');
     } catch (e) {

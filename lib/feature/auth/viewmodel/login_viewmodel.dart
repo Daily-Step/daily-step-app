@@ -19,9 +19,112 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   LoginViewModel(this._ref) : super(LoginState());
 
-  /// Kakao 로그인 로직
+  Future<void> handleLogin(BuildContext context) async {
+    await _ref.read(secureStorageServiceProvider).deleteTokens();
+    try {
+      final accessToken = await _getAccessTokenFromStorageOrKakao();
+
+      if (accessToken == null) {
+        state = state.copyWith(isLoading: false, errorMessage: '카카오 로그인 실패');
+        return;
+      }
+
+      // 서버에서 로그인 시도
+      final signUpSuccess = await _attemptSignUp(accessToken, context);
+
+      if (signUpSuccess) {
+        // 회원가입 성공 시 로그인 처리
+        _onSignUpSuccess(context, accessToken);
+      } else {
+        // 회원가입 실패 시 처리
+        _onSignUpFailure(context);
+      }
+    } catch (e) {
+      print('로그인 중 오류 발생: $e');
+      state = state.copyWith(isLoading: false, errorMessage: '예상치 못한 오류 발생');
+    }
+  }
+
+  Future<String?> _getAccessTokenFromStorageOrKakao() async {
+    final savedToken = await _ref.read(secureStorageServiceProvider).getAccessToken();
+    if (savedToken != null) {
+      print('저장된 토큰 사용: $savedToken');
+      return savedToken;
+    }
+    return await _kakaoAuthService.getKakaoAccessToken();
+  }
+
+  Future<bool> _attemptSignUp(String accessToken, BuildContext context) async {
+    final responseData = await _signUpToServer(accessToken); // 로그인 서버 호출
+
+    if (responseData != null) {
+      final newAccessToken = responseData['accessToken'] ?? '';
+      final expiresInSeconds = responseData['accessTokenExpiresIn'] ?? 3600;
+
+      if (newAccessToken.isNotEmpty) {
+        // 새로운 accessToken을 저장
+        await _ref.read(secureStorageServiceProvider).saveAccessToken(newAccessToken, expiresInSeconds);
+        return true;
+      } else {
+        print('새로운 accessToken을 받지 못했습니다.');
+      }
+    } else {
+      print('로그인 실패: 응답이 없습니다.');
+    }
+    return false;
+  }
+
+
+  /// 서버에 로그인 요청 보내기
+  Future<Map<String, dynamic>?> _signUpToServer(String accessToken) async {
+    try {
+      final requestData = {'accessToken': accessToken};
+      final response = await ApiClient().post('/auth/login/kakao', data: requestData);
+
+      if (response.statusCode == 200) {
+        if (response.data is Map<String, dynamic>) {
+          return response.data;
+        } else {
+          print('응답 데이터 형식이 아닙니다. 데이터: ${response.data}');
+        }
+      } else {
+        print('로그인 실패, 상태 코드: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('서버 로그인 요청 실패: $e');
+    }
+    return null;  // 로그인 실패 시 null 반환
+  }
+
+  /// 로그인 성공 후 처리
+  void _onSignUpSuccess(BuildContext context, String accessToken) {
+    state = state.copyWith(isLoading: false, isLoggedIn: true);
+    _ref.read(isLoggedInProvider.notifier).state = true;
+    print("로그인 성공, 액세스 토큰: $accessToken");
+    context.go('/main/home');
+  }
+
+  /// 로그인 실패 후 회원가입 화면으로 이동
+  void _onSignUpFailure(BuildContext context) async {
+    state = state.copyWith(isLoading: false);
+
+    final accessToken = await _getAccessTokenFromStorageOrKakao();
+
+    if (accessToken == null) {
+      print('액세스 토큰을 가져올 수 없습니다.');
+      return;
+    }
+
+    print("현재 state.accessToken: $accessToken");
+
+    // 로그인 실패 시 회원가입 처리
+    _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);
+    context.go('/signUp');
+  }
+
+/*
   Future<void> loginWithKakao(BuildContext context) async {  // context 매개변수 추가
-    //await _ref.read(secureStorageServiceProvider).deleteTokens();
+    await _ref.read(secureStorageServiceProvider).deleteTokens();
 
     state = state.copyWith(isLoading: true, errorMessage: null);
 
@@ -30,7 +133,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
       final savedToken = await _ref.read(secureStorageServiceProvider).getAccessToken();
       if (savedToken != null) {
         print('유효한 저장된 토큰: $savedToken');
-        state = state.copyWith(isLoading: false, isLoggedIn: true);
+        _ref.read(isLoggedInProvider.notifier).state = true;
         GoRouter.of(context).go('/main/home');
         return;
       }
@@ -66,7 +169,9 @@ class LoginViewModel extends StateNotifier<LoginState> {
       );
     }
   }
+*/
 
+/*
   /// 서버 API로 Kakao AccessToken 전송
   Future<bool> _loginToServer(String accessToken) async {
     try {
@@ -92,21 +197,17 @@ class LoginViewModel extends StateNotifier<LoginState> {
       return false; // 예외 발생 시 실패로 처리
     }
   }
+*/
 
-  Future<void> _saveAccessToken(String accessToken) async {
-    try {
-      // SecureStorageService를 사용하여 토큰 저장
-      await _ref.read(secureStorageServiceProvider).saveAccessToken(accessToken, 2592000);
-    } catch (e) {
-      print("토큰 저장 중 오류 발생: $e");
-      // 필요 시 에러 상태 업데이트
-      state = state.copyWith(errorMessage: '토큰 저장 중 오류가 발생했습니다.');
-    }
-  }
 
   /// 로그아웃 처리
-  void logout() {
+  void logout() async {
+    // Secure Storage에서 액세스 토큰과 리프레시 토큰 삭제
+    await _ref.read(secureStorageServiceProvider).deleteTokens();
+
+    // 로그인 상태 업데이트
     state = state.copyWith(isLoggedIn: false);
+    print('로그아웃 성공, 모든 토큰 삭제됨');
   }
 }
 

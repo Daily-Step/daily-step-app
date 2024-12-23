@@ -19,6 +19,7 @@ class DailyStepAuth extends ChangeNotifier {
   DailyStepAuth({required this.socialLoginRepository, required this.loginApi});
 
   bool get signedIn => _signedIn;
+
   bool get signedUp => _signedUp;
 
   Future<void> signOut() async {
@@ -65,24 +66,20 @@ class DailyStepAuth extends ChangeNotifier {
 
   String? guard(GoRouterState state, bool isLoggedIn) {
     final isLoginPage = state.matchedLocation == '/signIn' || state.matchedLocation == '/signUp';
-    final isSignupPage = state.matchedLocation == '/signUp';
 
     if (isLoggedIn) {
-      // 로그인 상태에서 로그인 또는 가입 페이지에 접근하면 홈으로 리디렉션
-      if (isLoginPage || state.matchedLocation == '/') {
-        return '/main/home';
-      }
-      if (isSignupPage) {
+      // 로그인한 경우 로그인 또는 회원가입 페이지로 가는 것을 막고 홈으로 리디렉션
+      if (isLoginPage) {
         return '/main/home';
       }
     }
 
-    // 로그인 안 된 상태에서 로그인 페이지 외 다른 페이지 접근 시 로그인 페이지로 리디렉션
-    if (!isLoggedIn && state.matchedLocation != '/signIn' && state.matchedLocation != '/signUp') {
+    // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+    if (!isLoggedIn && !isLoginPage) {
       return '/signIn';
     }
 
-    return null;  // 리디렉션 없이 그대로 페이지 유지
+    return null; // 리디렉션이 필요 없으면 null 반환
   }
 }
 

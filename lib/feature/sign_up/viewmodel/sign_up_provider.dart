@@ -23,6 +23,7 @@ import '../view/jobtenure_dummies.dart';
 class SignUpViewModel extends StateNotifier<SignUpState> {
   final NicknameRepository _nicknameRepository = NicknameRepository();
   final Ref ref;
+
   SignUpViewModel(this.ref) : super(SignUpState());
 
   Future<void> saveUserInfo(String accessToken, BuildContext context) async {
@@ -32,7 +33,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
       print('saveUserInfo 호출, accessToken: $accessToken');
 
       final signUpRequest = SignUpRequest(
-        accessToken: accessToken,
+        accessToken: state.accessToken ?? '',
         nickname: state.nickName ?? '',
         birth: state.birthDate != null ? DateFormat('yyyy-MM-dd').format(state.birthDate!) : '',
         gender: state.sex == 0 ? "MALE" : "FEMALE",
@@ -40,38 +41,27 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
         yearId: state.jobTenure ?? 0,
       );
 
-      // requestData를 JSON으로 직렬화
-      final requestData = signUpRequest.toJson();
-      print('서버 응답 데이터: ${requestData}');
+      final response = await ApiClient().post(
+        'auth/signin/kakao',
+        data: signUpRequest.toJson(),
+      );
 
-      // 서버 요청 URL이 맞는지 확인
-      final url = 'auth/signin/kakao';
-      print('POST 요청 URL: $url');
-      print('요청 데이터: ${jsonEncode(requestData)}');
+      print('응답 데이터signUpRequest: ${jsonEncode(response.data)}'); // 응답 데이터 로그 추가
 
-      final response = await ApiClient().post(url, data: requestData);
 
       if (response.statusCode == 200) {
         // 서버에서 반환된 데이터 처리
         final responseData = response.data;
-        final newAccessToken = responseData['data']['accessToken'] ?? ''; // 새로운 accessToken
-        final accessTokenExpiresIn = responseData['data']['accessTokenExpiresIn'] ?? ''; // 새로운 accessToken
-
+        final newAccessToken = responseData['data']['accessToken'] ?? '';
+        final accessTokenExpiresIn = responseData['data']['accessTokenExpiresIn'] ?? '';
 
         if (newAccessToken.isNotEmpty) {
           // 새로운 accessToken으로 로그인 처리
-          final secureStorage = SecureStorage(secureStorageService: ref.read(secureStorageServiceProvider));
-
-          await secureStorage.saveAccessToken(newAccessToken, accessTokenExpiresIn); // 예: 1시간 후 만료
-          setAccessToken(newAccessToken);  // 새로운 토큰을 저장
-
-          // 로그인 상태 관리
-          final container = ProviderContainer();
-          container.read(isLoggedInProvider.notifier).state = true;
-
+          await ref.read(secureStorageServiceProvider).saveAccessToken(newAccessToken, accessTokenExpiresIn);
           print('로그인 성공: 새로운 accessToken 저장');
 
-          // 홈 화면으로 이동
+          // 로그인 성공 처리
+          ref.read(isLoggedInProvider.notifier).state = true;
           context.go('/main/home');
         } else {
           print('새로운 accessToken을 받지 못했습니다.');
