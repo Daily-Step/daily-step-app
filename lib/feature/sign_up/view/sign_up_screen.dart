@@ -1,3 +1,4 @@
+import 'package:dailystep/config/secure_storage/secure_storage_provider.dart';
 import 'package:dailystep/feature/sign_up/view/birthdate_fragment.dart';
 import 'package:dailystep/feature/sign_up/view/job_fragment.dart';
 import 'package:dailystep/feature/sign_up/view/jobtenure_fragment.dart';
@@ -108,10 +109,12 @@ class SignUpScreen extends ConsumerWidget {
           WCtaFloatingButton(
             signUpState.step == 6 ? '시작하기' : '다음',
             onPressed: signUpState.step == 6
-                ? () {
+                ? () async {
                     final accessToken = signUpState.accessToken;
+                    print('AccessToken: $accessToken');
+
                     if (accessToken != null) {
-                      GoRouter.of(context).go('/main/home');
+                      await signUpViewModel.saveUserInfo(accessToken, context);  // 데이터 서버로 전송
                     } else {
                       print("AccessToken이 없습니다.");
                     }

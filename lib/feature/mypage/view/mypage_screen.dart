@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../viewmodel/mypage_viewmodel.dart';
 
 class MyPageScreen extends ConsumerWidget {
@@ -12,6 +13,17 @@ class MyPageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(myPageViewModelProvider);
+
+    final secureStorage = ref.watch(secureStorageServiceProvider).getAccessToken();
+
+    // 비동기적으로 SecureStorage에서 데이터 읽기
+    Future<void> readAndLog() async {
+      String? accessToken = await secureStorage;
+      print('Access Token from SecureStorage: $accessToken');
+    }
+
+    // 화면이 빌드될 때 readAndLog() 호출
+    readAndLog();
 
     if (user == null) {
       return Scaffold(

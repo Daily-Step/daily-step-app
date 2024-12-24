@@ -47,15 +47,22 @@ class LoginScreen extends ConsumerWidget {
                       child: ElevatedButton(
                         onPressed: () async {
 
-/*                          if (savedToken != null) {
+                          final savedToken = await ref.read(secureStorageServiceProvider).getAccessToken();
+
+                          if (savedToken != null) {
                             // 저장된 토큰이 유효하면 서버 요청 없이 바로 로그인 처리
                             print('유효한 저장된 토큰이 있습니다. 서버 요청을 건너뜁니다.');
                             ref.read(loginViewModelProvider.notifier).state = loginState.copyWith(isLoggedIn: true);
                             context.go('/main/home'); // 바로 홈 화면으로 이동
                             return;
-                          }*/
+                          }
 
-                          await viewModel.loginWithKakao(context);
+                          await viewModel.handleLogin(context);
+
+
+                          // 저장된 토큰을 콘솔에 출력합니다
+                          print('저장된 토큰: $savedToken');
+
                           final isLoggedIn = viewModel.state.isLoggedIn;
 
                           if (isLoggedIn) {
