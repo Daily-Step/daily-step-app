@@ -11,7 +11,7 @@ class MyPageModel with _$MyPageModel {
     required int ongoingChallenges,
     required int completedChallenges,
     required int totalChallenges,
-    @Default(true) bool isPushNotificationEnabled,
+    @Default(false) bool isPushNotificationEnabled,
     required DateTime birth,
     required String gender,
   }) = _UserModel;

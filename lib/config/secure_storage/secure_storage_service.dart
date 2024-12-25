@@ -4,6 +4,7 @@ class SecureStorageService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   static const String _accessTokenKey = 'access_token';
+  static const String _refreshTokenKey = 'refresh_token';
   static const String _accessTokenExpirationKey = 'access_token_expiration';
 
   // Access Token 저장 (만료 시간도 함께 저장)
@@ -11,12 +12,20 @@ class SecureStorageService {
     try {
       final expirationTime = DateTime.now().add(Duration(seconds: expiresInSeconds));
       await _storage.write(key: _accessTokenKey, value: token);
-      print('Saving Access Token: $token');
-
       await _storage.write(key: _accessTokenExpirationKey, value: expirationTime.toIso8601String());
       print('[SECURE_STORAGE] Access Token saved with expiration: $expirationTime');
     } catch (e) {
       print("[ERR] Access Token 저장 실패: $e");
+    }
+  }
+
+  // Refresh Token 저장
+  Future<void> saveRefreshToken(String refreshToken) async {
+    try {
+      await _storage.write(key: _refreshTokenKey, value: refreshToken);
+      print('[SECURE_STORAGE] Refresh Token saved');
+    } catch (e) {
+      print("[ERR] Refresh Token 저장 실패: $e");
     }
   }
 
@@ -44,6 +53,7 @@ class SecureStorageService {
       return null;
     }
   }
+
 
   // 토큰 삭제
   Future<void> deleteTokens() async {
