@@ -10,7 +10,8 @@ SecureStorageService secureStorageService(SecureStorageServiceRef ref) {
 
 class SecureStorage {
   static const ACCESS_TOKEN = 'access_token';
-  static const ACCESS_TOKEN_EXPIRATION = 'access_token_expiration';
+  static const REFRESH_TOKEN = 'refresh_token';
+
 
   final SecureStorageService secureStorageService;
 
@@ -23,10 +24,18 @@ class SecureStorage {
     try {
       final expirationTime = DateTime.now().add(Duration(seconds: expiresInSeconds));
       await secureStorageService.saveAccessToken(accessToken, expiresInSeconds);
-      await secureStorageService.saveAccessToken(ACCESS_TOKEN_EXPIRATION, expirationTime.toIso8601String());
       print('[SECURE_STORAGE] saveAccessToken: $accessToken, expires at: $expirationTime');
     } catch (e) {
       print("[ERR] AccessToken 저장 실패: $e");
+    }
+  }
+
+  Future<void> saveRefreshToken(String refreshToken) async {
+    try {
+      await secureStorageService.saveRefreshToken(refreshToken);
+      print('[SECURE_STORAGE] Refresh Token saved');
+    } catch (e) {
+      print("[ERR] Refresh Token 저장 실패: $e");
     }
   }
 
