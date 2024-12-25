@@ -22,8 +22,13 @@ class AchieveChallengeAction extends ChallengeListAction {
   final id;
   final ChallengeModel challengeModel;
   final BuildContext context;
+  final bool isCancel;
 
-  const AchieveChallengeAction(this.id, this.challengeModel,this.context);
+  const AchieveChallengeAction(
+      {required this.id,
+      required this.challengeModel,
+      required this.context,
+      required this.isCancel});
 }
 
 class DeleteChallengeAction extends ChallengeListAction {

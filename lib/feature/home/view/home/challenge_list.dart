@@ -3,7 +3,6 @@ import 'package:dailystep/model/record/record_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../widgets/widget_toast.dart';
 import '../../action/challenge_list_action.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_item.dart';
@@ -28,7 +27,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
         itemBuilder: (context, index) {
           final challenge = state.challengeList[index];
           final bool isAchieved = challenge.record.successDates
-              .any((date) => date.isSameDate(DateTime.now()));
+              .any((date) => date.isSameDate(state.selectedDate));
           return ChallengeItem(
             task: challenge,
             index: index,
@@ -40,17 +39,18 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               List<DateTime> copiedChallengeSuccessList =
                   List<DateTime>.from(challenge.record.successDates);
               if (isAchieved == false) {
-                copiedChallengeSuccessList.add(DateTime.now());
+                copiedChallengeSuccessList.add(state.selectedDate);
               } else {
                 copiedChallengeSuccessList.removeLast();
               }
-              final newChallenge =
-                  challenge.copyWith(record: RecordModel(successDates: copiedChallengeSuccessList));
-              await notifier
-                  .handleAction(AchieveChallengeAction(challenge.id, newChallenge, context));
-              if (isAchieved == false) {
-                WToast.show(context, '토스트메세지');
-              }
+              final newChallenge = challenge.copyWith(
+                  record:
+                      RecordModel(successDates: copiedChallengeSuccessList));
+              await notifier.handleAction(AchieveChallengeAction(
+                  id: challenge.id,
+                  challengeModel: newChallenge,
+                  context: context,
+                  isCancel: isAchieved));
             },
             isAchieved: isAchieved,
           );

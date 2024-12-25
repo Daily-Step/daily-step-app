@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../model/challenge/challenge_dummies.dart';
 import '../../../model/challenge/challenge_model.dart';
+import '../../../widgets/widget_toast.dart';
 import '../action/challenge_list_action.dart';
 
 part 'challenge_viewmodel.g.dart';
@@ -13,7 +18,6 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   ChallengesState build() {
     _initialTasks = _setChallengeList(DateTime.now());
-
     DateTime today = DateTime.now();
 
     //오늘 부터 2주 전 까지 캘린더 데이터 생성
@@ -24,8 +28,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       for (int j = 0; j < _initialTasks.length; j++) {
         bool hasSuccessDate = _initialTasks[j].record.successDates.any(
               (el) => el.isSameDate(targetDate),
-        );
-
+            );
         if (!hasSuccessDate) {
           allChallengesSuccess = false;
           break;
@@ -78,18 +81,19 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       }
       return task;
     }).toList();
-
     state = state.copyWith(challengeList: updatedTasks);
   }
 
   void _handleAchieveChallenge(AchieveChallengeAction action) {
+    if(!action.isCancel){
+      _checkIsFirstAchieved(List.of(state.challengeList), action.context);
+    }
     final updatedTasks = state.challengeList.map((task) {
       if (task.id == action.id) {
         return action.challengeModel;
       }
       return task;
     }).toList();
-
     state = state.copyWith(challengeList: updatedTasks);
   }
 
@@ -146,17 +150,35 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     }).toList();
   }
 
-  bool _checkIsFirstAchieved() {
-    final challenges = List.of(state.challengeList);
+  void _checkIsFirstAchieved(
+      List<ChallengeModel> challenges, BuildContext context) {
+    int successDate = 0 ;
+    print(challenges[0].record.successDates);
     for (int j = 0; j < challenges.length; j++) {
       bool hasSuccessDate = challenges[j].record.successDates.any(
             (el) => el.isSameDate(state.selectedDate),
           );
-      if (hasSuccessDate) {
-        return false;
+      if(hasSuccessDate){
+        successDate += 1;
       }
     }
-    return true;
+    print(successDate);
+    if (successDate == 0) {
+      ToastMsg toastMsg = _setToastMsg(1);//하루 첫 달성
+      WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+    } else {
+      ToastMsg toastMsg = _setToastMsg(2);
+      WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+    }
+  }
+
+  ToastMsg _setToastMsg(int type) {
+    if (type == 1) {
+      return toastMsg.firstWhere((el) => el.type == 1);
+    } else {
+      int randomNum = 3 + Random().nextInt((7 + 1) - 3);
+      return toastMsg.firstWhere((el) => el.id == randomNum);
+    }
   }
 }
 
