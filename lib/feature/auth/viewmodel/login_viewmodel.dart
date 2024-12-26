@@ -83,7 +83,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
       if (response.statusCode == 200) {
         if (response.data is Map<String, dynamic>) {
-          return response.data;
+          return response.data['data'];
         } else {
           print('응답 데이터 형식이 아닙니다. 데이터: ${response.data}');
         }
