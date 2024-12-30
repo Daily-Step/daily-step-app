@@ -1,3 +1,4 @@
+import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/feature/mypage/model/mypage_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -124,7 +125,7 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                       Row(
                         children: [
-                          Text(user.gender),
+                          Text(user.translatedGender),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/gender');
@@ -147,7 +148,7 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                       Row(
                         children: [
-                          Text(user.jobId.toString()),
+                          Text(user.translatedJob),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/job');
@@ -170,7 +171,7 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                       Row(
                         children: [
-                          Text(user.jobYearId.toString()),
+                          Text(user.translatedJobTenure),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/jobTenure');
