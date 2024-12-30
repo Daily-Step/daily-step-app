@@ -4,6 +4,7 @@ import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:dailystep/config/app.dart';
 import 'package:dailystep/config/secure_storage/secure_storage_provider.dart';
 import 'package:dailystep/feature/sign_up/viewmodel/validation_providers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,10 +55,13 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
         final responseData = response.data;
         final newAccessToken = responseData['data']['accessToken'] ?? '';
         final accessTokenExpiresIn = responseData['data']['accessTokenExpiresIn'] ?? '';
+        final refreshToken = responseData['data']['refreshToken'] ?? '';
 
         if (newAccessToken.isNotEmpty) {
           // 새로운 accessToken으로 로그인 처리
           await ref.read(secureStorageServiceProvider).saveAccessToken(newAccessToken, accessTokenExpiresIn);
+          await ref.read(secureStorageServiceProvider).saveRefreshToken(refreshToken);
+
           print('로그인 성공: 새로운 accessToken 저장');
 
           // 로그인 성공 처리
@@ -105,39 +109,67 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
   }
 
   Future<void> checkNicknameAvailability(String nickname, WidgetRef ref) async {
+    print('닉네임 중복 확인 시작: $nickname');
     ref.read(isNicknameCheckInProgressProvider.notifier).state = true;
 
     try {
+      // NicknameRepository에서 결과를 받아 처리
       final result = await _nicknameRepository.checkNickname(nickname);
-      _handleNicknameResult(result, ref);
+
+      print('닉네임 중복 확인 결과: ${result.isSuccess ? "성공" : "실패"}');
+
+      if (result.isSuccess) {
+        // 닉네임 사용 가능
+        print('닉네임 사용 가능');
+        _updateNicknameState(
+          ref,
+          '사용 가능한 닉네임입니다. :)',
+          Colors.blue,
+          true,
+        );
+      } else if (result.failureData?.statusCode == 400) {
+        // 서버에서 반환된 메시지 처리
+        final errorMessage = result.failureData?.message ?? '이미 사용 중인 닉네임입니다.';
+        print('닉네임 중복: $errorMessage');
+        _updateNicknameState(
+          ref,
+          errorMessage,
+          Colors.red,
+          false,
+        );
+      } else {
+        // 기타 오류 처리
+        print('서버에서 알 수 없는 오류 발생');
+        _updateNicknameState(
+          ref,
+          '서버 오류. 다시 시도해주세요.',
+          Colors.red,
+          false,
+        );
+      }
     } catch (e) {
-      _updateNicknameState(ref, '서버 오류. 다시 시도해주세요.', Colors.red, false);
+      // 네트워크 오류 또는 예외 처리
+      if (e is DioException && e.response?.statusCode == 400) {
+        final errorMessage = e.response?.data['message'] ?? '이미 사용 중인 닉네임입니다.';
+        print('DioException 상태 코드 400: $errorMessage');
+        _updateNicknameState(
+          ref,
+          errorMessage,
+          Colors.red,
+          false,
+        );
+      } else {
+        print('네트워크 오류 또는 예외 발생: $e');
+        _updateNicknameState(
+          ref,
+          '네트워크 오류. 다시 시도해주세요.',
+          Colors.red,
+          false,
+        );
+      }
     } finally {
+      print('닉네임 중복 확인 완료');
       ref.read(isNicknameCheckInProgressProvider.notifier).state = false;
-    }
-  }
-
-  void _handleNicknameResult(SimpleResult<NicknameValidationResponse, ApiError> result, WidgetRef ref) {
-    if (result.isSuccess) {
-      final successData = result.successData;
-      print('Success Data: ${successData.toString()}');
-
-      // 공백 제거 후 문자열 비교
-      final isAvailable = successData?.data.trim() == '사용 가능한 닉네임입니다.';
-      print('Is Available: $isAvailable'); // 디버깅용 출력
-
-      _updateNicknameState(
-        ref,
-        isAvailable ? '사용 가능한 닉네임입니다. :)' : '이미 사용 중인 닉네임입니다.',
-        isAvailable ? Colors.blue : Colors.red,
-        isAvailable,
-      );
-    } else {
-      final errorData = result.failureData;
-      print('Error Data: ${errorData?.toString()}');
-
-      final errorMessage = errorData?.message ?? '서버 오류. 다시 시도해주세요.';
-      _updateNicknameState(ref, errorMessage, Colors.red, false);
     }
   }
 

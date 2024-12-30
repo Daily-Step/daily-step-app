@@ -14,23 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-MyPageModel _$MyPageModelFromJson(Map<String, dynamic> json) {
-  return _UserModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$MyPageModel {
-  String get userName => throw _privateConstructorUsedError;
+  String get nickname => throw _privateConstructorUsedError;
   String get profileImageUrl => throw _privateConstructorUsedError;
+  DateTime get birth => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
   int get ongoingChallenges => throw _privateConstructorUsedError;
   int get completedChallenges => throw _privateConstructorUsedError;
   int get totalChallenges => throw _privateConstructorUsedError;
   bool get isPushNotificationEnabled => throw _privateConstructorUsedError;
-  DateTime get birth => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
-
-  /// Serializes this MyPageModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  int? get jobId => throw _privateConstructorUsedError;
+  String? get job => throw _privateConstructorUsedError;
+  int? get jobYearId => throw _privateConstructorUsedError;
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -46,14 +42,17 @@ abstract class $MyPageModelCopyWith<$Res> {
       _$MyPageModelCopyWithImpl<$Res, MyPageModel>;
   @useResult
   $Res call(
-      {String userName,
+      {String nickname,
       String profileImageUrl,
+      DateTime birth,
+      String gender,
       int ongoingChallenges,
       int completedChallenges,
       int totalChallenges,
       bool isPushNotificationEnabled,
-      DateTime birth,
-      String gender});
+      int? jobId,
+      String? job,
+      int? jobYearId});
 }
 
 /// @nodoc
@@ -71,23 +70,34 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userName = null,
+    Object? nickname = null,
     Object? profileImageUrl = null,
+    Object? birth = null,
+    Object? gender = null,
     Object? ongoingChallenges = null,
     Object? completedChallenges = null,
     Object? totalChallenges = null,
     Object? isPushNotificationEnabled = null,
-    Object? birth = null,
-    Object? gender = null,
+    Object? jobId = freezed,
+    Object? job = freezed,
+    Object? jobYearId = freezed,
   }) {
     return _then(_value.copyWith(
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
+      nickname: null == nickname
+          ? _value.nickname
+          : nickname // ignore: cast_nullable_to_non_nullable
               as String,
       profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      birth: null == birth
+          ? _value.birth
+          : birth // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
               as String,
       ongoingChallenges: null == ongoingChallenges
           ? _value.ongoingChallenges
@@ -105,14 +115,18 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
           ? _value.isPushNotificationEnabled
           : isPushNotificationEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+      jobId: freezed == jobId
+          ? _value.jobId
+          : jobId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      job: freezed == job
+          ? _value.job
+          : job // ignore: cast_nullable_to_non_nullable
+              as String?,
+      jobYearId: freezed == jobYearId
+          ? _value.jobYearId
+          : jobYearId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -126,14 +140,17 @@ abstract class _$$UserModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String userName,
+      {String nickname,
       String profileImageUrl,
+      DateTime birth,
+      String gender,
       int ongoingChallenges,
       int completedChallenges,
       int totalChallenges,
       bool isPushNotificationEnabled,
-      DateTime birth,
-      String gender});
+      int? jobId,
+      String? job,
+      int? jobYearId});
 }
 
 /// @nodoc
@@ -149,23 +166,34 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userName = null,
+    Object? nickname = null,
     Object? profileImageUrl = null,
+    Object? birth = null,
+    Object? gender = null,
     Object? ongoingChallenges = null,
     Object? completedChallenges = null,
     Object? totalChallenges = null,
     Object? isPushNotificationEnabled = null,
-    Object? birth = null,
-    Object? gender = null,
+    Object? jobId = freezed,
+    Object? job = freezed,
+    Object? jobYearId = freezed,
   }) {
     return _then(_$UserModelImpl(
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
+      nickname: null == nickname
+          ? _value.nickname
+          : nickname // ignore: cast_nullable_to_non_nullable
               as String,
       profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      birth: null == birth
+          ? _value.birth
+          : birth // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
               as String,
       ongoingChallenges: null == ongoingChallenges
           ? _value.ongoingChallenges
@@ -183,55 +211,69 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.isPushNotificationEnabled
           : isPushNotificationEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+      jobId: freezed == jobId
+          ? _value.jobId
+          : jobId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      job: freezed == job
+          ? _value.job
+          : job // ignore: cast_nullable_to_non_nullable
+              as String?,
+      jobYearId: freezed == jobYearId
+          ? _value.jobYearId
+          : jobYearId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$UserModelImpl implements _UserModel {
   const _$UserModelImpl(
-      {required this.userName,
-      required this.profileImageUrl,
-      required this.ongoingChallenges,
-      required this.completedChallenges,
-      required this.totalChallenges,
-      this.isPushNotificationEnabled = true,
+      {required this.nickname,
+      this.profileImageUrl = '',
       required this.birth,
-      required this.gender});
-
-  factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserModelImplFromJson(json);
+      required this.gender,
+      this.ongoingChallenges = 0,
+      this.completedChallenges = 0,
+      this.totalChallenges = 0,
+      this.isPushNotificationEnabled = false,
+      this.jobId,
+      this.job,
+      this.jobYearId});
 
   @override
-  final String userName;
+  final String nickname;
   @override
+  @JsonKey()
   final String profileImageUrl;
   @override
+  final DateTime birth;
+  @override
+  final String gender;
+  @override
+  @JsonKey()
   final int ongoingChallenges;
   @override
+  @JsonKey()
   final int completedChallenges;
   @override
+  @JsonKey()
   final int totalChallenges;
   @override
   @JsonKey()
   final bool isPushNotificationEnabled;
   @override
-  final DateTime birth;
+  final int? jobId;
   @override
-  final String gender;
+  final String? job;
+  @override
+  final int? jobYearId;
 
   @override
   String toString() {
-    return 'MyPageModel(userName: $userName, profileImageUrl: $profileImageUrl, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, birth: $birth, gender: $gender)';
+    return 'MyPageModel(nickname: $nickname, profileImageUrl: $profileImageUrl, birth: $birth, gender: $gender, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, jobId: $jobId, job: $job, jobYearId: $jobYearId)';
   }
 
   @override
@@ -239,10 +281,12 @@ class _$UserModelImpl implements _UserModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserModelImpl &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
+            (identical(other.nickname, nickname) ||
+                other.nickname == nickname) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
                 other.profileImageUrl == profileImageUrl) &&
+            (identical(other.birth, birth) || other.birth == birth) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.ongoingChallenges, ongoingChallenges) ||
                 other.ongoingChallenges == ongoingChallenges) &&
             (identical(other.completedChallenges, completedChallenges) ||
@@ -252,22 +296,26 @@ class _$UserModelImpl implements _UserModel {
             (identical(other.isPushNotificationEnabled,
                     isPushNotificationEnabled) ||
                 other.isPushNotificationEnabled == isPushNotificationEnabled) &&
-            (identical(other.birth, birth) || other.birth == birth) &&
-            (identical(other.gender, gender) || other.gender == gender));
+            (identical(other.jobId, jobId) || other.jobId == jobId) &&
+            (identical(other.job, job) || other.job == job) &&
+            (identical(other.jobYearId, jobYearId) ||
+                other.jobYearId == jobYearId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      userName,
+      nickname,
       profileImageUrl,
+      birth,
+      gender,
       ongoingChallenges,
       completedChallenges,
       totalChallenges,
       isPushNotificationEnabled,
-      birth,
-      gender);
+      jobId,
+      job,
+      jobYearId);
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -276,33 +324,30 @@ class _$UserModelImpl implements _UserModel {
   @pragma('vm:prefer-inline')
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
       __$$UserModelImplCopyWithImpl<_$UserModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$UserModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _UserModel implements MyPageModel {
   const factory _UserModel(
-      {required final String userName,
-      required final String profileImageUrl,
-      required final int ongoingChallenges,
-      required final int completedChallenges,
-      required final int totalChallenges,
-      final bool isPushNotificationEnabled,
+      {required final String nickname,
+      final String profileImageUrl,
       required final DateTime birth,
-      required final String gender}) = _$UserModelImpl;
-
-  factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$UserModelImpl.fromJson;
+      required final String gender,
+      final int ongoingChallenges,
+      final int completedChallenges,
+      final int totalChallenges,
+      final bool isPushNotificationEnabled,
+      final int? jobId,
+      final String? job,
+      final int? jobYearId}) = _$UserModelImpl;
 
   @override
-  String get userName;
+  String get nickname;
   @override
   String get profileImageUrl;
+  @override
+  DateTime get birth;
+  @override
+  String get gender;
   @override
   int get ongoingChallenges;
   @override
@@ -312,9 +357,11 @@ abstract class _UserModel implements MyPageModel {
   @override
   bool get isPushNotificationEnabled;
   @override
-  DateTime get birth;
+  int? get jobId;
   @override
-  String get gender;
+  String? get job;
+  @override
+  int? get jobYearId;
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.

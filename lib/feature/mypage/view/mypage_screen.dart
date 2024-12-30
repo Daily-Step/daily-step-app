@@ -64,7 +64,7 @@ class MyPageScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${user.userName}님의 챌린지',
+                                '${user.nickname}님의 챌린지',
                                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),
