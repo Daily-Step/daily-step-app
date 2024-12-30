@@ -119,13 +119,6 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
               },
             ),
             GoRoute(
-              path: '/:postId',
-              builder: (BuildContext context, GoRouterState state) {
-                final String postId = state.pathParameters['postId']!;
-                return ChallengeDetailScreen(int.parse(postId));
-              },
-            ),
-            GoRoute(
               path: '/myinfo',
               pageBuilder: (BuildContext context, GoRouterState state) =>
                   FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
@@ -165,6 +158,14 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
                 child: JobTenureScreen(),
               ),
             ),
+            GoRoute(
+              path: '/:postId',
+              builder: (BuildContext context, GoRouterState state) {
+                final String postId = state.pathParameters['postId']!;
+                return ChallengeDetailScreen(int.parse(postId));
+              },
+            ),
+
             GoRoute(
               path: 'myinfo/account_settings/:account',
               pageBuilder: (BuildContext context, GoRouterState state) =>

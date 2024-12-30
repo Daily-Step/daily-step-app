@@ -18,7 +18,7 @@ class ApiError {
     if (e is DioException) {
       final response = e.response;
       final statusCode = response?.statusCode;
-      final serverCode = response?.data['code']; // 서버에서 전달한 에러 코드
+      final serverCode = response?.data['code'];
       final errorMessage = _getErrorMessage(serverCode, statusCode);
 
       final apiError = ApiError(

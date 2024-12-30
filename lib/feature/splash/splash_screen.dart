@@ -15,19 +15,29 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkPermissions() async {
-    // 권한 요청
-    final cameraStatus = await Permission.camera.request();
-    final storageStatus = await Permission.photos.request();
+    PermissionStatus galleryPermission;
 
-    if (cameraStatus.isGranted && storageStatus.isGranted) {
-      // 모든 권한이 허용된 경우
-      Future.delayed(Duration(milliseconds: 1500), () {
-        if (mounted) {
-          context.go('/main/home');
-        }
-      });
+    if (await Permission.photos.isGranted || await Permission.storage.isGranted) {
+      // 권한이 이미 허용된 경우
+      context.go('/main/home');
+      return;
+    }
+
+    // Android 13(API 33) 이상인지 확인 후 권한 요청
+    if (await Permission.photos.isRestricted || await Permission.photos.isPermanentlyDenied) {
+      _showPermissionDialog();
+      return;
+    } else if (await Permission.photos.isDenied) {
+      galleryPermission = await Permission.photos.request(); // Android 13 이상
     } else {
-      // 권한이 거부된 경우 사용자에게 알림
+      galleryPermission = await Permission.storage.request(); // Android 12 이하
+    }
+
+    if (galleryPermission.isGranted) {
+      // 권한 허용된 경우
+      context.go('/main/home');
+    } else {
+      // 권한 거부된 경우
       _showPermissionDialog();
     }
   }
@@ -38,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
       builder: (context) => AlertDialog(
         title: Text('권한 필요'),
         content: Text(
-            '앱을 사용하려면 카메라 및 저장소 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
+            '앱을 사용하려면 갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
         actions: [
           TextButton(
             onPressed: () {

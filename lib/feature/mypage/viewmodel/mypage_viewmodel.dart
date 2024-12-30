@@ -11,50 +11,40 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
 
   // 생성자에서 ApiClient와 SecureStorageService 주입
   MyPageViewModel(this._apiClient, this._secureStorageService) : super(null) {
-    loadUserData();
+    loadDummyUserData(); // 초기화 시 실제 유저 데이터 로드
   }
 
   @override
   void handleEvent(MyPageAction action) {
-    switch (action.runtimeType) {
-      case FetchUserDataAction:
-        loadUserData();
-        break;
-      case UpdateUserProfileAction:
-        final updateAction = action as UpdateUserProfileAction;
-        updateUserProfile(updateAction.newUserName, updateAction.birth, updateAction.gender);
-        break;
-      case TogglePushNotificationAction:
-        togglePushNotification();
-        break;
+    if (action is FetchUserDataAction) {
+      loadDummyUserData();
+    } else if (action is UpdateUserProfileAction) {
+      updateUserProfile(action.newUserName, action.birth, action.gender);
+    } else if (action is TogglePushNotificationAction) {
+      togglePushNotification();
     }
   }
 
-  // 유저 정보 가져오기
-  Future<void> loadUserData() async {
-    try {
-      final accessToken = await _secureStorageService.getAccessToken();
-      if (accessToken != null) {
-        // API 호출하여 유저 데이터 가져오기
-        final response = await _apiClient.get(
-          'member',
-          headers: {'Authorization': 'Bearer $accessToken'},
-        );
-
-        if (response != null) {
-          state = MyPageModel.fromJson(response.data);;
-        }
-      }
-    } catch (e) {
-      print('Failed to load user data: $e');
-    }
+  // 실제 유저 데이터 가져오기 (API 호출)
+  // TODO : 실제 유저로 바꾸기 api가 만들어 지면
+  void loadDummyUserData() {
+    state = MyPageModel(
+      nickname: "챌린저123",
+      profileImageUrl: "",
+      ongoingChallenges: 3,
+      completedChallenges: 1,
+      totalChallenges: 4,
+      isPushNotificationEnabled: true,
+      birth: DateTime(1999, 1, 1),
+      gender: "남성",
+    );
   }
 
   // 프로필 업데이트
   void updateUserProfile(String newUserName, DateTime birth, String gender) {
     if (state != null) {
       state = state!.copyWith(
-        userName: newUserName,
+        nickname: newUserName,
         birth: birth,
         gender: gender,
       );
@@ -70,6 +60,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     }
   }
 }
+
 
 // Provider 정의
 final myPageViewModelProvider = StateNotifierProvider<MyPageViewModel, MyPageModel?>((ref) {

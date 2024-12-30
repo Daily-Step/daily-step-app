@@ -1,11 +1,13 @@
 class NicknameValidationResponse {
-  final String data;
+  final String? data;
+  final String? message;
 
-  NicknameValidationResponse({required this.data});
+  NicknameValidationResponse({this.data, this.message});
 
   factory NicknameValidationResponse.fromJson(Map<String, dynamic> json) {
     return NicknameValidationResponse(
-      data: json['data'] ?? '', // 디코딩 없이 바로 데이터 처리
+      data: json['data'],
+      message: json['message'],
     );
   }
 }

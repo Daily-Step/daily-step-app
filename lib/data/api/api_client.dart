@@ -19,13 +19,16 @@ class ApiClient {
         return handler.next(options); // 요청 진행
       },
       onResponse: (response, handler) {
-        print('Response: ${response.data}');
+        print('ApiClient Response: ${response.data}');
         return handler.next(response);
       },
       onError: (error, handler) async {
         if (error.response?.statusCode == 401) {
           // Access Token이 만료된 경우
+          print('토큰 만료: Access Token 갱신 시도');
           final refreshToken = await _secureStorage.read(key: 'refreshToken');
+          print('사용 중인 Refresh Token: $refreshToken');
+
           if (refreshToken != null && refreshToken.isNotEmpty) {
             try {
               // Refresh Token으로 새 Access Token 요청
@@ -33,6 +36,7 @@ class ApiClient {
                 'auth/reissue',
                 data: {'refresh_token': refreshToken},
               );
+              print('토큰 갱신 응답: ${tokenResponse.data}');
 
               if (tokenResponse.statusCode == 200) {
                 final newAccessToken = tokenResponse.data['access_token'];

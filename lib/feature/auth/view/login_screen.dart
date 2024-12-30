@@ -46,7 +46,6 @@ class LoginScreen extends ConsumerWidget {
                       padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                       child: ElevatedButton(
                         onPressed: () async {
-
                           final savedToken = await ref.read(secureStorageServiceProvider).getAccessToken();
 
                           if (savedToken != null) {
