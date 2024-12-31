@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/mypage/action/mypage_action.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
 import '../model/mypage_model.dart';
+import '../model/push_setting_response.dart';
 
 class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPageAction> {
   final ApiClient _apiClient;
@@ -51,12 +54,46 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     }
   }
 
+  Future<void> updatePushSetting(bool enabled) async {
+    final response = await _apiClient.put(
+      'member/push',
+      data: jsonEncode({
+        'enabled': enabled,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.data);
+      // 응답을 PushSettingResponse로 파싱
+      final result = PushSettingResponse.fromJson(responseBody);
+
+      // status, code 등에 따라 추가 로직 수행
+      if (result.status == 0) {
+        print('푸시 설정 업데이트 성공! code: ${result.code}, message: ${result.message}');
+      } else {
+        // status가 0이 아닐 경우 에러로 처리할 수도 있음
+        throw Exception('푸시 설정 실패: ${result.message}');
+      }
+    } else {
+      throw Exception('푸시 설정 요청 실패: statusCode=${response.statusCode}, body=${response.data}');
+    }
+  }
+
   // Push 알림 토글
-  void togglePushNotification() {
+  void togglePushNotification() async {
     if (state != null) {
-      state = state!.copyWith(
-        isPushNotificationEnabled: !state!.isPushNotificationEnabled,
-      );
+      final newValue = !state!.isPushNotificationEnabled;
+      // 먼저 로컬 State를 업데이트
+      state = state!.copyWith(isPushNotificationEnabled: newValue);
+
+      try {
+        // 위에서 만든 updatePushSetting 호출
+        await updatePushSetting(newValue);
+      } catch (e) {
+        // 서버 업데이트 실패 시 처리 (롤백 등)
+        state = state!.copyWith(isPushNotificationEnabled: !newValue);
+        print('푸시 알림 설정 업데이트 실패: $e');
+      }
     }
   }
 }

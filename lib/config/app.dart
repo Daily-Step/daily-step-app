@@ -125,10 +125,13 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
             ),
             GoRoute(
               path: '/myinfo/nickname/:nickname',
-              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-                key: state.pageKey,
-                child: NickNameScreen(),
-              ),
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                final String nicknameId = state.pathParameters['nickname']!;
+                return FadeTransitionPage(
+                  key: state.pageKey,
+                  child: NickNameScreen(initialNickname: nicknameId,),
+                );
+              }
             ),
             GoRoute(
               path: '/myinfo/birthday/:birthday',

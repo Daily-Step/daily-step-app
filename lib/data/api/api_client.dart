@@ -26,6 +26,9 @@ class ApiClient {
         if (error.response?.statusCode == 401) {
           // Access Token이 만료된 경우
           print('토큰 만료: Access Token 갱신 시도');
+          String? savedToken = await _secureStorage.read(key: 'refreshToken');
+          print('refreshTokensavedToken$savedToken');
+
           final refreshToken = await _secureStorage.read(key: 'refreshToken');
           print('사용 중인 Refresh Token: $refreshToken');
 

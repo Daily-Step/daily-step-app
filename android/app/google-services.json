@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "394182234490",
+    "project_id": "daliystop",
+    "storage_bucket": "daliystop.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394182234490:android:3112b014c8eca8b2de46c3",
+        "android_client_info": {
+          "package_name": "com.daily.step.dailystep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgr4ctr7LlfRkjJ8b8rElUh9eyq3YTIGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

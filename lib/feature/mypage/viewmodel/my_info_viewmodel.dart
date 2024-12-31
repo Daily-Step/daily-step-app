@@ -75,15 +75,22 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
       state = MyPageState.error(message: '정보 업데이트 중 예외 발생: $e');
     }
   }
+
+  void updateNickname(String newNickname) {
+    if (state is MyPageStateLoaded) {
+      final currentUser = (state as MyPageStateLoaded).user;
+      final updatedUser = currentUser.copyWith(nickname: newNickname);
+      state = MyPageState.loaded(user: updatedUser);
+    }
+  }
 }
 
 final myInfoViewModelProvider =
 StateNotifierProvider<MyPageViewModel, MyPageState>((ref) {
   final apiClient = ref.watch(apiClientProvider);
-  final secureStorageService = ref.read(secureStorageServiceProvider);
+  final secureStorageService = ref.read(myInfoSecureStorageProvider);
   return MyPageViewModel(apiClient, secureStorageService);
 });
 
-// apiClientProvider 와 secureStorageServiceProvider 정의 필요
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
-final secureStorageServiceProvider = Provider<SecureStorageService>((ref) => SecureStorageService());
+final myInfoSecureStorageProvider = Provider<SecureStorageService>((ref) => SecureStorageService());

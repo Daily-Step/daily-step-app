@@ -9,20 +9,28 @@ import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_textfield.dart';
 
 class NickNameScreen extends ConsumerWidget {
-  const NickNameScreen({super.key});
+  final String initialNickname;
+
+  const NickNameScreen({super.key, required this.initialNickname});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nickNameState = ref.watch(nickNameProvider);
-    final nickNameNotifier = ref.read(nickNameProvider.notifier);
+    final nickNameState = ref.watch(nickNameProvider(initialNickname));
     final isNickNameValid = ref.watch(isNickNameValidProvider);
+    final nickNameNotifier = ref.read(nickNameProvider(initialNickname).notifier);
+    bool isSaveButtonEnabled = nickNameState.isValid && nickNameState.validationMessage == '사용 가능한 닉네임입니다. :)';
+
+
+    // 화면에 기존 닉네임을 표시
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (nickNameState.nickName.isEmpty) {
+        nickNameNotifier.updateNickName(initialNickname);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '닉네임',
-          style: TextStyle(fontSize: 25),
-        ),
+        title: const Text('닉네임', style: TextStyle(fontSize: 25)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -32,7 +40,12 @@ class NickNameScreen extends ConsumerWidget {
         ),
         actions: [
           WConfirmButton(
-            onPressed: () {},
+            onPressed: isSaveButtonEnabled
+                ? () async {
+              await nickNameNotifier.saveNickName(nickNameState.nickName);
+              context.go('/main/myPage/myinfo');
+            }
+                : () {},  // 버튼 비활성화 시 null로 설정
             isValidProvider: isNickNameValid,
           )
         ],
@@ -42,24 +55,29 @@ class NickNameScreen extends ConsumerWidget {
         children: [
           height20,
           WTextField(
-            controller: TextEditingController(text: nickNameState.nickName)
-              ..selection = TextSelection.collapsed(
-                offset: nickNameState.nickName.length,
-              ),
+            controller: nickNameState.controller,
             hintText: '사용하실 닉네임을 입력하세요',
             onChanged: (value) {
-              nickNameNotifier.updateNickName(value); // 상태 업데이트
+              nickNameNotifier.updateNickName(value);
             },
             isEnable: nickNameState.isValid || nickNameState.nickName.isEmpty,
             suffixButton: WRoundButton(
               isEnabled: nickNameState.isValid,
               onPressed: () {
-                // 중복 확인 로직 추가 가능
+                // 중복 확인 로직 추가
+                ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
               },
               text: '중복확인',
             ),
           ),
           const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              nickNameState.validationMessage,
+              style: TextStyle(color: nickNameState.validationColor),
+            ),
+          ),
         ],
       ),
     );
