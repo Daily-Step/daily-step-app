@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/data/api/challenge_api.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/model/category/category_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,12 +15,18 @@ part 'challenge_viewmodel.g.dart';
 
 @riverpod
 class ChallengeViewModel extends _$ChallengeViewModel {
+  ChallengeApi _challengeApi = ChallengeApi();
+
   @override
   Future<ChallengesState> build() async {
     DateTime _today = DateTime.now();
-    print(_today);
-    final List<ChallengeModel> _initialChallenges = _setChallengeList(
-        challenges: dummyChallenges, selectedDate: _today);
+    final result = await _challengeApi.getCategories() as List;
+      List<CategoryModel> categories = result.map((el) {
+        return CategoryModel.fromJson(el as Map<String, dynamic>);
+      }).toList();
+
+    final List<ChallengeModel> _initialChallenges =
+        _setChallengeList(challenges: dummyChallenges, selectedDate: _today);
     final List<DateTime> _initialSuccessList = _setSuccessList(dummyChallenges);
     return ChallengesState(
       challengeList: _initialChallenges,
@@ -28,6 +35,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       firstDateOfWeek: _today.getStartOfWeek(),
       firstDateOfMonth: DateTime(_today.year, _today.month, 1),
       selectedDate: _today,
+      categories: categories,
     );
   }
 
@@ -103,10 +111,10 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   Future<void> _handleFindChallenge(FindChallengeAction action) async {
-    state.whenData((currentState){
+    state.whenData((currentState) {
       final challenges = List.of(currentState.challengeList);
       final selectedChallenge =
-      challenges.firstWhere((challenge) => challenge.id == action.id);
+          challenges.firstWhere((challenge) => challenge.id == action.id);
       state = AsyncValue.data(currentState.copyWith(
         selectedChallenge: selectedChallenge,
       ));
@@ -114,33 +122,35 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   void _handleChangeSelectedDate(ChangeSelectedDateAction action) {
-    state.whenData((currentState){
+    state.whenData((currentState) {
       final challenges = List.of(currentState.challengeList);
-      List<ChallengeModel> newChallengeList =
-      _setChallengeList(challenges: challenges, selectedDate: action.selectedDate);
+      List<ChallengeModel> newChallengeList = _setChallengeList(
+          challenges: challenges, selectedDate: action.selectedDate);
       state = AsyncValue.data(currentState.copyWith(
           selectedDate: action.selectedDate, challengeList: newChallengeList));
     });
   }
 
   void _handleChangeFirstDateOfWeekAction(ChangeFirstDateOfWeekAction action) {
-    state.whenData((currentState){
+    state.whenData((currentState) {
       final challenges = List.of(currentState.challengeList);
       DateTime newFirstDateOfWeek = DateTime.now()
           .getStartOfWeek()
           .add(Duration(days: action.addPage! * 7));
-      int daysOff = currentState.selectedDate.difference(currentState.firstDateOfWeek).inDays;
-      DateTime newSelectedDate = newFirstDateOfWeek.add(Duration(days: daysOff));
+      int daysOff = currentState.selectedDate
+          .difference(currentState.firstDateOfWeek)
+          .inDays;
+      DateTime newSelectedDate =
+          newFirstDateOfWeek.add(Duration(days: daysOff));
       if (newSelectedDate.isAfter(DateTime.now())) {
         newSelectedDate = DateTime.now();
       }
-      List<ChallengeModel> newChallengeList = _setChallengeList(challenges: challenges, selectedDate:newSelectedDate);
-      state = AsyncValue.data(
-          currentState.copyWith(
-              firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
-              selectedDate: newSelectedDate,
-              challengeList: newChallengeList)
-      );
+      List<ChallengeModel> newChallengeList = _setChallengeList(
+          challenges: challenges, selectedDate: newSelectedDate);
+      state = AsyncValue.data(currentState.copyWith(
+          firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
+          selectedDate: newSelectedDate,
+          challengeList: newChallengeList));
     });
   }
 
@@ -186,13 +196,13 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _checkIsFirstAchieved(
       List<ChallengeModel> challenges, BuildContext context) {
-    state.whenData((currentState){
+    state.whenData((currentState) {
       int successDate = 0;
       print(challenges[0].record.successDates);
       for (int j = 0; j < challenges.length; j++) {
         bool hasSuccessDate = challenges[j].record.successDates.any(
               (el) => el.isSameDate(currentState.selectedDate),
-        );
+            );
         if (hasSuccessDate) {
           successDate += 1;
         }
@@ -229,7 +239,8 @@ class ChallengesState {
   final DateTime selectedDate;
 
   ///카테고리 변수
-  //final List<CategoryModel> categories;
+  final List<CategoryModel> categories;
+
   const ChallengesState({
     required this.challengeList,
     required this.successList,
@@ -237,7 +248,7 @@ class ChallengesState {
     required this.firstDateOfWeek,
     required this.firstDateOfMonth,
     required this.selectedDate,
-    //required this.categories,
+    required this.categories,
   });
 
   ChallengesState copyWith({
@@ -260,7 +271,7 @@ class ChallengesState {
       firstDateOfWeek: firstDateOfWeek ?? this.firstDateOfWeek,
       firstDateOfMonth: firstDateOfMonth ?? this.firstDateOfMonth,
       selectedDate: selectedDate ?? this.selectedDate,
-      //categories: categories ?? this.categories,
+      categories: categories ?? this.categories,
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/feature/home/view/settings/category_dummies.dart';
 import 'package:dailystep/model/category/category_model.dart';
 import 'package:dailystep/model/record/record_model.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
@@ -35,6 +34,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   int? selectedCategory;
   int? selectedColor;
   ChallengeModel? selectedChallenge;
+  List<CategoryModel>? categories;
 
   // 에러 상태
   Map<String, bool> errors = {
@@ -84,6 +84,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             _noteController.text = data.selectedChallenge!.content;
           });
         }
+        setState(() {
+          categories = data.categories;
+        });
       });
     }
   }
@@ -185,9 +188,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             WSelectInputWithLabel(
               onTap: () => _showModal(WScrollPicker(
                 value: selectedCategory != null ? selectedCategory! : 1,
-                childCount: dummyCategories.length,
+                childCount: categories!.length,
                 childList:
-                    dummyCategories.map((item) => item.toString()).toList(),
+                categories!.map((item) => item.name).toList(),
                 onSelected: (int) {
                   setState(() {
                     errors['category'] = false;
@@ -198,7 +201,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               label: '카테고리',
               child: selectedCategory != null
                   ? Text(
-                      dummyCategories[selectedCategory!].toString(),
+                categories![selectedCategory!].name,
                       style: contentTextStyle,
                     )
                   : Text(

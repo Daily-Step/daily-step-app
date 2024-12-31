@@ -41,7 +41,7 @@ class WSelectInputWithLabel extends StatelessWidget {
                   child: child,
                   onTap: onTap,
                   hasError: hasError,
-                  width: 150,
+                  width: 180,
                   disabled: disabled,
                 ),
                 if (hasError && errorMessage != null)

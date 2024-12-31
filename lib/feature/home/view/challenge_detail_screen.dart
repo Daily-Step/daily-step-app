@@ -1,7 +1,6 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/list_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
-import 'package:dailystep/feature/home/view/settings/custom_color_dummies.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +12,6 @@ import '../../../widgets/widget_month_calendar.dart';
 import '../../../widgets/widget_progress_indicator.dart';
 import '../action/challenge_list_action.dart';
 import '../viewmodel/challenge_viewmodel.dart';
-import 'settings/category_dummies.dart';
 
 class ChallengeDetailScreen extends ConsumerWidget {
   final int id;
@@ -175,11 +173,10 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                     Text('카테고리',
                                         style: TextStyle(color: Colors.grey)),
                                     Text(
-                                        dummyCategories
+                                        data.categories
                                             .firstWhere((category) =>
                                         category.id ==
-                                            selectedChallenge.category.id)
-                                            .toString(),
+                                            selectedChallenge.category.id).name,
                                         style: boldTextStyle),
                                   ],
                                 ),
@@ -296,8 +293,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 ),
               );
             },
-            error: (Object error, StackTrace stackTrace) {},
-            loading: () {}
+            error: (Object error, StackTrace stackTrace)=> SizedBox(),
+            loading: ()=> SizedBox(),
         )
     );
   }
