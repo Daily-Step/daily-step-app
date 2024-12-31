@@ -24,10 +24,30 @@ class SecureStorageService {
     try {
       await _storage.write(key: _refreshTokenKey, value: refreshToken);
       print('[SECURE_STORAGE] Refresh Token saved');
+
+      String? savedToken = await _storage.read(key: _refreshTokenKey);
+      if (savedToken != null) {
+        print('[SECURE_STORAGE] Refresh Token 확인: $savedToken');
+      } else {
+        print('[SECURE_STORAGE] Refresh Token 저장 후 확인 실패');
+      }
     } catch (e) {
       print("[ERR] Refresh Token 저장 실패: $e");
     }
   }
+
+  // Refresh Token 불러오기
+  Future<String?> getRefreshToken() async {
+    try {
+      final refreshToken = await _storage.read(key: _refreshTokenKey);
+      print('[SECURE_STORAGE] Refresh Token 불러오기 성공: $refreshToken');
+      return refreshToken;
+    } catch (e) {
+      print("[ERR] Refresh Token 불러오기 실패: $e");
+      return null;
+    }
+  }
+
 
   // Access Token 불러오기 시 만료 여부 체크
   Future<String?> getAccessToken() async {

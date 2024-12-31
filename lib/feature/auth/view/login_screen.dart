@@ -14,7 +14,6 @@ class LoginScreen extends ConsumerWidget {
     // 상태 감지
     final loginState = ref.watch(loginViewModelProvider);
     final viewModel = ref.read(loginViewModelProvider.notifier);
-    final savedTokenAsync = ref.watch(savedTokenProvider); // 비동기 savedToken 확인
 
     return Scaffold(
       body: Stack(

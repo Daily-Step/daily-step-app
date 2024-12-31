@@ -64,6 +64,17 @@ class SecureStorage {
     }
   }
 
+  Future<String?> readRefreshToken() async {
+    try {
+      final refreshToken = await secureStorageService.getRefreshToken();
+      print('[SECURE_STORAGE] Read Refresh Token: $refreshToken');
+      return refreshToken;
+    } catch (e) {
+      print("[ERR] Refresh Token 불러오기 실패: $e");
+      return null;
+    }
+  }
+
   // 엑세스 토큰 삭제
   Future<void> deleteAccessToken() async {
     try {
