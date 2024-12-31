@@ -1,17 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import '../../config/secure_storage/secure_storage_service.dart';
 import 'dio/dio_set.dart';
 
 class ApiClient {
   final Dio _dio = dioSet;
-  final _secureStorage = const FlutterSecureStorage();
+  final _secureStorageService = SecureStorageService();
 
   ApiClient() {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final accessToken = await _secureStorage.read(key: 'accessToken');
-
+        final accessToken = await _secureStorageService.getAccessToken();
         if (accessToken != null && accessToken.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $accessToken';
         }
@@ -26,10 +24,9 @@ class ApiClient {
         if (error.response?.statusCode == 401) {
           // Access Token이 만료된 경우
           print('토큰 만료: Access Token 갱신 시도');
-          String? savedToken = await _secureStorage.read(key: 'refreshToken');
-          print('refreshTokensavedToken$savedToken');
 
-          final refreshToken = await _secureStorage.read(key: 'refreshToken');
+          final refreshToken = await _secureStorageService.getRefreshToken();
+
           print('사용 중인 Refresh Token: $refreshToken');
 
           if (refreshToken != null && refreshToken.isNotEmpty) {
@@ -43,8 +40,9 @@ class ApiClient {
 
               if (tokenResponse.statusCode == 200) {
                 final newAccessToken = tokenResponse.data['access_token'];
+                final newExpirationTime = tokenResponse.data['access_token_expiration'];
                 // 새 토큰 저장
-                await _secureStorage.write(key: 'accessToken', value: newAccessToken);
+                await _secureStorageService.saveAccessToken(newAccessToken,newExpirationTime);
 
                 // 원래 요청에 새 Access Token 추가 후 재시도
                 error.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';

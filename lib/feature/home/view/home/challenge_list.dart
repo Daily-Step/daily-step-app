@@ -22,38 +22,44 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
     final state = ref.watch(challengeViewModelProvider);
     final notifier = ref.read(challengeViewModelProvider.notifier);
 
-    return ListView.builder(
-        itemCount: state.challengeList.length,
-        itemBuilder: (context, index) {
-          final challenge = state.challengeList[index];
-          final bool isAchieved = challenge.record.successDates
-              .any((date) => date.isSameDate(state.selectedDate));
-          return ChallengeItem(
-            task: challenge,
-            index: index,
-            onTap: () async {
-              await notifier.handleAction(FindChallengeAction(challenge.id));
-              context.push('/main/challenge/${challenge.id}');
-            },
-            onClickAchieveButton: () async {
-              List<DateTime> copiedChallengeSuccessList =
-                  List<DateTime>.from(challenge.record.successDates);
-              if (isAchieved == false) {
-                copiedChallengeSuccessList.add(state.selectedDate);
-              } else {
-                copiedChallengeSuccessList.removeLast();
-              }
-              final newChallenge = challenge.copyWith(
-                  record:
-                      RecordModel(successDates: copiedChallengeSuccessList));
-              await notifier.handleAction(AchieveChallengeAction(
-                  id: challenge.id,
-                  challengeModel: newChallenge,
-                  context: context,
-                  isCancel: isAchieved));
-            },
-            isAchieved: isAchieved,
-          );
-        });
+    return state.when(
+        data: (data) {
+          return ListView.builder(
+              itemCount: data.challengeList.length,
+              itemBuilder: (context, index) {
+                final challenge = data.challengeList[index];
+                final bool isAchieved = challenge.record.successDates
+                    .any((date) => date.isSameDate(data.selectedDate));
+                return ChallengeItem(
+                  task: challenge,
+                  index: index,
+                  onTap: () async {
+                    await notifier
+                        .handleAction(FindChallengeAction(challenge.id));
+                    context.push('/main/challenge/${challenge.id}');
+                  },
+                  onClickAchieveButton: () async {
+                    List<DateTime> copiedChallengeSuccessList =
+                        List<DateTime>.from(challenge.record.successDates);
+                    if (isAchieved == false) {
+                      copiedChallengeSuccessList.add(data.selectedDate);
+                    } else {
+                      copiedChallengeSuccessList.removeLast();
+                    }
+                    final newChallenge = challenge.copyWith(
+                        record: RecordModel(
+                            successDates: copiedChallengeSuccessList));
+                    await notifier.handleAction(AchieveChallengeAction(
+                        id: challenge.id,
+                        challengeModel: newChallenge,
+                        context: context,
+                        isCancel: isAchieved));
+                  },
+                  isAchieved: isAchieved,
+                );
+              });
+        },
+        error: (Object error, StackTrace stackTrace) => SizedBox(),
+        loading: () => SizedBox());
   }
 }

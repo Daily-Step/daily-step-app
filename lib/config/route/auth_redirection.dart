@@ -1,22 +1,18 @@
 import 'package:dailystep/feature/auth/social_type.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/api/login_api.dart';
 import '../../feature/auth/social_login_repository.dart';
-import '../../feature/auth/viewmodel/login_viewmodel.dart';
 import '../../model/user/user_model.dart';
 
 class DailyStepAuth extends ChangeNotifier {
   bool _signedIn = false;
   bool _signedUp = false;
   final SocialLoginRepository socialLoginRepository;
-  final LoginApi loginApi;
 
   UserModel? user;
 
-  DailyStepAuth({required this.socialLoginRepository, required this.loginApi});
+  DailyStepAuth({required this.socialLoginRepository});
 
   bool get signedIn => _signedIn;
 

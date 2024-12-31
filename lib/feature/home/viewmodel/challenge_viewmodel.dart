@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/data/api/challenge_api.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
+import 'package:dailystep/model/category/category_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../model/challenge/challenge_dummies.dart';
@@ -13,39 +15,27 @@ part 'challenge_viewmodel.g.dart';
 
 @riverpod
 class ChallengeViewModel extends _$ChallengeViewModel {
-  late final List<ChallengeModel> _initialTasks;
-  late List<DateTime> _initialSuccessList = [];
+  ChallengeApi _challengeApi = ChallengeApi();
 
-  ChallengesState build() {
-    _initialTasks = _setChallengeList(DateTime.now());
-    DateTime today = DateTime.now();
+  @override
+  Future<ChallengesState> build() async {
+    DateTime _today = DateTime.now();
+    final result = await _challengeApi.getCategories() as List;
+      List<CategoryModel> categories = result.map((el) {
+        return CategoryModel.fromJson(el as Map<String, dynamic>);
+      }).toList();
 
-    //오늘 부터 2주 전 까지 캘린더 데이터 생성
-    for (int i = 1; i <= 60; i++) {
-      DateTime targetDate = today.subtract(Duration(days: i));
-      bool allChallengesSuccess = true;
-
-      for (int j = 0; j < _initialTasks.length; j++) {
-        bool hasSuccessDate = _initialTasks[j].record.successDates.any(
-              (el) => el.isSameDate(targetDate),
-            );
-        if (!hasSuccessDate) {
-          allChallengesSuccess = false;
-          break;
-        }
-      }
-
-      if (allChallengesSuccess) {
-        _initialSuccessList.add(targetDate);
-      }
-    }
+    final List<ChallengeModel> _initialChallenges =
+        _setChallengeList(challenges: dummyChallenges, selectedDate: _today);
+    final List<DateTime> _initialSuccessList = _setSuccessList(dummyChallenges);
     return ChallengesState(
-      challengeList: _initialTasks,
+      challengeList: _initialChallenges,
       successList: _initialSuccessList,
       selectedChallenge: null,
-      firstDateOfWeek: DateTime.now().getStartOfWeek(),
-      firstDateOfMonth: DateTime(DateTime.now().year, DateTime.now().month, 1),
-      selectedDate: DateTime.now(),
+      firstDateOfWeek: _today.getStartOfWeek(),
+      firstDateOfMonth: DateTime(_today.year, _today.month, 1),
+      selectedDate: _today,
+      categories: categories,
     );
   }
 
@@ -68,78 +58,132 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   void _handleAddChallenge(AddChallengeAction action) {
-    final newChallengeList = List<ChallengeModel>.from(state.challengeList);
-    newChallengeList.add(action.challengeModel);
+    state.whenData((currentState) {
+      final newChallengeList =
+          List<ChallengeModel>.from(currentState.challengeList);
+      newChallengeList.add(action.challengeModel);
 
-    state = state.copyWith(challengeList: newChallengeList);
+      state = AsyncValue.data(
+        currentState.copyWith(challengeList: newChallengeList),
+      );
+    });
   }
 
   void _handleUpdateChallenge(UpdateChallengeAction action) {
-    final updatedTasks = state.challengeList.map((task) {
-      if (task.id == action.id) {
-        return action.challengeModel;
-      }
-      return task;
-    }).toList();
-    state = state.copyWith(challengeList: updatedTasks);
+    state.whenData((currentState) {
+      final updatedTasks = currentState.challengeList.map((task) {
+        if (task.id == action.id) {
+          return action.challengeModel;
+        }
+        return task;
+      }).toList();
+      state =
+          AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
+    });
   }
 
   void _handleAchieveChallenge(AchieveChallengeAction action) {
-    if(!action.isCancel){
-      _checkIsFirstAchieved(List.of(state.challengeList), action.context);
-    }
-    final updatedTasks = state.challengeList.map((task) {
-      if (task.id == action.id) {
-        return action.challengeModel;
+    state.whenData((currentState) {
+      if (!action.isCancel) {
+        _checkIsFirstAchieved(
+            List.of(currentState.challengeList), action.context);
       }
-      return task;
-    }).toList();
-    state = state.copyWith(challengeList: updatedTasks);
+      final updatedTasks = currentState.challengeList.map((task) {
+        if (task.id == action.id) {
+          return action.challengeModel;
+        }
+        return task;
+      }).toList();
+      state =
+          AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
+    });
   }
 
   Future<void> _handleRemoveTask(DeleteChallengeAction action) async {
-    final newChallengeList = List.of(state.challengeList);
-    newChallengeList.removeWhere((task) => task.id == action.id);
+    state.whenData((currentState) {
+      final newChallengeList = List.of(currentState.challengeList);
+      newChallengeList.removeWhere((task) => task.id == action.id);
 
-    state = state.copyWith(
-      challengeList: newChallengeList,
-    );
+      state = AsyncValue.data(currentState.copyWith(
+        challengeList: newChallengeList,
+      ));
+    });
   }
 
   Future<void> _handleFindChallenge(FindChallengeAction action) async {
-    final challenges = List.of(state.challengeList);
-    final selectedChallenge =
-        challenges.firstWhere((challenge) => challenge.id == action.id);
-    state = state.copyWith(
-      selectedChallenge: selectedChallenge,
-    );
+    state.whenData((currentState) {
+      final challenges = List.of(currentState.challengeList);
+      final selectedChallenge =
+          challenges.firstWhere((challenge) => challenge.id == action.id);
+      state = AsyncValue.data(currentState.copyWith(
+        selectedChallenge: selectedChallenge,
+      ));
+    });
   }
 
   void _handleChangeSelectedDate(ChangeSelectedDateAction action) {
-    List<ChallengeModel> newChallengeList =
-        _setChallengeList(action.selectedDate);
-    state = state.copyWith(
-        selectedDate: action.selectedDate, challengeList: newChallengeList);
+    state.whenData((currentState) {
+      final challenges = List.of(currentState.challengeList);
+      List<ChallengeModel> newChallengeList = _setChallengeList(
+          challenges: challenges, selectedDate: action.selectedDate);
+      state = AsyncValue.data(currentState.copyWith(
+          selectedDate: action.selectedDate, challengeList: newChallengeList));
+    });
   }
 
   void _handleChangeFirstDateOfWeekAction(ChangeFirstDateOfWeekAction action) {
-    DateTime newFirstDateOfWeek = DateTime.now()
-        .getStartOfWeek()
-        .add(Duration(days: action.addPage! * 7));
-    int daysOff = state.selectedDate.difference(state.firstDateOfWeek).inDays;
-    DateTime newSelectedDate = newFirstDateOfWeek.add(Duration(days: daysOff));
-    if (newSelectedDate.isAfter(DateTime.now())) {
-      newSelectedDate = DateTime.now();
-    }
-    List<ChallengeModel> newChallengeList = _setChallengeList(newSelectedDate);
-    state = state.copyWith(
-        firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
-        selectedDate: newSelectedDate,
-        challengeList: newChallengeList);
+    state.whenData((currentState) {
+      final challenges = List.of(currentState.challengeList);
+      DateTime newFirstDateOfWeek = DateTime.now()
+          .getStartOfWeek()
+          .add(Duration(days: action.addPage! * 7));
+      int daysOff = currentState.selectedDate
+          .difference(currentState.firstDateOfWeek)
+          .inDays;
+      DateTime newSelectedDate =
+          newFirstDateOfWeek.add(Duration(days: daysOff));
+      if (newSelectedDate.isAfter(DateTime.now())) {
+        newSelectedDate = DateTime.now();
+      }
+      List<ChallengeModel> newChallengeList = _setChallengeList(
+          challenges: challenges, selectedDate: newSelectedDate);
+      state = AsyncValue.data(currentState.copyWith(
+          firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
+          selectedDate: newSelectedDate,
+          challengeList: newChallengeList));
+    });
   }
 
-  List<ChallengeModel> _setChallengeList(DateTime selectedDate) {
-    return dummyChallenges.where((challenge) {
+  List<DateTime> _setSuccessList(List<ChallengeModel> challenges) {
+    final List<DateTime> successList = [];
+
+    for (int i = 1; i <= 60; i++) {
+      DateTime targetDate = DateTime.now().subtract(Duration(days: i));
+      List<ChallengeModel> challengeList =
+          _setChallengeList(challenges: challenges, selectedDate: targetDate);
+      bool allChallengesSuccess = true;
+
+      for (int j = 0; j < challengeList.length; j++) {
+        bool hasSuccessDate = challengeList[j].record.successDates.any(
+              (el) => el.isSameDate(targetDate),
+            );
+        if (!hasSuccessDate) {
+          allChallengesSuccess = false;
+          break;
+        }
+      }
+
+      if (allChallengesSuccess && challengeList.length != 0) {
+        successList.add(targetDate);
+      }
+    }
+    return successList;
+  }
+
+  List<ChallengeModel> _setChallengeList(
+      {required List<ChallengeModel> challenges,
+      required DateTime selectedDate}) {
+    return challenges.where((challenge) {
       DateTime today = selectedDate;
       DateTime startDttm = challenge.startDatetime;
       DateTime endDttm = challenge.endDatetime;
@@ -152,24 +196,25 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _checkIsFirstAchieved(
       List<ChallengeModel> challenges, BuildContext context) {
-    int successDate = 0 ;
-    print(challenges[0].record.successDates);
-    for (int j = 0; j < challenges.length; j++) {
-      bool hasSuccessDate = challenges[j].record.successDates.any(
-            (el) => el.isSameDate(state.selectedDate),
-          );
-      if(hasSuccessDate){
-        successDate += 1;
+    state.whenData((currentState) {
+      int successDate = 0;
+      print(challenges[0].record.successDates);
+      for (int j = 0; j < challenges.length; j++) {
+        bool hasSuccessDate = challenges[j].record.successDates.any(
+              (el) => el.isSameDate(currentState.selectedDate),
+            );
+        if (hasSuccessDate) {
+          successDate += 1;
+        }
       }
-    }
-    print(successDate);
-    if (successDate == 0) {
-      ToastMsg toastMsg = _setToastMsg(1);//하루 첫 달성
-      WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
-    } else {
-      ToastMsg toastMsg = _setToastMsg(2);
-      WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
-    }
+      if (successDate == 0) {
+        ToastMsg toastMsg = _setToastMsg(1); //하루 첫 달성
+        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+      } else {
+        ToastMsg toastMsg = _setToastMsg(2);
+        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+      }
+    });
   }
 
   ToastMsg _setToastMsg(int type) {
@@ -183,13 +228,18 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 }
 
 class ChallengesState {
+  ///챌린지 변수
   final List<ChallengeModel> challengeList;
   final List<DateTime> successList;
   final ChallengeModel? selectedChallenge;
 
+  ///캘린더 변수
   final DateTime firstDateOfWeek;
   final DateTime firstDateOfMonth;
   final DateTime selectedDate;
+
+  ///카테고리 변수
+  final List<CategoryModel> categories;
 
   const ChallengesState({
     required this.challengeList,
@@ -198,6 +248,7 @@ class ChallengesState {
     required this.firstDateOfWeek,
     required this.firstDateOfMonth,
     required this.selectedDate,
+    required this.categories,
   });
 
   ChallengesState copyWith({
@@ -208,6 +259,7 @@ class ChallengesState {
     DateTime? firstDateOfWeek,
     DateTime? firstDateOfMonth,
     DateTime? selectedDate,
+    List<CategoryModel>? categories,
   }) {
     return ChallengesState(
       challengeList: challengeList != null
@@ -219,6 +271,7 @@ class ChallengesState {
       firstDateOfWeek: firstDateOfWeek ?? this.firstDateOfWeek,
       firstDateOfMonth: firstDateOfMonth ?? this.firstDateOfMonth,
       selectedDate: selectedDate ?? this.selectedDate,
+      categories: categories ?? this.categories,
     );
   }
 }

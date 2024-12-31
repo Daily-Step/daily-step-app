@@ -66,7 +66,7 @@ class _WeekPickerModalState extends State<WScrollPicker> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 100,
+                  width: 200,
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {
                       if (notification is ScrollEndNotification) {
@@ -87,22 +87,20 @@ class _WeekPickerModalState extends State<WScrollPicker> {
                         builder: (context, index) {
                           return InkWell(
                             onTap: () => _onItemSelected(index),
-                            child: Center(
-                              child: widget.itemBuilder != null
-                                  ? widget.itemBuilder!(
-                                      context, index, _selectedValue == index)
-                                  : Text(
-                                      widget.childList != null
-                                          ? '${widget.childList?[index]}'
-                                          : '${index + 1}',
-                                      style: TextStyle(
-                                        fontSize: pickerFontSize,
-                                        color: _selectedValue == index
-                                            ? Colors.black
-                                            : Colors.grey,
-                                      ),
+                            child: widget.itemBuilder != null
+                                ? widget.itemBuilder!(
+                                    context, index, _selectedValue == index)
+                                : Text(
+                                    widget.childList != null
+                                        ? '${widget.childList?[index]}'
+                                        : '${index + 1}',
+                                    style: TextStyle(
+                                      fontSize: pickerFontSize,
+                                      color: _selectedValue == index
+                                          ? Colors.black
+                                          : Colors.grey,
                                     ),
-                            ),
+                                  ),
                           );
                         },
                       ),

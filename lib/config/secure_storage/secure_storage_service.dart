@@ -10,7 +10,7 @@ class SecureStorageService {
   // Access Token 저장 (만료 시간도 함께 저장)
   Future<void> saveAccessToken(String token, dynamic expiresInSeconds) async {
     try {
-      final expirationTime = DateTime.now().add(Duration(seconds: expiresInSeconds));
+      final expirationTime = DateTime.fromMillisecondsSinceEpoch(expiresInSeconds);
       await _storage.write(key: _accessTokenKey, value: token);
       await _storage.write(key: _accessTokenExpirationKey, value: expirationTime.toIso8601String());
       print('[SECURE_STORAGE] Access Token saved with expiration: $expirationTime');
@@ -70,6 +70,16 @@ class SecureStorageService {
       return token;
     } catch (e) {
       print("[ERR] Access Token 불러오기 실패: $e");
+      return null;
+    }
+  }
+
+  Future<String?> getRefreshToken() async {
+    try {
+      final token = await _storage.read(key: _refreshTokenKey);
+      return token;
+    } catch (e) {
+      print("[ERR] Refresh Token 불러오기 실패: $e");
       return null;
     }
   }

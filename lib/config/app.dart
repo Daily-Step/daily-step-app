@@ -1,5 +1,4 @@
 import 'package:dailystep/config/route/fade_transition_page.dart';
-import 'package:dailystep/data/api/login_api.dart';
 import 'package:dailystep/feature/auth/viewmodel/login_viewmodel.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_screen.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_screen.dart';
@@ -26,7 +25,7 @@ import 'route/auth_redirection.dart';
 
 class App extends ConsumerWidget with WidgetsBindingObserver {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-  final DailyStepAuth _auth = DailyStepAuth(socialLoginRepository: SocialLoginRepository(), loginApi: LoginApi.instance);
+  final DailyStepAuth _auth = DailyStepAuth(socialLoginRepository: SocialLoginRepository());
 
   App({super.key});
 
