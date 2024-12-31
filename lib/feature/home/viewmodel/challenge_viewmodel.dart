@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
+import 'package:dailystep/model/category/category_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../model/challenge/challenge_dummies.dart';
@@ -13,20 +14,21 @@ part 'challenge_viewmodel.g.dart';
 
 @riverpod
 class ChallengeViewModel extends _$ChallengeViewModel {
-  late final List<ChallengeModel> _initialTasks;
+  late final List<ChallengeModel> _initialChallenges;
   late List<DateTime> _initialSuccessList = [];
 
   ChallengesState build() {
-    _initialTasks = _setChallengeList(DateTime.now());
-    DateTime today = DateTime.now();
+    _initialChallenges = _setChallengeList(DateTime.now());
+    DateTime _today = DateTime.now();
 
-    //오늘 부터 2주 전 까지 캘린더 데이터 생성
+    //오늘 부터 2달 전 까지 캘린더 데이터 생성
     for (int i = 1; i <= 60; i++) {
-      DateTime targetDate = today.subtract(Duration(days: i));
+      DateTime targetDate = _today.subtract(Duration(days: i));
+      List<ChallengeModel> challenges = _setChallengeList(targetDate);
       bool allChallengesSuccess = true;
 
-      for (int j = 0; j < _initialTasks.length; j++) {
-        bool hasSuccessDate = _initialTasks[j].record.successDates.any(
+      for (int j = 0; j < challenges.length; j++) {
+        bool hasSuccessDate = challenges[j].record.successDates.any(
               (el) => el.isSameDate(targetDate),
             );
         if (!hasSuccessDate) {
@@ -35,17 +37,17 @@ class ChallengeViewModel extends _$ChallengeViewModel {
         }
       }
 
-      if (allChallengesSuccess) {
+      if (allChallengesSuccess && challenges.length != 0) {
         _initialSuccessList.add(targetDate);
       }
     }
     return ChallengesState(
-      challengeList: _initialTasks,
+      challengeList: _initialChallenges,
       successList: _initialSuccessList,
       selectedChallenge: null,
-      firstDateOfWeek: DateTime.now().getStartOfWeek(),
-      firstDateOfMonth: DateTime(DateTime.now().year, DateTime.now().month, 1),
-      selectedDate: DateTime.now(),
+      firstDateOfWeek: _today.getStartOfWeek(),
+      firstDateOfMonth: DateTime(_today.year, _today.month, 1),
+      selectedDate: _today,
     );
   }
 
@@ -183,14 +185,18 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 }
 
 class ChallengesState {
+  ///챌린지 변수
   final List<ChallengeModel> challengeList;
   final List<DateTime> successList;
   final ChallengeModel? selectedChallenge;
 
+  ///캘린더 변수
   final DateTime firstDateOfWeek;
   final DateTime firstDateOfMonth;
   final DateTime selectedDate;
 
+  ///카테고리 변수
+  //final List<CategoryModel> categories;
   const ChallengesState({
     required this.challengeList,
     required this.successList,
@@ -198,6 +204,7 @@ class ChallengesState {
     required this.firstDateOfWeek,
     required this.firstDateOfMonth,
     required this.selectedDate,
+    //required this.categories,
   });
 
   ChallengesState copyWith({
@@ -208,6 +215,7 @@ class ChallengesState {
     DateTime? firstDateOfWeek,
     DateTime? firstDateOfMonth,
     DateTime? selectedDate,
+    List<CategoryModel>? categories,
   }) {
     return ChallengesState(
       challengeList: challengeList != null
@@ -219,6 +227,7 @@ class ChallengesState {
       firstDateOfWeek: firstDateOfWeek ?? this.firstDateOfWeek,
       firstDateOfMonth: firstDateOfMonth ?? this.firstDateOfMonth,
       selectedDate: selectedDate ?? this.selectedDate,
+      //categories: categories ?? this.categories,
     );
   }
 }
