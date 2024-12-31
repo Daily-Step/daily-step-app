@@ -69,20 +69,22 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   void _initializeData() async {
     if (widget.id != null) {
       final state = ref.watch(challengeViewModelProvider);
-      if (state.selectedChallenge != null) {
-        setState(() {
-          selectedChallenge = state.selectedChallenge;
-          _titleController.text = state.selectedChallenge!.title;
-          challengeWeeks = state.selectedChallenge!.startDatetime
-              .calculateWeeksBetween(state.selectedChallenge!.endDatetime);
-          weeklyGoal = state.selectedChallenge!.weekGoalCount;
-          selectedCategory = state.selectedChallenge!.category.id;
-          selectedColor = customColors
-              .firstWhere((el) => el.code == state.selectedChallenge!.color)
-              .id;
-          _noteController.text = state.selectedChallenge!.content;
-        });
-      }
+      state.whenData((data){
+        if (data.selectedChallenge != null) {
+          setState(() {
+            selectedChallenge = data.selectedChallenge;
+            _titleController.text = data.selectedChallenge!.title;
+            challengeWeeks = data.selectedChallenge!.startDatetime
+                .calculateWeeksBetween(data.selectedChallenge!.endDatetime);
+            weeklyGoal = data.selectedChallenge!.weekGoalCount;
+            selectedCategory = data.selectedChallenge!.category.id;
+            selectedColor = customColors
+                .firstWhere((el) => el.code == data.selectedChallenge!.color)
+                .id;
+            _noteController.text = data.selectedChallenge!.content;
+          });
+        }
+      });
     }
   }
 

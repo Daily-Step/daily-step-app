@@ -7,12 +7,12 @@ part of 'challenge_viewmodel.dart';
 // **************************************************************************
 
 String _$challengeViewModelHash() =>
-    r'2620d4dac84ba8493e200fb334a50a3dfdd5e1aa';
+    r'2344691821a06f345a415c94decbf5a09a541a74';
 
 /// See also [ChallengeViewModel].
 @ProviderFor(ChallengeViewModel)
-final challengeViewModelProvider =
-    AutoDisposeNotifierProvider<ChallengeViewModel, ChallengesState>.internal(
+final challengeViewModelProvider = AutoDisposeAsyncNotifierProvider<
+    ChallengeViewModel, ChallengesState>.internal(
   ChallengeViewModel.new,
   name: r'challengeViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final challengeViewModelProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ChallengeViewModel = AutoDisposeNotifier<ChallengesState>;
+typedef _$ChallengeViewModel = AutoDisposeAsyncNotifier<ChallengesState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -24,7 +24,7 @@ final List<ChallengeModel> dummyChallenges = [
     totalGoalCount: 20,
     color: '0xFF2257FF',
     startDatetime: DateTime(2024, 11, 30), // 시작 날짜
-    endDatetime: DateTime(2024, 12, 30), // 종료 날짜
+    endDatetime: DateTime(2024, 12, 31), // 종료 날짜
   ),
   ChallengeModel(
     id: 2,

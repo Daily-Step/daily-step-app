@@ -28,48 +28,54 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
 
   @override
   Widget build(BuildContext context) {
-    final challengeState = ref.watch(challengeViewModelProvider);
+    final state = ref.watch(challengeViewModelProvider);
 
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return state.when(
+        data: (data) {
+          return Column(
             children: [
-              Row(children: [
-                Text(
-                  challengeState.selectedDate.formattedMonth,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-              ]),
-              Spacer(),
-              CircleAvatar(
-                backgroundColor: Color(0xff2257FF),
-                child: Text(
-                  '🥰',
-                  style: TextStyle(fontSize: 17),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      Text(
+                        data.selectedDate.formattedMonth,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ]),
+                    Spacer(),
+                    CircleAvatar(
+                      backgroundColor: Color(0xff2257FF),
+                      child: Text(
+                        '🥰',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: 80,
-          curve: Curves.easeInOut,
-          child: WWeekPageView(
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                height: 80,
+                curve: Curves.easeInOut,
+                child: WWeekPageView(
                   weekPageController: weekPageController,
-                  successList: challengeState.successList,
+                  successList: data.successList,
                 ),
-        ),
-        height20,
-        challengeState.challengeList.length == 0
-            ? ChallengeEmpty()
-            : Expanded(
-                child: ChallengeList(),
               ),
-      ],
-    );
+              height20,
+              data.challengeList.length == 0
+                  ? ChallengeEmpty()
+                  : Expanded(
+                      child: ChallengeList(),
+                    ),
+            ],
+          );
+        },
+        error: (Object error, StackTrace stackTrace) => SizedBox(),
+        loading: () => SizedBox());
   }
 }
