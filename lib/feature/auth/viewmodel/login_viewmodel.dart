@@ -59,11 +59,12 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
     if (responseData != null) {
       final newAccessToken = responseData['accessToken'] ?? '';
+      final newRefreshToken = responseData['refreshToken'] ?? '';
       final expiresInSeconds = responseData['accessTokenExpiresIn'] ?? 3600;
 
       if (newAccessToken.isNotEmpty) {
-        // 새로운 accessToken을 저장
         await _ref.read(secureStorageServiceProvider).saveAccessToken(newAccessToken, expiresInSeconds);
+        await _ref.read(secureStorageServiceProvider).saveRefreshToken(newRefreshToken);
         return true;
       } else {
         print('새로운 accessToken을 받지 못했습니다.');
