@@ -18,11 +18,13 @@ class ChallengeApi {
     }
   }
 
-  Future<dynamic> getChallenges() async {
+  Future<dynamic> getChallenges(String queryDate) async {
+    final requestData = {'queryDate': queryDate};
     try {
-      final response = await _apiClient.get('/challenges');
+      final response =
+          await _apiClient.get('/challenges', data: requestData);
       if (response.statusCode == 200) {
-        return response.data; // 챌린지 데이터를 반환
+        return response.data['data'];
       } else {
         throw Exception('챌린지 요청 실패: ${response.statusCode}');
       }
@@ -34,8 +36,9 @@ class ChallengeApi {
 
   Future<void> addChallenge(Map<String, dynamic> challengeData) async {
     try {
-      final response = await _apiClient.post('/challenges', data: challengeData);
-      if (response.statusCode == 201) {
+      final response =
+          await _apiClient.post('/challenges', data: challengeData);
+      if (response.statusCode == 200) {
         print('챌린지 추가 성공');
       } else {
         throw Exception('챌린지 추가 실패: ${response.statusCode}');
@@ -47,7 +50,8 @@ class ChallengeApi {
 
   Future<void> updateChallenge(Map<String, dynamic> challengeData) async {
     try {
-      final response = await _apiClient.post('/challenges', data: challengeData);
+      final response =
+          await _apiClient.put('/challenges', data: challengeData);
       if (response.statusCode == 201) {
         print('챌린지 수정 성공');
       } else {
@@ -60,7 +64,8 @@ class ChallengeApi {
 
   Future<void> deleteChallenge(Map<String, dynamic> challengeData) async {
     try {
-      final response = await _apiClient.post('/challenges', data: challengeData);
+      final response =
+          await _apiClient.delete('/challenges', data: challengeData);
       if (response.statusCode == 201) {
         print('챌린지 삭제 성공');
       } else {
@@ -71,9 +76,10 @@ class ChallengeApi {
     }
   }
 
-  Future<void> achieveChallenge(Map<String, dynamic> challengeData) async {
+  Future<void> achieveChallenge(String achieveDate) async {
+    final requestData = {'achieveDate': achieveDate};
     try {
-      final response = await _apiClient.post('/achieve', data: challengeData);
+      final response = await _apiClient.post('/achieve', data: requestData);
       if (response.statusCode == 201) {
         print('챌린지 달성 성공');
       } else {

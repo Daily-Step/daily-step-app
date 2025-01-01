@@ -25,7 +25,7 @@ class ChallengeItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      key: ValueKey(task),
+      key: ValueKey(task.id),
       child: Column(
         children: [
           InkWell(
@@ -33,7 +33,7 @@ class ChallengeItem extends StatelessWidget {
             child: ListTile(
               leading: WProgressIndicator(
                 percentage: task.totalGoalCount
-                    .getProgress(task.record.successDates.length),
+                    .getProgress(task.record?.successDates.length ?? 0),
                 width: 40,
                 height: 40,
                 strokeWidth: 6,
@@ -42,7 +42,7 @@ class ChallengeItem extends StatelessWidget {
               ),
               title: Text(task.title),
               subtitle: Text(
-                '${task.startDatetime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
+                '${task.startDateTime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
                 style: subTextStyle,
               ),
               trailing: ReorderableDragStartListener(

@@ -20,7 +20,7 @@ RecordModel _$RecordModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RecordModel {
-  List<DateTime> get successDates => throw _privateConstructorUsedError;
+  List<String> get successDates => throw _privateConstructorUsedError;
 
   /// Serializes this RecordModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +38,7 @@ abstract class $RecordModelCopyWith<$Res> {
           RecordModel value, $Res Function(RecordModel) then) =
       _$RecordModelCopyWithImpl<$Res, RecordModel>;
   @useResult
-  $Res call({List<DateTime> successDates});
+  $Res call({List<String> successDates});
 }
 
 /// @nodoc
@@ -62,7 +62,7 @@ class _$RecordModelCopyWithImpl<$Res, $Val extends RecordModel>
       successDates: null == successDates
           ? _value.successDates
           : successDates // ignore: cast_nullable_to_non_nullable
-              as List<DateTime>,
+              as List<String>,
     ) as $Val);
   }
 }
@@ -75,7 +75,7 @@ abstract class _$$RecordImplCopyWith<$Res>
       __$$RecordImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<DateTime> successDates});
+  $Res call({List<String> successDates});
 }
 
 /// @nodoc
@@ -97,7 +97,7 @@ class __$$RecordImplCopyWithImpl<$Res>
       successDates: null == successDates
           ? _value._successDates
           : successDates // ignore: cast_nullable_to_non_nullable
-              as List<DateTime>,
+              as List<String>,
     ));
   }
 }
@@ -105,15 +105,15 @@ class __$$RecordImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RecordImpl implements _Record {
-  const _$RecordImpl({required final List<DateTime> successDates})
+  const _$RecordImpl({required final List<String> successDates})
       : _successDates = successDates;
 
   factory _$RecordImpl.fromJson(Map<String, dynamic> json) =>
       _$$RecordImplFromJson(json);
 
-  final List<DateTime> _successDates;
+  final List<String> _successDates;
   @override
-  List<DateTime> get successDates {
+  List<String> get successDates {
     if (_successDates is EqualUnmodifiableListView) return _successDates;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_successDates);
@@ -155,13 +155,13 @@ class _$RecordImpl implements _Record {
 }
 
 abstract class _Record implements RecordModel {
-  const factory _Record({required final List<DateTime> successDates}) =
+  const factory _Record({required final List<String> successDates}) =
       _$RecordImpl;
 
   factory _Record.fromJson(Map<String, dynamic> json) = _$RecordImpl.fromJson;
 
   @override
-  List<DateTime> get successDates;
+  List<String> get successDates;
 
   /// Create a copy of RecordModel
   /// with the given fields replaced by the non-null parameter values.

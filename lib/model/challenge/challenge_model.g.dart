@@ -11,15 +11,17 @@ _$ChallengeImpl _$$ChallengeImplFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       category:
           CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
-      record: RecordModel.fromJson(json['record'] as Map<String, dynamic>),
+      record: json['record'] == null
+          ? null
+          : RecordModel.fromJson(json['record'] as Map<String, dynamic>),
       title: json['title'] as String,
       content: json['content'] as String,
       durationInWeeks: (json['durationInWeeks'] as num).toInt(),
       weekGoalCount: (json['weekGoalCount'] as num).toInt(),
       totalGoalCount: (json['totalGoalCount'] as num).toInt(),
       color: json['color'] as String,
-      startDatetime: DateTime.parse(json['startDatetime'] as String),
-      endDatetime: DateTime.parse(json['endDatetime'] as String),
+      startDateTime: DateTime.parse(json['startDateTime'] as String),
+      endDateTime: DateTime.parse(json['endDateTime'] as String),
     );
 
 Map<String, dynamic> _$$ChallengeImplToJson(_$ChallengeImpl instance) =>
@@ -33,6 +35,6 @@ Map<String, dynamic> _$$ChallengeImplToJson(_$ChallengeImpl instance) =>
       'weekGoalCount': instance.weekGoalCount,
       'totalGoalCount': instance.totalGoalCount,
       'color': instance.color,
-      'startDatetime': instance.startDatetime.toIso8601String(),
-      'endDatetime': instance.endDatetime.toIso8601String(),
+      'startDateTime': instance.startDateTime.toIso8601String(),
+      'endDateTime': instance.endDateTime.toIso8601String(),
     };

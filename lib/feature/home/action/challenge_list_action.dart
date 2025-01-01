@@ -6,16 +6,16 @@ abstract class ChallengeListAction {
 }
 
 class AddChallengeAction extends ChallengeListAction {
-  final ChallengeModel challengeModel;
+  final Map<String,dynamic> data;
 
-  const AddChallengeAction(this.challengeModel);
+  const AddChallengeAction(this.data);
 }
 
 class UpdateChallengeAction extends ChallengeListAction {
   final id;
-  final ChallengeModel challengeModel;
+  final Map<String,dynamic> data;
 
-  const UpdateChallengeAction(this.id, this.challengeModel);
+  const UpdateChallengeAction(this.id, this.data);
 }
 
 class AchieveChallengeAction extends ChallengeListAction {

@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:dailystep/data/api/challenge_api.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/model/category/category_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../model/challenge/challenge_dummies.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_toast.dart';
 import '../action/challenge_list_action.dart';
@@ -19,22 +19,25 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   @override
   Future<ChallengesState> build() async {
-    DateTime _today = DateTime.now();
-    final result = await _challengeApi.getCategories() as List;
-      List<CategoryModel> categories = result.map((el) {
-        return CategoryModel.fromJson(el as Map<String, dynamic>);
-      }).toList();
+    DateTime today = DateTime.now();
 
-    final List<ChallengeModel> _initialChallenges =
-        _setChallengeList(challenges: dummyChallenges, selectedDate: _today);
-    final List<DateTime> _initialSuccessList = _setSuccessList(dummyChallenges);
+    final categoryResult = await _challengeApi.getCategories() as List;
+    List<CategoryModel> categories = categoryResult.map((el) {
+      return CategoryModel.fromJson(el as Map<String, dynamic>);
+    }).toList();
+
+    final initialChallenges = await _handleGetChallenge(today);
+    final List<ChallengeModel> selectedChallenges =
+        _setChallengeList(challenges: initialChallenges, selectedDate: today);
+    final List<DateTime> initialSuccessList = _setSuccessList(initialChallenges);
     return ChallengesState(
-      challengeList: _initialChallenges,
-      successList: _initialSuccessList,
+      initialChallengeList: initialChallenges,
+      challengeList: selectedChallenges,
+      successList: initialSuccessList,
       selectedChallenge: null,
-      firstDateOfWeek: _today.getStartOfWeek(),
-      firstDateOfMonth: DateTime(_today.year, _today.month, 1),
-      selectedDate: _today,
+      firstDateOfWeek: today.getStartOfWeek(),
+      firstDateOfMonth: DateTime(today.year, today.month, 1),
+      selectedDate: today,
       categories: categories,
     );
   }
@@ -56,12 +59,18 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       _handleChangeFirstDateOfWeekAction(action);
     }
   }
+  Future<List<ChallengeModel>> _handleGetChallenge(DateTime date) async {
+    List<dynamic> challengeResult = await _challengeApi.getChallenges(date.apiFormattedDate) as List;
+    List<ChallengeModel> result = challengeResult.map((el) {
+      return ChallengeModel.fromJson(el);
+    }).toList();
+    return result;
+  }
 
-  void _handleAddChallenge(AddChallengeAction action) {
-    state.whenData((currentState) {
-      final newChallengeList =
-          List<ChallengeModel>.from(currentState.challengeList);
-      newChallengeList.add(action.challengeModel);
+  void _handleAddChallenge(AddChallengeAction action){
+    state.whenData((currentState) async {
+      await _challengeApi.addChallenge(action.data);
+      final newChallengeList = await _handleGetChallenge(DateTime.now());
 
       state = AsyncValue.data(
         currentState.copyWith(challengeList: newChallengeList),
@@ -70,16 +79,16 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   void _handleUpdateChallenge(UpdateChallengeAction action) {
-    state.whenData((currentState) {
-      final updatedTasks = currentState.challengeList.map((task) {
-        if (task.id == action.id) {
-          return action.challengeModel;
-        }
-        return task;
-      }).toList();
-      state =
-          AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
-    });
+    // state.whenData((currentState) {
+    //   final updatedTasks = currentState.challengeList.map((task) {
+    //     if (task.id == action.id) {
+    //       return action.challengeModel;
+    //     }
+    //     return task;
+    //   }).toList();
+    //   state =
+    //       AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
+    // });
   }
 
   void _handleAchieveChallenge(AchieveChallengeAction action) {
@@ -123,7 +132,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _handleChangeSelectedDate(ChangeSelectedDateAction action) {
     state.whenData((currentState) {
-      final challenges = List.of(currentState.challengeList);
+      final challenges = List.of(currentState.initialChallengeList);
       List<ChallengeModel> newChallengeList = _setChallengeList(
           challenges: challenges, selectedDate: action.selectedDate);
       state = AsyncValue.data(currentState.copyWith(
@@ -133,7 +142,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _handleChangeFirstDateOfWeekAction(ChangeFirstDateOfWeekAction action) {
     state.whenData((currentState) {
-      final challenges = List.of(currentState.challengeList);
+      final challenges = List.of(currentState.initialChallengeList);
       DateTime newFirstDateOfWeek = DateTime.now()
           .getStartOfWeek()
           .add(Duration(days: action.addPage! * 7));
@@ -164,9 +173,9 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       bool allChallengesSuccess = true;
 
       for (int j = 0; j < challengeList.length; j++) {
-        bool hasSuccessDate = challengeList[j].record.successDates.any(
-              (el) => el.isSameDate(targetDate),
-            );
+        bool hasSuccessDate = challengeList[j].record?.successDates.any(
+              (el) => el.toDateTime.isSameDate(targetDate),
+            ) ?? false;
         if (!hasSuccessDate) {
           allChallengesSuccess = false;
           break;
@@ -185,8 +194,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       required DateTime selectedDate}) {
     return challenges.where((challenge) {
       DateTime today = selectedDate;
-      DateTime startDttm = challenge.startDatetime;
-      DateTime endDttm = challenge.endDatetime;
+      DateTime startDttm = challenge.startDateTime;
+      DateTime endDttm = challenge.endDateTime;
 
       return (today.isAfter(startDttm) && today.isBefore(endDttm)) ||
           today.isSameDate(startDttm) ||
@@ -198,11 +207,10 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       List<ChallengeModel> challenges, BuildContext context) {
     state.whenData((currentState) {
       int successDate = 0;
-      print(challenges[0].record.successDates);
       for (int j = 0; j < challenges.length; j++) {
-        bool hasSuccessDate = challenges[j].record.successDates.any(
-              (el) => el.isSameDate(currentState.selectedDate),
-            );
+        bool hasSuccessDate = challenges[j].record?.successDates.any(
+              (el) => el.toDateTime.isSameDate(currentState.selectedDate),
+            )?? false;
         if (hasSuccessDate) {
           successDate += 1;
         }
@@ -229,6 +237,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
 class ChallengesState {
   ///챌린지 변수
+  final List<ChallengeModel> initialChallengeList;
   final List<ChallengeModel> challengeList;
   final List<DateTime> successList;
   final ChallengeModel? selectedChallenge;
@@ -242,6 +251,7 @@ class ChallengesState {
   final List<CategoryModel> categories;
 
   const ChallengesState({
+    required this.initialChallengeList,
     required this.challengeList,
     required this.successList,
     this.selectedChallenge,
@@ -252,6 +262,7 @@ class ChallengesState {
   });
 
   ChallengesState copyWith({
+    List<ChallengeModel>? initialChallengeList,
     List<ChallengeModel>? challengeList,
     List<DateTime>? successList,
     ChallengeModel? selectedChallenge,
@@ -262,6 +273,10 @@ class ChallengesState {
     List<CategoryModel>? categories,
   }) {
     return ChallengesState(
+      initialChallengeList: initialChallengeList != null
+          ? List<ChallengeModel>.from(
+          initialChallengeList.map((challenge) => challenge.copyWith()))
+          : this.challengeList,
       challengeList: challengeList != null
           ? List<ChallengeModel>.from(
               challengeList.map((challenge) => challenge.copyWith()))

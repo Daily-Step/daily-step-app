@@ -1,5 +1,5 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/model/record/record_model.dart';
+import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,8 +28,8 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               itemCount: data.challengeList.length,
               itemBuilder: (context, index) {
                 final challenge = data.challengeList[index];
-                final bool isAchieved = challenge.record.successDates
-                    .any((date) => date.isSameDate(data.selectedDate));
+                final bool isAchieved = challenge.record?.successDates
+                    .any((date) => date.toDateTime.isSameDate(data.selectedDate)) ?? false;
                 return ChallengeItem(
                   task: challenge,
                   index: index,
@@ -40,20 +40,21 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                   },
                   onClickAchieveButton: () async {
                     List<DateTime> copiedChallengeSuccessList =
-                        List<DateTime>.from(challenge.record.successDates);
+                        List<DateTime>.from(challenge.record?.successDates ?? []);
                     if (isAchieved == false) {
                       copiedChallengeSuccessList.add(data.selectedDate);
                     } else {
                       copiedChallengeSuccessList.removeLast();
                     }
-                    final newChallenge = challenge.copyWith(
-                        record: RecordModel(
-                            successDates: copiedChallengeSuccessList));
-                    await notifier.handleAction(AchieveChallengeAction(
-                        id: challenge.id,
-                        challengeModel: newChallenge,
-                        context: context,
-                        isCancel: isAchieved));
+                    //TODO: 챌린지 달성 구현
+                    // final newChallenge = challenge.copyWith(
+                    //     record: RecordModel(
+                    //         successDates: copiedChallengeSuccessList));
+                    // await notifier.handleAction(AchieveChallengeAction(
+                    //     id: challenge.id,
+                    //     challengeModel: newChallenge,
+                    //     context: context,
+                    //     isCancel: isAchieved));
                   },
                   isAchieved: isAchieved,
                 );

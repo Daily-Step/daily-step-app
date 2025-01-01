@@ -9,15 +9,15 @@ class ChallengeModel with _$ChallengeModel {
   const factory ChallengeModel({
     required final int id,
     required final CategoryModel category,
-    required final RecordModel record,
+    required final RecordModel? record,
     required final String title,
     required final String content,
     required final int durationInWeeks,
     required final int weekGoalCount,
     required final int totalGoalCount,
     required final String color,
-    required final DateTime startDatetime,
-    required final DateTime endDatetime,
+    required final DateTime startDateTime,
+    required final DateTime endDateTime,
   }) = _Challenge;
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>

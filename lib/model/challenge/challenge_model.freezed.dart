@@ -22,15 +22,15 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 mixin _$ChallengeModel {
   int get id => throw _privateConstructorUsedError;
   CategoryModel get category => throw _privateConstructorUsedError;
-  RecordModel get record => throw _privateConstructorUsedError;
+  RecordModel? get record => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   int get durationInWeeks => throw _privateConstructorUsedError;
   int get weekGoalCount => throw _privateConstructorUsedError;
   int get totalGoalCount => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
-  DateTime get startDatetime => throw _privateConstructorUsedError;
-  DateTime get endDatetime => throw _privateConstructorUsedError;
+  DateTime get startDateTime => throw _privateConstructorUsedError;
+  DateTime get endDateTime => throw _privateConstructorUsedError;
 
   /// Serializes this ChallengeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,18 +51,18 @@ abstract class $ChallengeModelCopyWith<$Res> {
   $Res call(
       {int id,
       CategoryModel category,
-      RecordModel record,
+      RecordModel? record,
       String title,
       String content,
       int durationInWeeks,
       int weekGoalCount,
       int totalGoalCount,
       String color,
-      DateTime startDatetime,
-      DateTime endDatetime});
+      DateTime startDateTime,
+      DateTime endDateTime});
 
   $CategoryModelCopyWith<$Res> get category;
-  $RecordModelCopyWith<$Res> get record;
+  $RecordModelCopyWith<$Res>? get record;
 }
 
 /// @nodoc
@@ -82,15 +82,15 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   $Res call({
     Object? id = null,
     Object? category = null,
-    Object? record = null,
+    Object? record = freezed,
     Object? title = null,
     Object? content = null,
     Object? durationInWeeks = null,
     Object? weekGoalCount = null,
     Object? totalGoalCount = null,
     Object? color = null,
-    Object? startDatetime = null,
-    Object? endDatetime = null,
+    Object? startDateTime = null,
+    Object? endDateTime = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -101,10 +101,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as CategoryModel,
-      record: null == record
+      record: freezed == record
           ? _value.record
           : record // ignore: cast_nullable_to_non_nullable
-              as RecordModel,
+              as RecordModel?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -129,13 +129,13 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
-      startDatetime: null == startDatetime
-          ? _value.startDatetime
-          : startDatetime // ignore: cast_nullable_to_non_nullable
+      startDateTime: null == startDateTime
+          ? _value.startDateTime
+          : startDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      endDatetime: null == endDatetime
-          ? _value.endDatetime
-          : endDatetime // ignore: cast_nullable_to_non_nullable
+      endDateTime: null == endDateTime
+          ? _value.endDateTime
+          : endDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
     ) as $Val);
   }
@@ -154,8 +154,12 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $RecordModelCopyWith<$Res> get record {
-    return $RecordModelCopyWith<$Res>(_value.record, (value) {
+  $RecordModelCopyWith<$Res>? get record {
+    if (_value.record == null) {
+      return null;
+    }
+
+    return $RecordModelCopyWith<$Res>(_value.record!, (value) {
       return _then(_value.copyWith(record: value) as $Val);
     });
   }
@@ -172,20 +176,20 @@ abstract class _$$ChallengeImplCopyWith<$Res>
   $Res call(
       {int id,
       CategoryModel category,
-      RecordModel record,
+      RecordModel? record,
       String title,
       String content,
       int durationInWeeks,
       int weekGoalCount,
       int totalGoalCount,
       String color,
-      DateTime startDatetime,
-      DateTime endDatetime});
+      DateTime startDateTime,
+      DateTime endDateTime});
 
   @override
   $CategoryModelCopyWith<$Res> get category;
   @override
-  $RecordModelCopyWith<$Res> get record;
+  $RecordModelCopyWith<$Res>? get record;
 }
 
 /// @nodoc
@@ -203,15 +207,15 @@ class __$$ChallengeImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? category = null,
-    Object? record = null,
+    Object? record = freezed,
     Object? title = null,
     Object? content = null,
     Object? durationInWeeks = null,
     Object? weekGoalCount = null,
     Object? totalGoalCount = null,
     Object? color = null,
-    Object? startDatetime = null,
-    Object? endDatetime = null,
+    Object? startDateTime = null,
+    Object? endDateTime = null,
   }) {
     return _then(_$ChallengeImpl(
       id: null == id
@@ -222,10 +226,10 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as CategoryModel,
-      record: null == record
+      record: freezed == record
           ? _value.record
           : record // ignore: cast_nullable_to_non_nullable
-              as RecordModel,
+              as RecordModel?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -250,13 +254,13 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
-      startDatetime: null == startDatetime
-          ? _value.startDatetime
-          : startDatetime // ignore: cast_nullable_to_non_nullable
+      startDateTime: null == startDateTime
+          ? _value.startDateTime
+          : startDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      endDatetime: null == endDatetime
-          ? _value.endDatetime
-          : endDatetime // ignore: cast_nullable_to_non_nullable
+      endDateTime: null == endDateTime
+          ? _value.endDateTime
+          : endDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
     ));
   }
@@ -275,8 +279,8 @@ class _$ChallengeImpl implements _Challenge {
       required this.weekGoalCount,
       required this.totalGoalCount,
       required this.color,
-      required this.startDatetime,
-      required this.endDatetime});
+      required this.startDateTime,
+      required this.endDateTime});
 
   factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeImplFromJson(json);
@@ -286,7 +290,7 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final CategoryModel category;
   @override
-  final RecordModel record;
+  final RecordModel? record;
   @override
   final String title;
   @override
@@ -300,13 +304,13 @@ class _$ChallengeImpl implements _Challenge {
   @override
   final String color;
   @override
-  final DateTime startDatetime;
+  final DateTime startDateTime;
   @override
-  final DateTime endDatetime;
+  final DateTime endDateTime;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, category: $category, record: $record, title: $title, content: $content, durationInWeeks: $durationInWeeks, weekGoalCount: $weekGoalCount, totalGoalCount: $totalGoalCount, color: $color, startDatetime: $startDatetime, endDatetime: $endDatetime)';
+    return 'ChallengeModel(id: $id, category: $category, record: $record, title: $title, content: $content, durationInWeeks: $durationInWeeks, weekGoalCount: $weekGoalCount, totalGoalCount: $totalGoalCount, color: $color, startDateTime: $startDateTime, endDateTime: $endDateTime)';
   }
 
   @override
@@ -327,10 +331,10 @@ class _$ChallengeImpl implements _Challenge {
             (identical(other.totalGoalCount, totalGoalCount) ||
                 other.totalGoalCount == totalGoalCount) &&
             (identical(other.color, color) || other.color == color) &&
-            (identical(other.startDatetime, startDatetime) ||
-                other.startDatetime == startDatetime) &&
-            (identical(other.endDatetime, endDatetime) ||
-                other.endDatetime == endDatetime));
+            (identical(other.startDateTime, startDateTime) ||
+                other.startDateTime == startDateTime) &&
+            (identical(other.endDateTime, endDateTime) ||
+                other.endDateTime == endDateTime));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -346,8 +350,8 @@ class _$ChallengeImpl implements _Challenge {
       weekGoalCount,
       totalGoalCount,
       color,
-      startDatetime,
-      endDatetime);
+      startDateTime,
+      endDateTime);
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -369,15 +373,15 @@ abstract class _Challenge implements ChallengeModel {
   const factory _Challenge(
       {required final int id,
       required final CategoryModel category,
-      required final RecordModel record,
+      required final RecordModel? record,
       required final String title,
       required final String content,
       required final int durationInWeeks,
       required final int weekGoalCount,
       required final int totalGoalCount,
       required final String color,
-      required final DateTime startDatetime,
-      required final DateTime endDatetime}) = _$ChallengeImpl;
+      required final DateTime startDateTime,
+      required final DateTime endDateTime}) = _$ChallengeImpl;
 
   factory _Challenge.fromJson(Map<String, dynamic> json) =
       _$ChallengeImpl.fromJson;
@@ -387,7 +391,7 @@ abstract class _Challenge implements ChallengeModel {
   @override
   CategoryModel get category;
   @override
-  RecordModel get record;
+  RecordModel? get record;
   @override
   String get title;
   @override
@@ -401,9 +405,9 @@ abstract class _Challenge implements ChallengeModel {
   @override
   String get color;
   @override
-  DateTime get startDatetime;
+  DateTime get startDateTime;
   @override
-  DateTime get endDatetime;
+  DateTime get endDateTime;
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.

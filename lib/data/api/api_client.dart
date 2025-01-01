@@ -69,11 +69,12 @@ class ApiClient {
     ));
   }
 
-  Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters, Map<String, String>? headers}) async {
+  Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters, Map<String, String>? headers, Map<String, dynamic>? data}) async {
     try {
       return await _dio.get(
         endpoint,
         queryParameters: queryParameters,
+        data: data,
         options: Options(headers: headers),
       );
     } catch (e) {
