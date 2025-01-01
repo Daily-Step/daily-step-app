@@ -1,3 +1,4 @@
+import 'package:dailystep/feature/mypage/viewmodel/my_info_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,7 @@ class BirthdayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final birthdayState = ref.watch(birthdayProvider);
     final birthdayNotifier = ref.read(birthdayProvider.notifier);
+
 
     // 날짜를 포맷팅하여 표시
     final formattedDate = birthdayState.birthDate != null
@@ -36,7 +38,12 @@ class BirthdayScreen extends ConsumerWidget {
         ),
         actions: [
           WConfirmButton(
-            onPressed: () {},
+            onPressed: () async {
+              await birthdayNotifier.saveBirthDay(birthdayState.birthDate);
+
+              context.go('/main/myPage/myinfo');
+
+            },
             isValidProvider: isValid,
           )
         ],

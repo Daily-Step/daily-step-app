@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:dailystep/data/api/api_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
 import '../action/mypage_action.dart';
 import '../model/mypage_model.dart';
@@ -16,8 +19,6 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
   void handleEvent(MyPageAction event) {
     if (event is FetchUserDataAction) {
       fetchUserData();
-    } else if (event is UpdateUserProfileAction) {
-      updateUserProfile(event);
     }
   }
 
@@ -45,41 +46,45 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     }
   }
 
-  Future<void> updateUserProfile(UpdateUserProfileAction action) async {
-    state = MyPageState.loading();
-    try {
-      final token = await _secureStorageService.getAccessToken();
-      if (token == null) {
-        throw Exception('액세스 토큰이 없습니다.');
-      }
-
-      final response = await _apiClient.put(
-        'member',
-        data: {
-          'nickname': action.newUserName,
-          'birth': action.birth.toIso8601String(),
-          'gender': action.gender,
-        },
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        final updatedUser = MyPageModel.fromJson(response.data);
-        state = MyPageState.loaded(user: updatedUser);
-      } else {
-        state = MyPageState.error(
-          message: '정보 업데이트 실패: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      state = MyPageState.error(message: '정보 업데이트 중 예외 발생: $e');
-    }
-  }
-
   void updateNickname(String newNickname) {
     if (state is MyPageStateLoaded) {
       final currentUser = (state as MyPageStateLoaded).user;
       final updatedUser = currentUser.copyWith(nickname: newNickname);
+      state = MyPageState.loaded(user: updatedUser);
+    }
+  }
+
+  void updateUserBirth(DateTime newBirthDate) {
+    if (state is MyPageStateLoaded) {
+      final currentState = state as MyPageStateLoaded;
+      state = MyPageState.loaded(
+        user: currentState.user.copyWith(birth: newBirthDate),
+      );
+    }
+  }
+
+  void updateUserGender(String newGender) {
+    if (state is MyPageStateLoaded) {
+      final currentState = state as MyPageStateLoaded;
+      state = MyPageState.loaded(
+        user: currentState.user.copyWith(gender: newGender),
+      );
+    }
+  }
+
+  void updateUserJob(int newJobId) {
+    if (state is MyPageStateLoaded) {
+      final currentState = state as MyPageStateLoaded;
+      state = MyPageState.loaded(
+        user: currentState.user.copyWith(jobId: newJobId),
+      );
+    }
+  }
+
+  void updateUserJobYear(int newJobYearId) {
+    if (state is MyPageStateLoaded) {
+      final currentState = state as MyPageStateLoaded;
+      final updatedUser = currentState.user.copyWith(jobYearId: newJobYearId);
       state = MyPageState.loaded(user: updatedUser);
     }
   }
