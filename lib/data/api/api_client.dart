@@ -34,15 +34,26 @@ class ApiClient {
               // Refresh Token으로 새 Access Token 요청
               final tokenResponse = await _dio.post(
                 'auth/reissue',
-                data: {'refresh_token': refreshToken},
+                data: {'refreshToken': refreshToken},
               );
               print('토큰 갱신 응답: ${tokenResponse.data}');
 
               if (tokenResponse.statusCode == 200) {
-                final newAccessToken = tokenResponse.data['access_token'];
-                final newExpirationTime = tokenResponse.data['access_token_expiration'];
+                final responseData = tokenResponse.data['data'];
+                final newAccessToken = responseData['accessToken'];
+                final newRefreshToken = responseData['refreshToken'];
+                final newExpirationTime = responseData['accessTokenExpiresIn'];
+
                 // 새 토큰 저장
                 await _secureStorageService.saveAccessToken(newAccessToken,newExpirationTime);
+                await _secureStorageService.saveRefreshToken(newRefreshToken);
+
+                // 저장된 Access Token 확인
+                final storedAccessToken = await _secureStorageService.getAccessToken();
+                final storedRefreshToken = await _secureStorageService.getRefreshToken();
+
+                print('[DEBUG] 저장된 Access Token: $storedAccessToken');
+                print('[DEBUG] 저장된 Refresh Token: $storedRefreshToken');
 
                 // 원래 요청에 새 Access Token 추가 후 재시도
                 error.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
