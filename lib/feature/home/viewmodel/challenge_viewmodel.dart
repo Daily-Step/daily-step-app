@@ -50,7 +50,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     } else if (action is AchieveChallengeAction) {
       _handleAchieveChallenge(action);
     } else if (action is DeleteChallengeAction) {
-      await _handleRemoveTask(action);
+      _handleRemoveChallenge(action);
     } else if (action is FindChallengeAction) {
       _handleFindChallenge(action);
     } else if (action is ChangeSelectedDateAction) {
@@ -71,7 +71,6 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     state.whenData((currentState) async {
       await _challengeApi.addChallenge(action.data);
       final newChallengeList = await _handleGetChallenge(DateTime.now());
-
       state = AsyncValue.data(
         currentState.copyWith(challengeList: newChallengeList),
       );
@@ -79,40 +78,33 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   }
 
   void _handleUpdateChallenge(UpdateChallengeAction action) {
-    // state.whenData((currentState) {
-    //   final updatedTasks = currentState.challengeList.map((task) {
-    //     if (task.id == action.id) {
-    //       return action.challengeModel;
-    //     }
-    //     return task;
-    //   }).toList();
-    //   state =
-    //       AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
-    // });
-  }
-
-  void _handleAchieveChallenge(AchieveChallengeAction action) {
-    state.whenData((currentState) {
-      if (!action.isCancel) {
-        _checkIsFirstAchieved(
-            List.of(currentState.challengeList), action.context);
-      }
-      final updatedTasks = currentState.challengeList.map((task) {
-        if (task.id == action.id) {
-          return action.challengeModel;
-        }
-        return task;
-      }).toList();
+    state.whenData((currentState) async {
+      await _challengeApi.updateChallenge(action.id,action.data);
+      final newChallengeList = await _handleGetChallenge(DateTime.now());
       state =
-          AsyncValue.data(currentState.copyWith(challengeList: updatedTasks));
+          AsyncValue.data(currentState.copyWith(challengeList: newChallengeList));
     });
   }
 
-  Future<void> _handleRemoveTask(DeleteChallengeAction action) async {
-    state.whenData((currentState) {
-      final newChallengeList = List.of(currentState.challengeList);
-      newChallengeList.removeWhere((task) => task.id == action.id);
+  void _handleAchieveChallenge(AchieveChallengeAction action) {
+    state.whenData((currentState) async {
+      if (!action.isCancel) {
+        _checkIsFirstAchieved(
+            List.of(currentState.challengeList), action.context);
+        await _challengeApi.achieveChallenge(action.id, DateTime.now().apiFormattedDate);
+      } else {
+        await _challengeApi.deleteAchieveChallenge(action.id, DateTime.now().apiFormattedDate);
+      }
+      final newChallengeList = await _handleGetChallenge(DateTime.now());
+      state =
+          AsyncValue.data(currentState.copyWith(challengeList: newChallengeList));
+    });
+  }
 
+  void _handleRemoveChallenge(DeleteChallengeAction action) {
+    state.whenData((currentState) async {
+      await _challengeApi.deleteChallenge(action.id);
+      final newChallengeList = await _handleGetChallenge(DateTime.now());
       state = AsyncValue.data(currentState.copyWith(
         challengeList: newChallengeList,
       ));

@@ -39,22 +39,10 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                     context.push('/main/challenge/${challenge.id}');
                   },
                   onClickAchieveButton: () async {
-                    List<DateTime> copiedChallengeSuccessList =
-                        List<DateTime>.from(challenge.record?.successDates ?? []);
-                    if (isAchieved == false) {
-                      copiedChallengeSuccessList.add(data.selectedDate);
-                    } else {
-                      copiedChallengeSuccessList.removeLast();
-                    }
-                    //TODO: 챌린지 달성 구현
-                    // final newChallenge = challenge.copyWith(
-                    //     record: RecordModel(
-                    //         successDates: copiedChallengeSuccessList));
-                    // await notifier.handleAction(AchieveChallengeAction(
-                    //     id: challenge.id,
-                    //     challengeModel: newChallenge,
-                    //     context: context,
-                    //     isCancel: isAchieved));
+                    await notifier.handleAction(AchieveChallengeAction(
+                        id: challenge.id,
+                        context: context,
+                        isCancel: isAchieved));
                   },
                   isAchieved: isAchieved,
                 );

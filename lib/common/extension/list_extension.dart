@@ -1,6 +1,8 @@
 
 import 'dart:math';
 
+import 'package:dailystep/common/extension/string_extension.dart';
+
 extension ListExtension<T> on List<T> {
   Iterable<R> mapIndexed<R>(R Function(T value, int index) f) {
     return asMap().entries.map((entry) => f(entry.value, entry.key));
@@ -8,18 +10,18 @@ extension ListExtension<T> on List<T> {
 
   // 최대 연속 성공 횟수 (DateTime 전용)
   int countLongestSuccessDays() {
-    if (T != DateTime) {
-      throw ArgumentError('This method only works with DateTime lists');
+    if (T != String) {
+      throw ArgumentError('This method only works with String lists');
     }
     if (isEmpty) return 0;
 
-    List<DateTime> dateList = cast<DateTime>();
+    List<String> dateList = cast<String>();
 
     int longestStreak = 0;
     int currentStreak = 1;
 
     for (int i = 1; i < dateList.length; i++) {
-      if (dateList[i].difference(dateList[i - 1]).inDays == 1) {
+      if (dateList[i].toDateTime.difference(dateList[i - 1].toDateTime).inDays == 1) {
         currentStreak++;
       } else {
         longestStreak = max(longestStreak, currentStreak);

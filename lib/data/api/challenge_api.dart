@@ -48,11 +48,11 @@ class ChallengeApi {
     }
   }
 
-  Future<void> updateChallenge(Map<String, dynamic> challengeData) async {
+  Future<void> updateChallenge(int id, Map<String, dynamic> challengeData) async {
     try {
       final response =
-          await _apiClient.put('/challenges', data: challengeData);
-      if (response.statusCode == 201) {
+          await _apiClient.put('/challenges/$id', data: challengeData);
+      if (response.statusCode == 200) {
         print('챌린지 수정 성공');
       } else {
         throw Exception('챌린지 수정 실패: ${response.statusCode}');
@@ -61,12 +61,12 @@ class ChallengeApi {
       print('챌린지 수정 중 오류 발생: $e');
     }
   }
-
-  Future<void> deleteChallenge(Map<String, dynamic> challengeData) async {
+  ///TODO: delete 테스트 필요
+  Future<void> deleteChallenge(int id) async {
     try {
       final response =
-          await _apiClient.delete('/challenges', data: challengeData);
-      if (response.statusCode == 201) {
+          await _apiClient.delete('/challenges/$id');
+      if (response.statusCode == 200) {
         print('챌린지 삭제 성공');
       } else {
         throw Exception('챌린지 삭제 실패: ${response.statusCode}');
@@ -76,17 +76,33 @@ class ChallengeApi {
     }
   }
 
-  Future<void> achieveChallenge(String achieveDate) async {
+  Future<void> achieveChallenge(int id, String achieveDate) async {
     final requestData = {'achieveDate': achieveDate};
     try {
-      final response = await _apiClient.post('/achieve', data: requestData);
-      if (response.statusCode == 201) {
+      final response = await _apiClient.post('/challenges/$id/achieve', data: requestData);
+      if (response.statusCode == 200) {
         print('챌린지 달성 성공');
       } else {
         throw Exception('챌린지 달성 실패: ${response.statusCode}');
       }
     } catch (e) {
       print('챌린지 달성 중 오류 발생: $e');
+    }
+  }
+  ///TODO: delete 테스트 필요
+  Future<void> deleteAchieveChallenge(int id, String cancelDate) async {
+    print('-------achieveDelete------');
+    print(cancelDate);
+    final requestData = {'cancelDate': cancelDate};
+    try {
+      final response = await _apiClient.post('/challenges/$id/cancel', data: requestData);
+      if (response.statusCode == 200) {
+        print('챌린지 달성 취소 성공');
+      } else {
+        throw Exception('챌린지 달성 취소 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('챌린지 달성 취소 중 오류 발생: $e');
     }
   }
 }
