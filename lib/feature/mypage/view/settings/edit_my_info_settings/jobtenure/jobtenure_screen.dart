@@ -32,7 +32,10 @@ class JobTenureScreen extends ConsumerWidget {
         ),
         actions: [
           WConfirmButton(
-            onPressed: () {},
+            onPressed: () async {
+              await ref.read(jobTenureProvider.notifier).saveJobTenure();
+              context.go('/main/myPage/myinfo');
+            },
             isValidProvider: isDataEntered,
           )
         ],

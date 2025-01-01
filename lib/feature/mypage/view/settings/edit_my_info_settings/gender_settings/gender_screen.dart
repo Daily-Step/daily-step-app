@@ -10,8 +10,10 @@ class GenderScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedGender = ref.watch(genderProvider);
+    final genderState = ref.watch(genderProvider);
     final isDataEntered = ref.watch(isDataEnteredProvider);
+    final genderNotifier = ref.read(genderProvider.notifier);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +30,11 @@ class GenderScreen extends ConsumerWidget {
         ),
         actions: [
           WConfirmButton(
-            onPressed: () {},
+            onPressed: () async {
+              await genderNotifier.saveGender();
+
+              context.go('/main/myPage/myinfo');
+            },
             isValidProvider: isDataEntered,
           )
         ],
@@ -40,9 +46,9 @@ class GenderScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _buildToggleButton('남성', 0, selectedGender, ref),
+                _buildToggleButton('남성', 'MALE', genderState.selectedGender, ref),
                 const SizedBox(width: 12),
-                _buildToggleButton('여성', 1, selectedGender, ref),
+                _buildToggleButton('여성', 'FEMALE', genderState.selectedGender, ref),
               ],
             ),
           ],
@@ -51,13 +57,13 @@ class GenderScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildToggleButton(String text, int index, int? selectedGender, WidgetRef ref) {
-    bool isSelected = selectedGender == index; // 선택된 성별과 비교
+  Widget _buildToggleButton(String text, String value, String? selectedGender, WidgetRef ref) {
+    bool isSelected = selectedGender == value;
 
     return GestureDetector(
       onTap: () {
         // 상태를 업데이트하도록 수정
-        ref.read(genderProvider.notifier).selectGender(isSelected ? -1 : index);
+        ref.read(genderProvider.notifier).selectGender(isSelected ? null : value);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),

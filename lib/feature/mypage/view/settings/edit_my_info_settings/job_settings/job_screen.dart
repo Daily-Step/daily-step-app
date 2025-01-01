@@ -31,7 +31,10 @@ class JobScreen extends ConsumerWidget {
         ),
         actions: [
           WConfirmButton(
-            onPressed: () {},
+            onPressed: () async {
+              await ref.read(jobProvider.notifier).saveJob();
+              context.go('/main/myPage/myinfo');
+            },
             isValidProvider: isDataEntered,
           )
         ],
