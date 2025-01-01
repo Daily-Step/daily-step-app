@@ -61,6 +61,7 @@ class SignUpViewModel extends StateNotifier<SignUpState> {
           // 새로운 accessToken으로 로그인 처리
           await ref.read(secureStorageServiceProvider).saveAccessToken(newAccessToken, accessTokenExpiresIn);
           await ref.read(secureStorageServiceProvider).saveRefreshToken(refreshToken);
+          await ref.read(secureStorageServiceProvider).saveIsFirstAchieve('0');
 
           final storedRefreshToken = await ref.read(secureStorageServiceProvider).getRefreshToken();
           print('저장된 RefreshToken: $storedRefreshToken');

@@ -7,6 +7,7 @@ import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/model/category/category_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../config/secure_storage/secure_storage_service.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_toast.dart';
 import '../action/challenge_list_action.dart';
@@ -16,6 +17,7 @@ part 'challenge_viewmodel.g.dart';
 @riverpod
 class ChallengeViewModel extends _$ChallengeViewModel {
   ChallengeApi _challengeApi = ChallengeApi();
+  final _secureStorageService = SecureStorageService();
 
   @override
   Future<ChallengesState> build() async {
@@ -197,7 +199,17 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _checkIsFirstAchieved(
       List<ChallengeModel> challenges, BuildContext context) {
-    state.whenData((currentState) {
+    state.whenData((currentState) async {
+      String? isFirstAchieved = await _secureStorageService.getIsFirstAchieve();
+
+      //가입 후 첫 달성
+      if(isFirstAchieved == '0'){
+        ToastMsg toastMsg = _setToastMsg(0);
+        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+        await _secureStorageService.saveIsFirstAchieve('1');
+        return;
+      }
+
       int successDate = 0;
       for (int j = 0; j < challenges.length; j++) {
         bool hasSuccessDate = challenges[j].record?.successDates.any(
@@ -208,9 +220,11 @@ class ChallengeViewModel extends _$ChallengeViewModel {
         }
       }
       if (successDate == 0) {
-        ToastMsg toastMsg = _setToastMsg(1); //하루 첫 달성
+        //하루 첫 달성
+        ToastMsg toastMsg = _setToastMsg(1);
         WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
       } else {
+        //일반 달성
         ToastMsg toastMsg = _setToastMsg(2);
         WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
       }

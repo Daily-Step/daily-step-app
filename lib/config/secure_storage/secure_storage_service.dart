@@ -6,6 +6,7 @@ class SecureStorageService {
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
   static const String _accessTokenExpirationKey = 'access_token_expiration';
+  static const String _checkIsFirstAchieveKey = 'is_first_achieve';
 
   // Access Token 저장 (만료 시간도 함께 저장)
   Future<void> saveAccessToken(String token, dynamic expiresInSeconds) async {
@@ -79,6 +80,24 @@ class SecureStorageService {
     await _storage.delete(key: _accessTokenKey);
     await _storage.delete(key: _accessTokenExpirationKey);
     print('[SECURE_STORAGE] Tokens deleted');
+  }
+
+  Future<void> saveIsFirstAchieve(String value) async {
+    try {
+      await _storage.write(key: _checkIsFirstAchieveKey, value: value); // 0:false, 1:true
+    } catch (e) {
+      print("[ERR] Is First Achieve 저장 실패: $e");
+    }
+  }
+
+  Future<String?> getIsFirstAchieve() async {
+    try {
+      String? isFirstAchieve = await _storage.read(key: _checkIsFirstAchieveKey);
+      return isFirstAchieve;
+    } catch (e) {
+      print("[ERR] Is First Achieve 불러오기 실패: $e");
+    }
+    return null;
   }
 
   // 모든 데이터 삭제
