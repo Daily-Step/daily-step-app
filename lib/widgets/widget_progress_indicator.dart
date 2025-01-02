@@ -27,6 +27,7 @@ class WProgressIndicator extends StatelessWidget {
         height: width,
         width: height,
         child: CircularProgressIndicator(
+          strokeCap:StrokeCap.round,
           value: percentage / 100,
           strokeWidth: strokeWidth,
           backgroundColor: Colors.grey[200],

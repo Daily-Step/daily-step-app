@@ -1,5 +1,6 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
+import 'package:dailystep/widgets/widget_card.dart';
 import 'package:flutter/material.dart';
 import '../../../../model/challenge/challenge_model.dart';
 import '../../../../widgets/widget_constant.dart';
@@ -23,61 +24,56 @@ class ChallengeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      key: ValueKey(task.id),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: ListTile(
-              leading: WProgressIndicator(
-                percentage: task.totalGoalCount
-                    .getProgress(task.record?.successDates.length ?? 0),
-                width: 40,
-                height: 40,
-                strokeWidth: 6,
-                fontSize: 14,
-                color: Color(int.parse(task.color)),
-              ),
-              title: Text(task.title),
-              subtitle: Text(
-                '${task.startDateTime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
-                style: subTextStyle,
-              ),
-              trailing: ReorderableDragStartListener(
-                index: index,
-                child: Container(
-                        decoration: BoxDecoration(
-                            color: bgGreyColor, shape: BoxShape.circle),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Icon(Icons.arrow_forward_ios_outlined,
-                              size: 12, color: Colors.white),
-                        )),
+    return WCard(
+        key: ValueKey(task.id),
+        padding: 10.0,
+        child: Column(
+          children: [
+            InkWell(
+              onTap: onTap,
+              child: ListTile(
+                leading: WProgressIndicator(
+                  percentage: task.totalGoalCount
+                      .getProgress(task.record?.successDates.length ?? 0),
+                  width: 40,
+                  height: 40,
+                  strokeWidth: 6,
+                  fontSize: 14,
+                  color: Color(int.parse(task.color)),
+                ),
+                title: Text(task.title),
+                subtitle: Text(
+                  '${task.startDateTime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
+                  style: subTextStyle,
+                ),
+                trailing: ReorderableDragStartListener(
+                  index: index,
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: bgGreyColor, shape: BoxShape.circle),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Icon(Icons.arrow_forward_ios_outlined,
+                            size: 12, color: Colors.white),
+                      )),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ElevatedButton(
+            ElevatedButton(
               onPressed: onClickAchieveButton,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isAchieved? primaryColor : Colors.black,
+                backgroundColor: isAchieved ? primaryColor : Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: globalBorderRadius,
                 ),
                 minimumSize: Size(double.infinity, 40),
               ),
               child: Text(
-                isAchieved? '챌린지 달성 완료!':'챌린지 달성',
+                isAchieved ? '챌린지 달성 완료!' : '챌린지 달성',
                 style: TextStyle(color: Colors.white),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }

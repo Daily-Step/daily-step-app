@@ -32,10 +32,13 @@ class ChallengeDetailScreen extends ConsumerWidget {
           ),
           title: Align(
               alignment: Alignment.center,
-              child: Text(selectedChallengeState.when(
-                  data: (state) => state.selectedChallenge!.title,
-                  error: (Object error, StackTrace stackTrace) => '',
-                  loading: () => ''))),
+              child: Text(
+                selectedChallengeState.when(
+                    data: (state) => state.selectedChallenge!.title,
+                    error: (Object error, StackTrace stackTrace) => '',
+                    loading: () => ''),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
           actions: [
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert),
@@ -192,9 +195,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         _card(
                             '달성한 날',
                             _textWithSubText(
-                                selectedChallenge.record?.successDates.length
-                                        .toString() ??
-                                    '0' + '일',
+                                (selectedChallenge
+                                                .record?.successDates.length ??
+                                            0)
+                                        .toString() +
+                                    '일',
                                 ' /' +
                                     (selectedChallenge.startDateTime
                                         .goalDays(selectedChallenge.endDateTime,
@@ -228,10 +233,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         _card(
                             '최대 연속 성공 횟수',
                             Text(
-                                selectedChallenge.record?.successDates
-                                        .countLongestSuccessDays()
-                                        .toString() ??
-                                    '0' + '일',
+                                (selectedChallenge.record?.successDates
+                                                .countLongestSuccessDays() ??
+                                            0)
+                                        .toString() +
+                                    '일',
                                 style: boldTextStyle),
                             'assets/icons/medal.svg'),
                         width2,

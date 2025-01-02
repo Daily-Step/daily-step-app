@@ -93,9 +93,9 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       if (!action.isCancel) {
         _checkIsFirstAchieved(
             List.of(currentState.challengeList), action.context);
-        await _challengeApi.achieveChallenge(action.id, DateTime.now().apiFormattedDate);
+        await _challengeApi.achieveChallenge(action.id, currentState.selectedDate.apiFormattedDate);
       } else {
-        await _challengeApi.deleteAchieveChallenge(action.id, DateTime.now().apiFormattedDate);
+        await _challengeApi.deleteAchieveChallenge(action.id, currentState.selectedDate.apiFormattedDate);
       }
       final newChallengeList = await _handleGetChallenge(DateTime.now());
       state =

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class WCard extends StatelessWidget {
   final Widget child;
+  final double? padding;
 
   const WCard({
     super.key,
     required this.child,
+    this.padding,
   });
 
   @override
@@ -17,8 +19,9 @@ class WCard extends StatelessWidget {
         borderRadius: globalBorderRadius,
       ),
       elevation: 1,
+      shadowColor: Color(0xD5E7E7E7),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(padding ?? 16.0),
         child: child,
       ),
     );
