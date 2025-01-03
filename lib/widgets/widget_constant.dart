@@ -1,6 +1,58 @@
 import 'package:dailystep/widgets/widget_height_and_width.dart';
 import 'package:flutter/material.dart';
 
+class AppColor {
+  /// 7DF6FF
+  static const Color mPrimary = Color(0xFF7DF6FF);
+
+  /// 2F41F2
+  static const Color secondary = Color(0xFF2F41F2);
+
+  /// 2257FF
+  static const Color secondary1 = Color(0xFF2257FF);
+
+  /// 1D1D1D
+  static const Color gray09 = Color(0xFF1D1D1D);
+
+  /// 2D2D2D
+  static const Color gray08 = Color(0xFF2D2D2D);
+
+  /// 555555
+  static const Color gray07 = Color(0xFF555555);
+
+  /// 717171
+  static const Color gray06 = Color(0xFF717171);
+
+  /// 8E8E8E
+  static const Color gray05 = Color(0xFF8E8E8E);
+
+  /// C6C6C6
+  static const Color gray04 = Color(0xFFC6C6C6);
+
+  /// D8D8D8
+  static const Color gray03 = Color(0xFFD8D8D8);
+
+  /// F8F8F8
+  static const Color gray02 = Color(0xFFF8F8F8);
+
+  /// FFFFFF
+  static const Color white = Color(0xFFFFFFFF);
+}
+
+class AppTextStyle {
+  /// Regular (400) 굵기
+  static const FontWeight regular = FontWeight.w400;
+
+  /// Normal (500) 굵기
+  static const FontWeight normal = FontWeight.w500;
+
+  /// SemiBold (600) 굵기
+  static const FontWeight semiBold = FontWeight.w600;
+
+  /// Bold (700) 굵기
+  static const FontWeight bold = FontWeight.w700;
+}
+
 const spacer = Spacer();
 
 const width2 = Width(2);
@@ -44,6 +96,7 @@ var subTextColor = Color(0xFF8E8E8E);
 var primaryColor = Color(0xFF2F41F2);
 var backgroundColor = Color(0xFFF8F8F8);
 var bgGreyColor = Color(0xFFE0E0E0);
+
 
 /// 그라디언트
 const mainGradient = LinearGradient(

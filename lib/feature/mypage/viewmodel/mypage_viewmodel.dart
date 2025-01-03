@@ -2,18 +2,23 @@ import 'dart:convert';
 
 import 'package:dailystep/data/api/api_client.dart';
 import 'package:dailystep/feature/mypage/action/mypage_action.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
+import '../../../config/shared_preferences_storage/fcm_token_store.dart';
 import '../model/mypage_model.dart';
 import '../model/push_setting_response.dart';
 
 class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPageAction> {
   final ApiClient _apiClient;
   final SecureStorageService _secureStorageService;
+  final FcmTokenStore _fcmTokenStore;
+
 
   // 생성자에서 ApiClient와 SecureStorageService 주입
-  MyPageViewModel(this._apiClient, this._secureStorageService) : super(null) {
+  MyPageViewModel(this._apiClient, this._secureStorageService, this._fcmTokenStore) : super(null) {
     loadDummyUserData(); // 초기화 시 실제 유저 데이터 로드
   }
 
@@ -30,14 +35,16 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
 
   // 실제 유저 데이터 가져오기 (API 호출)
   // TODO : 실제 유저로 바꾸기 api가 만들어 지면
-  void loadDummyUserData() {
+  void loadDummyUserData() async {
+    final isEnabled = await loadPushNotificationState();
+
     state = MyPageModel(
       nickname: "챌린저123",
       profileImageUrl: "",
       ongoingChallenges: 3,
       completedChallenges: 1,
       totalChallenges: 4,
-      isPushNotificationEnabled: true,
+      isPushNotificationEnabled: isEnabled,
       birth: DateTime(1999, 1, 1),
       gender: "남성",
     );
@@ -54,54 +61,87 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     }
   }
 
-  Future<void> updatePushSetting(bool enabled) async {
-    final response = await _apiClient.put(
-      'member/push',
-      data: jsonEncode({
-        'enabled': enabled,
-      }),
-    );
+  Future<void> savePushNotificationState(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isPushNotificationEnabled', isEnabled);
+  }
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = jsonDecode(response.data);
-      // 응답을 PushSettingResponse로 파싱
-      final result = PushSettingResponse.fromJson(responseBody);
+  Future<bool> loadPushNotificationState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isPushNotificationEnabled') ?? true; // 기본값 true
+  }
 
-      // status, code 등에 따라 추가 로직 수행
-      if (result.status == 0) {
-        print('푸시 설정 업데이트 성공! code: ${result.code}, message: ${result.message}');
+  Future<void> togglePushNotification() async {
+    final currentState = state;
+    if (currentState == null) return; // Prevent null state access
+
+    final newStatus = !currentState.isPushNotificationEnabled; // Toggle status
+
+    try {
+      if (newStatus) {
+        await handleFcmToken(); // Enable FCM
       } else {
-        // status가 0이 아닐 경우 에러로 처리할 수도 있음
-        throw Exception('푸시 설정 실패: ${result.message}');
+        await deleteFcmToken(); // Disable FCM
       }
-    } else {
-      throw Exception('푸시 설정 요청 실패: statusCode=${response.statusCode}, body=${response.data}');
+
+      state = currentState.copyWith(isPushNotificationEnabled: newStatus);
+    } catch (e) {
+      print('Error toggling push notifications: $e');
     }
   }
 
-  // Push 알림 토글
-  void togglePushNotification() async {
-    if (state != null) {
-      final newValue = !state!.isPushNotificationEnabled;
-      // 먼저 로컬 State를 업데이트
-      state = state!.copyWith(isPushNotificationEnabled: newValue);
+  Future<void> handleFcmToken() async {
+    try {
+      // FCM 토큰 가져오기
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        // 토큰 저장
+        await _fcmTokenStore.saveFcmToken(fcmToken);
+        print('FCM 토큰 저장 완료: $fcmToken');
 
-      try {
-        // 위에서 만든 updatePushSetting 호출
-        await updatePushSetting(newValue);
-      } catch (e) {
-        // 서버 업데이트 실패 시 처리 (롤백 등)
-        state = state!.copyWith(isPushNotificationEnabled: !newValue);
-        print('푸시 알림 설정 업데이트 실패: $e');
+        // 서버로 토큰 전송
+        await _apiClient.post('fcm', data: {'token': fcmToken});
+        print('FCM 토큰 서버에 전송 완료');
+
+        // 상태 업데이트
+        state = state?.copyWith(isPushNotificationEnabled: true);
+        print('FCM 토큰 가져오기 실패');
       }
+    } catch (e) {
+      print('FCM 토큰 처리 중 오류: $e');
     }
   }
+
+  // FCM 토큰 삭제 처리
+  Future<void> deleteFcmToken() async {
+    try {
+      // 저장된 FCM 토큰 가져오기
+      final fcmToken = await _fcmTokenStore.getFcmToken();
+      if (fcmToken != null) {
+        // 서버에서 토큰 삭제
+        await _apiClient.delete('fcm');
+        print('FCM 토큰 서버에서 삭제 완료: $fcmToken');
+
+        // 로컬 저장소에서 토큰 삭제
+        await _fcmTokenStore.deleteFcmToken();
+        print('로컬 저장소에서 FCM 토큰 삭제 완료');
+
+        // 상태 업데이트
+        state = state?.copyWith(isPushNotificationEnabled: false);
+      }
+    } catch (e) {
+      print('FCM 토큰 삭제 중 오류: $e');
+    }
+  }
+
+  // FCM 토큰 갱신 이벤트 처리
 }
 
-
 // Provider 정의
+final fcmTokenStoreProvider = Provider((ref) => FcmTokenStore());
 final myPageViewModelProvider = StateNotifierProvider<MyPageViewModel, MyPageModel?>((ref) {
   final apiClient = ApiClient();
   final secureStorageService = ref.read(secureStorageServiceProvider);
-  return MyPageViewModel(apiClient, secureStorageService);
+  final fcmTokenStore = ref.read(fcmTokenStoreProvider);
+  return MyPageViewModel(apiClient, secureStorageService, fcmTokenStore);
 });

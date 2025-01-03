@@ -1,6 +1,8 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,32 +30,33 @@ class MyPageScreen extends ConsumerWidget {
     if (user == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("마이페이지"),
+          centerTitle: true,
+          title: Text("마이페이지", style: TextStyle(fontSize: 20 * su)),
         ),
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("마이페이지")),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "마이페이지",
+          style: TextStyle(fontSize: 20 * su),
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Container(
         color: Color(0xffD8D8D8),
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.white, // 배경색 설정
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2), // 그림자 색상 설정
-                    blurRadius: 4,
-                    offset: Offset(0, 2), // 그림자의 위치
-                  ),
-                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16 * su)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0 * su),
                 child: Column(
                   children: [
                     Row(
@@ -65,46 +68,46 @@ class MyPageScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 '${user.nickname}님의 챌린지',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 20 * su, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 4),
+                              SizedBox(height: 4 * su),
                               TextButton(
                                 onPressed: () {
                                   context.go('/main/myPage/myinfo');
                                 },
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: EdgeInsets.symmetric(horizontal: 8 * su, vertical: 4 * su),
                                   backgroundColor: Color(0xffF8F8F8),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(16 * su),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   '내 정보 수정',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Color(0xff555555)),
+                                  style: TextStyle(fontSize: 16 * su, fontWeight: FontWeight.normal, color: Color(0xff555555)),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(width: 16),
+                        SizedBox(width: 16 * su),
                         CircleAvatar(
-                          radius: 40,
+                          radius: 40 * su,
                           backgroundColor: Color(0xff2257FF),
                           child: Text(
                             '🥰',
-                            style: TextStyle(fontSize: 30),
+                            style: TextStyle(fontSize: 30 * su),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 16 * su),
                     _buildChallengeCards(user),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16 * su),
             _buildSettingsContainer(ref, context),
           ],
         ),
@@ -127,21 +130,18 @@ class MyPageScreen extends ConsumerWidget {
             color: Colors.black,
             elevation: 2,
             child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0 * su),
               child: Column(
                 children: [
                   Text(
                     challenge["title"] as String,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(fontSize: 13 * su, color: Colors.white),
                     softWrap: false,
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4 * su),
                   Text(
                     (challenge["count"] as int).toString(),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontSize: 24 * su, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
               ),
@@ -156,50 +156,66 @@ class MyPageScreen extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16 * su),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * su),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "앱 설정",
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+              style: TextStyle(fontSize: 15 * su, fontWeight: FontWeight.w300),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            SizedBox(height: 46.5 * su),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Push 알림"),
-                Switch(
-                    value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
-                    onChanged: (value) {
-                      ref.read(myPageViewModelProvider.notifier).togglePushNotification();
-                    },
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.black,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Color(0xffD2D2D2),
-                    trackOutlineColor: WidgetStatePropertyAll(Colors.transparent)),
+                Text("Push 알림", style: TextStyle(fontSize: 16 * su)),
+                FlutterSwitch(
+                  value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
+                  onToggle: (value) async {
+                    final notifier = ref.read(myPageViewModelProvider.notifier);
+                    notifier.state = notifier.state?.copyWith(isPushNotificationEnabled: value);
+
+                    await notifier.savePushNotificationState(value);
+
+                    if (value) {
+                      await notifier.handleFcmToken();
+                    } else {
+                      await notifier.deleteFcmToken();
+                    }
+                  },
+                  activeColor: Colors.black,
+                  inactiveColor: Color(0xffD2D2D2),
+                  activeToggleColor: Colors.white,
+                  inactiveToggleColor: Colors.white,
+                  width: 55.0 * su, // 반응형 크기 적용
+                  height: 25.0 * su,
+                  toggleSize: 20.0 * su,
+                  borderRadius: 20.0 * su,
+                  padding: 2.0 * su,
+                  activeText: "ON",
+                  inactiveText: "OFF",
+                  showOnOff: false,
+                )
               ],
             ),
-            Divider(),
+            SizedBox(height: 22.5 * su,),
+            Divider(height: 1 * su),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("계정 설정"),
-              trailing: Icon(Icons.arrow_forward_ios),
+              title: Text("계정 설정", style: TextStyle(fontSize: 16 * su)),
+              trailing: Icon(Icons.arrow_forward_ios, size: 16 * su),
               onTap: () {
                 context.go('/main/myPage/myinfo/account_settings/account');
               },
             ),
-            Divider(),
+            Divider(height: 1 * su),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("문의하기"),
-              trailing: Icon(Icons.arrow_forward_ios),
+              title: Text("문의하기", style: TextStyle(fontSize: 16 * su)),
+              trailing: Icon(Icons.arrow_forward_ios, size: 16 * su),
               onTap: () async {
                 const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
 
@@ -212,19 +228,17 @@ class MyPageScreen extends ConsumerWidget {
                 }
               },
             ),
-            Divider(),
+            Divider(height: 1 * su),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("버전 정보"),
-              trailing: Icon(Icons.arrow_forward_ios),
+              title: Text("버전 정보", style: TextStyle(fontSize: 16 * su)),
+              trailing: Icon(Icons.arrow_forward_ios, size: 16 * su),
               onTap: () {
                 context.go('/main/myPage/version/version_info');
               },
             ),
-            Divider(),
-            SizedBox(
-              height: 50,
-            )
+            Divider(height: 1 * su),
+            SizedBox(height: 50 * su),
           ],
         ),
       ),

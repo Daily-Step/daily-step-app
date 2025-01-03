@@ -11,10 +11,12 @@ import '../../../viewmodel/my_info_viewmodel.dart';
 class MyInfoScreen extends ConsumerWidget {
   const MyInfoScreen({Key? key}) : super(key: key);
 
-  Future<void> _pickImage(BuildContext context) async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<void> _pickImage(BuildContext context, WidgetRef ref) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      // TODO: Picked 이미지 파일을 프로필로 설정하는 로직 추가
+      ref.read(myInfoViewModelProvider.notifier).uploadProfileImage(pickedFile);
     }
   }
 
@@ -49,16 +51,18 @@ class MyInfoScreen extends ConsumerWidget {
                         CircleAvatar(
                           radius: 64,
                           backgroundColor: const Color(0xff2257FF),
-                          child: const Text(
-                            '🥰',
-                            style: TextStyle(fontSize: 45),
-                          ),
+                          backgroundImage: user.profileImageUrl.isEmpty
+                              ? null
+                              : NetworkImage(user.profileImageUrl),
+                          child: user.profileImageUrl.isEmpty
+                              ? const Text('🥰', style: TextStyle(fontSize: 45))
+                              : null,
                         ),
                         Positioned(
                           right: 0,
                           bottom: 0,
                           child: GestureDetector(
-                            onTap: () => _pickImage(context),
+                            onTap: () => _pickImage(context, ref),
                             child: const CircleAvatar(
                               radius: 16,
                               backgroundColor: Colors.black,

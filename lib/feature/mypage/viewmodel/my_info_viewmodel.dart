@@ -1,7 +1,11 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:dailystep/data/api/api_client.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
 import '../action/mypage_action.dart';
@@ -87,6 +91,87 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
       final updatedUser = currentState.user.copyWith(jobYearId: newJobYearId);
       state = MyPageState.loaded(user: updatedUser);
     }
+  }
+
+  Future<void> uploadProfileImage(XFile image) async {
+    state = MyPageState.loading();
+    print('State set to loading in uploadProfileImage');
+
+    try {
+      final token = await _secureStorageService.getAccessToken();
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final fileSizeInBytes = await image.length();
+      final maxFileSizeInBytes = 4.99 * 1024 * 1024; // 4.99MB in bytes
+
+      File compressedFile;
+      if (fileSizeInBytes > maxFileSizeInBytes) {
+        compressedFile = await _compressImage(image);
+      } else {
+        compressedFile = File(image.path);
+      }
+
+      final formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(compressedFile.path),
+      });
+
+      final response = await _apiClient.post(
+        'member/profile/img',
+        data: formData,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        final imageUrl = response.data['data']; // URL 반환
+
+        // 상태가 MyPageStateLoaded인지 확인
+        if (response.statusCode == 200) {
+          final imageUrl = response.data['data']; // URL 반환
+
+          if (state is MyPageStateLoaded) {
+            final currentState = state as MyPageStateLoaded;
+            final updatedUser = currentState.user.copyWith(profileImageUrl: imageUrl);
+            state = MyPageState.loaded(user: updatedUser);
+            print('Profile image updated. State updated to loaded with user: $updatedUser');
+          } else {
+            // 기본 데이터를 사용해 loaded 상태로 설정
+            await fetchUserData();
+            if (state is MyPageStateLoaded) {
+              final currentState = state as MyPageStateLoaded;
+              final updatedUser = currentState.user.copyWith(profileImageUrl: imageUrl);
+
+              state = MyPageState.loaded(user: updatedUser);
+              print('State updated to loaded after fetch with updated user: $updatedUser');
+            }
+          }
+        }
+      }else {
+        state = MyPageState.error(message: 'Image upload failed: ${response.statusCode}');
+      }
+    } catch (e) {
+      state = MyPageState.error(message: 'Image upload error: $e');
+    }
+  }
+
+  Future<File> _compressImage(XFile image) async {
+    final result = await FlutterImageCompress.compressWithFile(
+      image.path,
+      minWidth: 800,
+      minHeight: 800,
+      quality: 80,
+    );
+
+    if (result == null) {
+      throw Exception('Image compression failed');
+    }
+
+    return File(image.path)
+      ..writeAsBytesSync(result);
   }
 }
 
