@@ -282,7 +282,7 @@ class ChallengesState {
       initialChallengeList: initialChallengeList != null
           ? List<ChallengeModel>.from(
           initialChallengeList.map((challenge) => challenge.copyWith()))
-          : this.challengeList,
+          : this.initialChallengeList,
       challengeList: challengeList != null
           ? List<ChallengeModel>.from(
               challengeList.map((challenge) => challenge.copyWith()))

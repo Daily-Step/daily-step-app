@@ -120,11 +120,10 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
         itemCount: 35,
         itemBuilder: (context, index) {
           final date = firstDayOfCalendar.add(Duration(days: index));
-          final isSelected = date.isSameDate(widget.selectedDate);
-          final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange) &&
-              date.isBefore(DateTime.now());
+          final isSelected = date.isSameDate(widget.selectedDate) && date.isSameMonth(widget.firstDateOfRange);
+          final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
           final isSuccess = widget.successDates
-              .any((successDate) => successDate.isSameDate(date));
+              .any((successDate) => successDate.isSameDate(date)) && date.isSameMonth(widget.firstDateOfRange);
 
           return CalendarDayContainer(
               isSelected: isSelected,
