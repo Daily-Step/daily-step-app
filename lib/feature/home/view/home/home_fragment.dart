@@ -42,8 +42,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     Row(children: [
                       Text(
                         data.selectedDate.formattedMonth,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
+                        style: boldTextStyle.copyWith(fontSize: 20),
                       ),
                     ]),
                     Spacer(),

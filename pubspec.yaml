@@ -59,3 +59,11 @@ flutter:
     - assets/images/
     - assets/splash/
     - assets/auth/
+  fonts:
+    - family: Suit
+      fonts:
+        - asset: assets/fonts/SUIT-Medium.ttf
+        - asset: assets/fonts/SUIT-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/SUIT-Bold.ttf
+          weight: 700

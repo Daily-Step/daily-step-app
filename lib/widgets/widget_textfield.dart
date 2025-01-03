@@ -31,7 +31,7 @@ class WTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = isEnable ? Colors.grey.shade300 : Colors.red;
+    final newBorderColor = isEnable ? borderColor : Colors.red;
 
     return Padding(
       padding: globalMargin,
@@ -47,7 +47,7 @@ class WTextField extends StatelessWidget {
             decoration: InputDecoration(
               border: isBox
                   ? OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor),
+                      borderSide: BorderSide(color: newBorderColor),
                       borderRadius: BorderRadius.circular(10.0),
                     )
                   : null,
@@ -57,22 +57,22 @@ class WTextField extends StatelessWidget {
               // 배경색 활성화
               enabledBorder: isBox
                   ? OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor),
+                      borderSide: BorderSide(color: newBorderColor),
                       borderRadius: BorderRadius.circular(10.0),
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: borderColor,
+                        color: newBorderColor,
                       ),
                     ),
               focusedBorder: isBox
                   ? OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor),
+                      borderSide: BorderSide(color: newBorderColor),
                       borderRadius: BorderRadius.circular(10.0),
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: borderColor,
+                        color: newBorderColor,
                       ),
                     ),
               hintText: hintText,

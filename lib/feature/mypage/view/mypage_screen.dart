@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/secure_storage/secure_storage_provider.dart';
+import '../../../widgets/widget_constant.dart';
 import '../viewmodel/mypage_viewmodel.dart';
 
 class MyPageScreen extends ConsumerWidget {
@@ -14,7 +15,8 @@ class MyPageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(myPageViewModelProvider);
 
-    final secureStorage = ref.watch(secureStorageServiceProvider).getAccessToken();
+    final secureStorage =
+        ref.watch(secureStorageServiceProvider).getAccessToken();
 
     // 비동기적으로 SecureStorage에서 데이터 읽기
     Future<void> readAndLog() async {
@@ -29,21 +31,26 @@ class MyPageScreen extends ConsumerWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text("마이페이지"),
+          backgroundColor: Colors.white,
         ),
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("마이페이지")),
+      appBar: AppBar(
+        title: Text("마이페이지"),
+        backgroundColor: Colors.white,
+      ),
       body: Container(
-        color: Color(0xffD8D8D8),
+        color: backgroundColor,
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
                 color: Colors.white, // 배경색 설정
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(16)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.2), // 그림자 색상 설정
@@ -65,7 +72,8 @@ class MyPageScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 '${user.nickname}님의 챌린지',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),
                               TextButton(
@@ -73,15 +81,19 @@ class MyPageScreen extends ConsumerWidget {
                                   context.go('/main/myPage/myinfo');
                                 },
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   backgroundColor: Color(0xffF8F8F8),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
-                                child: const Text(
-                                  '내 정보 수정',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Color(0xff555555)),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text(
+                                    '내 정보 수정',
+                                    style: contentTextStyle,
+                                  ),
                                 ),
                               ),
                             ],
@@ -141,7 +153,10 @@ class MyPageScreen extends ConsumerWidget {
                   SizedBox(height: 4),
                   Text(
                     (challenge["count"] as int).toString(),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -173,35 +188,45 @@ class MyPageScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Push 알림"),
+                Text(
+                  "Push 알림",
+                  style: menuTextStyle,
+                ),
                 Switch(
-                    value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
+                    value: ref
+                            .watch(myPageViewModelProvider)
+                            ?.isPushNotificationEnabled ??
+                        false,
                     onChanged: (value) {
-                      ref.read(myPageViewModelProvider.notifier).togglePushNotification();
+                      ref
+                          .read(myPageViewModelProvider.notifier)
+                          .togglePushNotification();
                     },
                     activeColor: Colors.white,
                     activeTrackColor: Colors.black,
                     inactiveThumbColor: Colors.white,
                     inactiveTrackColor: Color(0xffD2D2D2),
-                    trackOutlineColor: WidgetStatePropertyAll(Colors.transparent)),
+                    trackOutlineColor:
+                        WidgetStatePropertyAll(Colors.transparent)),
               ],
             ),
-            Divider(),
+            Divider(color: borderColor),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("계정 설정"),
+              title: Text("계정 설정", style: menuTextStyle),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 context.go('/main/myPage/myinfo/account_settings/account');
               },
             ),
-            Divider(),
+            Divider(color: borderColor),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("문의하기"),
+              title: Text("문의하기", style: menuTextStyle),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () async {
-                const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
+                const url =
+                    'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
 
                 final Uri uri = Uri.parse(url);
 
@@ -212,16 +237,16 @@ class MyPageScreen extends ConsumerWidget {
                 }
               },
             ),
-            Divider(),
+            Divider(color: borderColor),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text("버전 정보"),
+              title: Text("버전 정보", style: menuTextStyle),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 context.go('/main/myPage/version/version_info');
               },
             ),
-            Divider(),
+            Divider(color: borderColor),
             SizedBox(
               height: 50,
             )
