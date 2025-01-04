@@ -1,5 +1,6 @@
 import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -31,7 +32,7 @@ class MyPageScreen extends ConsumerWidget {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("마이페이지", style: TextStyle(fontSize: 20 * su)),
+          title: Text("마이페이지", style: WAppFontSize.titleXL),
         ),
         body: Center(child: CircularProgressIndicator()),
       );
@@ -42,12 +43,12 @@ class MyPageScreen extends ConsumerWidget {
         centerTitle: true,
         title: Text(
           "마이페이지",
-          style: TextStyle(fontSize: 20 * su),
+          style: WAppFontSize.titleXL,
         ),
         backgroundColor: Colors.white,
       ),
       body: Container(
-        color: Color(0xffD8D8D8),
+        color: WAppColors.gray02,
         child: Column(
           children: [
             Container(
@@ -71,20 +72,28 @@ class MyPageScreen extends ConsumerWidget {
                                 style: TextStyle(fontSize: 20 * su, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4 * su),
-                              TextButton(
-                                onPressed: () {
-                                  context.go('/main/myPage/myinfo');
-                                },
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 8 * su, vertical: 4 * su),
-                                  backgroundColor: Color(0xffF8F8F8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16 * su),
+                              Container(
+                                width: 95 * su,
+                                height: 30 * su,
+                                child: TextButton(
+                                  onPressed: () {
+                                    context.go('/main/myPage/myinfo');
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(horizontal: 8 * su, vertical: 4 * su),
+                                    backgroundColor: WAppColors.gray02,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16 * su),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  '내 정보 수정',
-                                  style: TextStyle(fontSize: 16 * su, fontWeight: FontWeight.normal, color: Color(0xff555555)),
+                                  child: Text(
+                                    '내 정보 수정',
+                                    style: TextStyle(
+                                      fontSize: 13 * su,
+                                      fontWeight: WAppTextStyle.regular,
+                                      color: WAppColors.gray07,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -130,18 +139,18 @@ class MyPageScreen extends ConsumerWidget {
             color: Colors.black,
             elevation: 2,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0 * su),
+              padding: EdgeInsets.symmetric(vertical: 16.0 * su),
               child: Column(
                 children: [
                   Text(
                     challenge["title"] as String,
-                    style: TextStyle(fontSize: 13 * su, color: Colors.white),
+                    style: TextStyle(fontSize: 13 * su, color: WAppColors.gray03),
                     softWrap: false,
                   ),
-                  SizedBox(height: 4 * su),
+                  SizedBox(height: 8 * su),
                   Text(
                     (challenge["count"] as int).toString(),
-                    style: TextStyle(fontSize: 24 * su, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontSize: 24 * su, fontWeight: WAppTextStyle.extraBold, color: WAppColors.white),
                   ),
                 ],
               ),
@@ -165,9 +174,9 @@ class MyPageScreen extends ConsumerWidget {
           children: [
             Text(
               "앱 설정",
-              style: TextStyle(fontSize: 15 * su, fontWeight: FontWeight.w300),
+              style: TextStyle(fontSize: 15 * su, fontWeight: FontWeight.w300, color: WAppColors.gray05),
             ),
-            SizedBox(height: 46.5 * su),
+            SizedBox(height: 35 * su),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -190,8 +199,9 @@ class MyPageScreen extends ConsumerWidget {
                   inactiveColor: Color(0xffD2D2D2),
                   activeToggleColor: Colors.white,
                   inactiveToggleColor: Colors.white,
-                  width: 55.0 * su, // 반응형 크기 적용
-                  height: 25.0 * su,
+                  width: 50.0 * su,
+                  // 반응형 크기 적용
+                  height: 24.0 * su,
                   toggleSize: 20.0 * su,
                   borderRadius: 20.0 * su,
                   padding: 2.0 * su,
@@ -201,7 +211,9 @@ class MyPageScreen extends ConsumerWidget {
                 )
               ],
             ),
-            SizedBox(height: 22.5 * su,),
+            SizedBox(
+              height: 19.5 * su,
+            ),
             Divider(height: 1 * su),
             ListTile(
               contentPadding: EdgeInsets.zero,

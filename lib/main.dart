@@ -12,7 +12,7 @@ import 'data/api/api_client.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SizeUtil().setSizeUnitSafe(); // 초기화
+  SizeUtil().setSizeUnit();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
 

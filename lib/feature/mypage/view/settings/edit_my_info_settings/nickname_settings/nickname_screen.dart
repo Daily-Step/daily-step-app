@@ -1,3 +1,4 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/nickname_settings/nickname_provider.dart';
 import 'package:dailystep/widgets/widget_buttons.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class NickNameScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('닉네임', style: TextStyle(fontSize: 25)),
+        title: Text('닉네임', style: WAppFontSize.titleXL),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -61,18 +62,20 @@ class NickNameScreen extends ConsumerWidget {
               nickNameNotifier.updateNickName(value);
             },
             isEnable: nickNameState.isValid || nickNameState.nickName.isEmpty,
-            suffixButton: WRoundButton(
-              isEnabled: nickNameState.isValid,
-              onPressed: () {
-                // 중복 확인 로직 추가
-                ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
-              },
-              text: '중복확인',
+            suffixButton: Container(
+              child: WRoundButton(
+                isEnabled: nickNameState.isValid,
+                onPressed: () {
+                  // 중복 확인 로직 추가
+                  ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
+                },
+                text: '중복확인',
+              ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8 * su),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: EdgeInsets.only(left: 16.0 * su),
             child: Text(
               nickNameState.validationMessage,
               style: TextStyle(color: nickNameState.validationColor),

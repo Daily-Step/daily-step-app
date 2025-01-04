@@ -1,7 +1,9 @@
 import 'package:dailystep/widgets/widget_height_and_width.dart';
 import 'package:flutter/material.dart';
 
-class AppColor {
+import '../common/util/size_util.dart';
+
+class WAppColors {
   /// 7DF6FF
   static const Color mPrimary = Color(0xFF7DF6FF);
 
@@ -39,7 +41,7 @@ class AppColor {
   static const Color white = Color(0xFFFFFFFF);
 }
 
-class AppTextStyle {
+class WAppTextStyle {
   /// Regular (400) 굵기
   static const FontWeight regular = FontWeight.w400;
 
@@ -51,6 +53,58 @@ class AppTextStyle {
 
   /// Bold (700) 굵기
   static const FontWeight bold = FontWeight.w700;
+
+  /// ExtraBold (800) 굵기
+  static const FontWeight extraBold = FontWeight.w800;
+}
+
+class WAppFontSize {
+  /// Title XXL (Bold, Size 32)
+  static TextStyle titleXXL = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 32 * su,
+    height: 1.5 * su,
+  );
+
+  /// Title XL (Bold, Size 25)
+  static TextStyle titleXL = TextStyle(
+    fontWeight: WAppTextStyle.bold,
+    fontSize: 25 * su,
+    height: 1.5 * su,
+  );
+
+  /// Title L (Bold, Size 21)
+  static TextStyle titleL = TextStyle(
+    fontWeight: WAppTextStyle.bold,
+    fontSize: 21 * su,
+    height: 1.5 * su,
+  );
+
+  /// Title M (Bold, Size 19)
+  static TextStyle titleM = TextStyle(
+    fontWeight: WAppTextStyle.bold,
+    fontSize: 19 * su,
+    height: 1.5 * su,
+  );
+
+  /// Title S (Bold, Size 17)
+  static TextStyle titleS = TextStyle(
+    fontWeight: WAppTextStyle.bold,
+    fontSize: 17 * su,
+    height: 1.5 * su,
+  );
+
+  static TextStyle bodyL1 = TextStyle(
+    fontWeight: WAppTextStyle.semiBold,
+    fontSize: 19 * su,
+    height: 1.3 * su,
+  );
+
+  static TextStyle values = TextStyle(
+    fontWeight: WAppTextStyle.regular,
+    fontSize: 15 * su,
+    height: 1.3 * su,
+  );
 }
 
 const spacer = Spacer();

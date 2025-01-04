@@ -6,25 +6,33 @@ class SizeUtil {
 
   SizeUtil._internal(); // 프라이빗 생성자
 
-  double su = 1;
+  double su = 1; // 단위 크기
 
-  void setSizeUnitSafe() {
-    const int designSize = 360;
-
+  void setSizeUnit() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      su = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.width /
-          WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio /
-          designSize;
+      final size = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+      final pixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
 
-      if (su == 0) {
-        su = 1;
-      } else if (su >= 1.8) {
-        su = 1.2;
-      }
+      // 화면 크기 계산
+      final screenWidth = size.width / pixelRatio; // dp 단위의 화면 너비
+      final screenHeight = size.height / pixelRatio; // dp 단위의 화면 높이
 
-      debugPrint("size unit is $su");
+      // 디자인 기준 (360x640)
+      const designWidth = 382.0;
+      const designHeight = 850.0;
+
+      // 가로, 세로 비율 계산
+      final widthUnit = screenWidth / designWidth;
+      final heightUnit = screenHeight / designHeight;
+
+      // 최소값으로 su 계산
+      su = widthUnit < heightUnit ? widthUnit : heightUnit;
+
+      debugPrint(
+          "SizeUnit - su: $su, widthUnit: $widthUnit, heightUnit: $heightUnit, screenWidth: $screenWidth, screenHeight: $screenHeight");
     });
   }
 }
 
+// 전역적으로 접근 가능한 `su` 값
 double get su => SizeUtil().su;
