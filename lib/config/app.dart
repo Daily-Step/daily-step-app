@@ -46,7 +46,8 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
           scaffoldBackgroundColor: backgroundColor,
           appBarTheme: AppBarTheme(
             backgroundColor: backgroundColor,
-          )
+          ),
+          fontFamily: 'Suit',
         ),
         routerConfig: _router(isLoggedIn),
       ),

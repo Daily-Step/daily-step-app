@@ -41,7 +41,7 @@ class ChallengeItem extends StatelessWidget {
                   fontSize: 14,
                   color: Color(int.parse(task.color)),
                 ),
-                title: Text(task.title),
+                title: Text(task.title, style: contentTextStyle.copyWith(color: Colors.black),),
                 subtitle: Text(
                   '${task.startDateTime.formattedDate} ~ | ${task.durationInWeeks}주 챌린지',
                   style: subTextStyle,

@@ -81,7 +81,6 @@ class WWeekCalendar extends ConsumerWidget {
                   final date = weekDays[index];
                   final isSelected = date.isSameDate(data.selectedDate);
                   final isCurrentPeriod =
-                      date.isSameMonth(data.firstDateOfWeek) &&
                           date.isBefore(DateTime.now());
                   ;
                   final isSuccess = successDates

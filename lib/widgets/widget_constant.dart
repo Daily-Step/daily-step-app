@@ -137,11 +137,12 @@ const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
 var globalBorderRadius = BorderRadius.circular(10);
 
 /// 텍스트 스타일
-var subTextStyle = TextStyle(fontSize: 12 ,color: Colors.grey.shade500);
+var subTextStyle = TextStyle(fontSize: 14 ,color: Colors.grey.shade500);
 var labelTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
 var hintTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade400);
 var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade600);
-var boldTextStyle = TextStyle(fontSize: detailDataFontSize ,fontWeight: FontWeight.bold);
+var menuTextStyle = TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold);
+var boldTextStyle = TextStyle(fontSize: detailDataFontSize ,fontWeight: FontWeight.bold, color:blackColor );
 
 /// 색상
 var blackColor = Color(0xFF000000);
@@ -150,6 +151,7 @@ var subTextColor = Color(0xFF8E8E8E);
 var primaryColor = Color(0xFF2F41F2);
 var backgroundColor = Color(0xFFF8F8F8);
 var bgGreyColor = Color(0xFFE0E0E0);
+var borderColor =  Colors.grey.shade300;
 
 
 /// 그라디언트

@@ -331,23 +331,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
 }
 
 Widget _textWithSubText(String text, String subText) {
-  return RichText(
-    text: TextSpan(
-        text: text,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: detailDataFontSize,
-          color: Colors.black,
-        ),
-        children: [
-          TextSpan(
-            text: subText,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: subFontSize,
-              color: subTextColor,
-            ),
-          )
-        ]),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Text(text, style: boldTextStyle,),
+      Text(subText, style: boldTextStyle.copyWith(fontSize: 14, color:subTextColor),)
+    ],
   );
 }

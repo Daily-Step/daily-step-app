@@ -27,17 +27,24 @@ class WProgressIndicator extends StatelessWidget {
         height: width,
         width: height,
         child: CircularProgressIndicator(
-          strokeCap:StrokeCap.round,
+          strokeCap: StrokeCap.round,
           value: percentage / 100,
           strokeWidth: strokeWidth,
           backgroundColor: Colors.grey[200],
           valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
-      Text(
-        '${percentage.toInt()}${subString??''}',
-        style: TextStyle(
-            fontSize: fontSize, fontWeight: FontWeight.bold, color: color),
+      RichText(
+        text: TextSpan(
+          text: '${percentage.toInt()}',
+          style: TextStyle(
+              fontSize: fontSize, fontWeight: FontWeight.bold, color: color),
+          children:[TextSpan(
+            text: '${subString ?? ''}',
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color)
+          )]
+        ),
       ),
     ]);
   }

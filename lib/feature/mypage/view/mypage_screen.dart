@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/secure_storage/secure_storage_provider.dart';
+import '../../../widgets/widget_constant.dart';
 import '../viewmodel/mypage_viewmodel.dart';
 
 class MyPageScreen extends ConsumerWidget {
@@ -17,7 +18,8 @@ class MyPageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(myPageViewModelProvider);
 
-    final secureStorage = ref.watch(secureStorageServiceProvider).getAccessToken();
+    final secureStorage =
+        ref.watch(secureStorageServiceProvider).getAccessToken();
 
     // 비동기적으로 SecureStorage에서 데이터 읽기
     Future<void> readAndLog() async {
@@ -33,6 +35,7 @@ class MyPageScreen extends ConsumerWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text("마이페이지", style: WAppFontSize.titleXL),
+          backgroundColor: Colors.white,
         ),
         body: Center(child: CircularProgressIndicator()),
       );
@@ -229,7 +232,8 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("문의하기", style: TextStyle(fontSize: 16 * su)),
               trailing: Icon(Icons.arrow_forward_ios, size: 16 * su),
               onTap: () async {
-                const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
+                const url =
+                    'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
 
                 final Uri uri = Uri.parse(url);
 
