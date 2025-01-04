@@ -1,6 +1,8 @@
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
+import '../common/util/size_util.dart';
+
 class WRoundButton extends StatelessWidget {
   final bool isEnabled;
   final VoidCallback onPressed;
@@ -11,8 +13,8 @@ class WRoundButton extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: 20,
-      width: 100,
+      height: 18 * su,
+      width: 83 * su,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
@@ -30,7 +32,7 @@ class WRoundButton extends StatelessWidget {
               text,
               style: TextStyle(
                 color: isEnabled ? Colors.black : Colors.grey.shade300,
-                fontSize: 14,
+                fontSize: 14 * su,
                 fontWeight: FontWeight.w500,
               ),
             ),

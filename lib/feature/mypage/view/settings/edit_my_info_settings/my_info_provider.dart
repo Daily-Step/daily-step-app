@@ -42,3 +42,4 @@ void updateBirthday(WidgetRef ref, DateTime date) {
 void updateGender(WidgetRef ref, String gender) {
   ref.read(genderProvider.notifier).state = gender;
 }
+

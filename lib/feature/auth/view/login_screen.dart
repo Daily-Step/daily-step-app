@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../common/util/size_util.dart';
 import '../../../config/secure_storage/secure_storage_provider.dart';
 import '../viewmodel/login_viewmodel.dart';
 
@@ -73,7 +74,7 @@ class LoginScreen extends ConsumerWidget {
                           backgroundColor: const Color(0xFFFEE500),
                           minimumSize: const Size(200, 50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(16 * su),
                           ),
                         ),
                         child: Row(

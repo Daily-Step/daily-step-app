@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_provider.dart';
 
+import '../../../../../../common/util/size_util.dart';
 import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../sign_up/view/job_dummies.dart';
@@ -59,7 +60,7 @@ class JobScreen extends ConsumerWidget {
                           backgroundColor: isSelected ? Colors.black : Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(16 * su),
                             side: BorderSide(
                               color: isSelected ? Colors.black : Colors.grey[300]!,
                             ),

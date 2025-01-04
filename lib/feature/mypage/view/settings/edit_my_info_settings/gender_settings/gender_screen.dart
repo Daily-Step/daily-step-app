@@ -1,3 +1,4 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -69,7 +70,7 @@ class GenderScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.black : Colors.white, // 선택된 버튼 색
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(16 * su),
           border: Border.all(
             color: isSelected ? Colors.black : Colors.grey.shade300,
           ),

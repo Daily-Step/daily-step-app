@@ -1,5 +1,7 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/feature/mypage/model/mypage_state.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,10 +13,12 @@ import '../../../viewmodel/my_info_viewmodel.dart';
 class MyInfoScreen extends ConsumerWidget {
   const MyInfoScreen({Key? key}) : super(key: key);
 
-  Future<void> _pickImage(BuildContext context) async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<void> _pickImage(BuildContext context, WidgetRef ref) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      // TODO: Picked 이미지 파일을 프로필로 설정하는 로직 추가
+      ref.read(myInfoViewModelProvider.notifier).uploadProfileImage(pickedFile);
     }
   }
 
@@ -30,7 +34,7 @@ class MyInfoScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('내 정보 수정'),
+        title: Text('내 정보 수정', style: WAppFontSize.titleXL,),
         centerTitle: true,
       ),
       body: userState.when(
@@ -39,7 +43,7 @@ class MyInfoScreen extends ConsumerWidget {
         loaded: (user) => Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0 * su),
               child: Column(
                 children: [
                   // 프로필 이미지
@@ -49,38 +53,39 @@ class MyInfoScreen extends ConsumerWidget {
                         CircleAvatar(
                           radius: 64,
                           backgroundColor: const Color(0xff2257FF),
-                          child: const Text(
-                            '🥰',
-                            style: TextStyle(fontSize: 45),
-                          ),
+                          backgroundImage: user.profileImageUrl.isEmpty
+                              ? null
+                              : NetworkImage(user.profileImageUrl),
+                          child: user.profileImageUrl.isEmpty
+                              ? Text('🥰', style: TextStyle(fontSize: 45 * su))
+                              : null,
                         ),
                         Positioned(
                           right: 0,
                           bottom: 0,
                           child: GestureDetector(
-                            onTap: () => _pickImage(context),
-                            child: const CircleAvatar(
-                              radius: 16,
+                            onTap: () => _pickImage(context, ref),
+                            child: CircleAvatar(
+                              radius: 16 * su,
                               backgroundColor: Colors.black,
-                              child: Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                              child: Icon(Icons.camera_alt, color: Colors.white, size: 16 * su),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20 * su),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '닉네임',
-                        style: TextStyle(fontSize: 19),
+                      Text(
+                        '닉네임', style: WAppFontSize.bodyL1,
                       ),
                       Row(
                         children: [
-                          Text(user.nickname),
+                          Text(user.nickname, style: WAppFontSize.values),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
@@ -91,14 +96,14 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40 * su),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         '생년월일',
-                        style: TextStyle(fontSize: 19),
+                        style: WAppFontSize.bodyL1,
                       ),
                       Row(
                         children: [
@@ -113,19 +118,19 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40 * su),
 
                   // 성별 선택
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         '성별',
-                        style: TextStyle(fontSize: 19),
+                        style: WAppFontSize.bodyL1,
                       ),
                       Row(
                         children: [
-                          Text(user.translatedGender),
+                          Text(user.translatedGender, style: WAppFontSize.values),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/gender');
@@ -136,19 +141,19 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40 * su),
 
                   // 직무 선택
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         '직무',
-                        style: TextStyle(fontSize: 19),
+                        style: WAppFontSize.bodyL1,
                       ),
                       Row(
                         children: [
-                          Text(user.translatedJob),
+                          Text(user.translatedJob, style: WAppFontSize.values),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/job');
@@ -159,19 +164,19 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40 * su),
 
                   // 연차 선택
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         '연차',
-                        style: TextStyle(fontSize: 19),
+                        style: WAppFontSize.bodyL1,
                       ),
                       Row(
                         children: [
-                          Text(user.translatedJobTenure),
+                          Text(user.translatedJobTenure, style: WAppFontSize.values),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/jobTenure');
@@ -182,7 +187,7 @@ class MyInfoScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10 * su),
                 ],
               ),
             ),
