@@ -97,18 +97,21 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       } else {
         await _challengeApi.deleteAchieveChallenge(action.id, currentState.selectedDate.apiFormattedDate);
       }
-      final newChallengeList = await _handleGetChallenge(DateTime.now());
+      final newInitChallengeList = await _handleGetChallenge(DateTime.now());
+      final newChallengeList = await _setChallengeList(challenges: newInitChallengeList, selectedDate: currentState.selectedDate);
       state =
-          AsyncValue.data(currentState.copyWith(challengeList: newChallengeList));
+          AsyncValue.data(currentState.copyWith(initialChallengeList: newInitChallengeList, challengeList: newChallengeList));
     });
   }
 
   void _handleRemoveChallenge(DeleteChallengeAction action) {
     state.whenData((currentState) async {
       await _challengeApi.deleteChallenge(action.id);
-      final newChallengeList = await _handleGetChallenge(DateTime.now());
+      final newInitChallengeList = await _handleGetChallenge(DateTime.now());
+      final newChallengeList = await _setChallengeList(challenges: newInitChallengeList, selectedDate: currentState.selectedDate);
       state = AsyncValue.data(currentState.copyWith(
-        challengeList: newChallengeList,
+        initialChallengeList: newInitChallengeList,
+        challengeList: newChallengeList
       ));
     });
   }
