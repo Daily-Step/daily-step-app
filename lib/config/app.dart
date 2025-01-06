@@ -120,19 +120,19 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
             ),
             GoRoute(
               path: '/myinfo',
-              pageBuilder: (BuildContext context, GoRouterState state) =>
-                  FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
+              pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(key: state.pageKey, child: MyInfoScreen()),
             ),
             GoRoute(
-              path: '/myinfo/nickname/:nickname',
-              pageBuilder: (BuildContext context, GoRouterState state) {
-                final String nicknameId = state.pathParameters['nickname']!;
-                return FadeTransitionPage(
-                  key: state.pageKey,
-                  child: NickNameScreen(initialNickname: nicknameId,),
-                );
-              }
-            ),
+                path: '/myinfo/nickname/:nickname',
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  final String nicknameId = state.pathParameters['nickname']!;
+                  return FadeTransitionPage(
+                    key: state.pageKey,
+                    child: NickNameScreen(
+                      initialNickname: nicknameId,
+                    ),
+                  );
+                }),
             GoRoute(
               path: '/myinfo/birthday/:birthday',
               pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
@@ -168,7 +168,6 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
                 return ChallengeDetailScreen(int.parse(postId));
               },
             ),
-
             GoRoute(
               path: 'myinfo/account_settings/:account',
               pageBuilder: (BuildContext context, GoRouterState state) =>
@@ -210,7 +209,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
         ),
       ],
       redirect: (BuildContext context, GoRouterState state) {
-        return _auth.guard(state, isLoggedIn);
+        return _auth.guard(state);
       },
       refreshListenable: _auth,
       debugLogDiagnostics: true,

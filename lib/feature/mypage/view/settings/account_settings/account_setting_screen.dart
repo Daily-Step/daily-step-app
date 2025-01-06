@@ -1,11 +1,65 @@
+import 'package:dailystep/config/route/auth_redirection.dart';
+import 'package:dailystep/feature/auth/viewmodel/login_viewmodel.dart';
+import 'package:dailystep/widgets/widget_confirm_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class AccountSettingScreen extends StatelessWidget {
+class AccountSettingScreen extends ConsumerWidget  {
   const AccountSettingScreen({Key? key}) : super(key: key);
 
+  final _secureStorage = const FlutterSecureStorage();
+
+  Future<void> _deleteAccessToken() async {
+    await _secureStorage.delete(key: 'access_token');
+    print('Access Token 삭제 완료');
+  }
+
+  void handleLogout(BuildContext context, WidgetRef ref) {
+    final auth = DailyStepAuthScope.of(context); // 인스턴스 가져오기
+
+    showConfirmModal(
+      context: context,
+      content: const Text(
+        '로그아웃 하시겠습니까?',
+        style: TextStyle(fontSize: 16),
+      ),
+      confirmText: '로그아웃',
+      isCancelButton: true,
+      onClickConfirm: () async {
+        await _deleteAccessToken();
+        auth.signOut(); // 인스턴스 메서드 호출
+        context.go('/signIn');
+      },
+    );
+  }
+
+  Future<void> handleAccountDeletion(BuildContext context) async {
+    const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfrKhMPVUThBZq0jvHy8dX38WU95e0lLTYqg69l62jAl8SGIg/viewform';
+    final Uri uri = Uri.parse(url);
+
+    showConfirmModal(
+      context: context,
+      content: const Text(
+        '회원탈퇴 하시겠습니까?',
+        style: TextStyle(fontSize: 16),
+      ),
+      confirmText: '회원탈퇴',
+      isCancelButton: true,
+      onClickConfirm: () async {
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          throw 'Could not launch $url';
+        }
+      },
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -31,7 +85,10 @@ class AccountSettingScreen extends StatelessWidget {
                     '로그아웃',
                     style: TextStyle(fontSize: 16),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.keyboard_arrow_right),)
+                  IconButton(
+                    onPressed: () => handleLogout(context, ref),
+                    icon: Icon(Icons.keyboard_arrow_right),
+                  )
                 ],
               ),
               Divider(), // Row 외부에 위치
@@ -42,7 +99,10 @@ class AccountSettingScreen extends StatelessWidget {
                     '회원탈퇴',
                     style: TextStyle(fontSize: 16),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.keyboard_arrow_right),)
+                  IconButton(
+                    onPressed: () => handleAccountDeletion(context),
+                    icon: Icon(Icons.keyboard_arrow_right),
+                  )
                 ],
               ),
               Divider(), // Row 외부에 위치
