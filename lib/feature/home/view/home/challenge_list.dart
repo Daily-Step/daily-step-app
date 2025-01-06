@@ -51,7 +51,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                           context: context,
                           content: Text('이번주 목표를 모두 달성했어요'),
                           confirmText: "확인",
-                          onClickConfirm: ()=> Navigator.pop(context),
+                          onClickConfirm: (){},
                           isCancelButton: false);
                       return;
                     }
@@ -72,7 +72,8 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
   bool checkIsAchieveWeeksGoal(ChallengeModel challenge,
       List<String> successDates) {
     final int elapsedWeeks = challenge.startDateTime.calculateWeeksBetween(
-        DateTime.now());
+        DateTime.now()) + 1;
+    print(elapsedWeeks);
     final int thisWeekGoal = elapsedWeeks * challenge.weekGoalCount;
     return successDates.length >= thisWeekGoal;
   }
