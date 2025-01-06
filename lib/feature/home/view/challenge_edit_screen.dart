@@ -71,7 +71,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             challengeWeeks = data.selectedChallenge!.startDateTime
                 .calculateWeeksBetween(data.selectedChallenge!.endDateTime);
             weeklyGoal = data.selectedChallenge!.weekGoalCount;
-            selectedCategory = data.selectedChallenge!.category.id;
+            selectedCategory = data.selectedChallenge!.category.id - 1;
             selectedColor = customColors
                 .firstWhere((el) => el.code == data.selectedChallenge!.color)
                 .id;
@@ -270,7 +270,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     final newChallenge =
                     {
                       "title" : _titleController.text,
-                      "categoryId" : selectedCategory,
+                      "categoryId" : selectedCategory! + 1,
                       "color" : customColors[selectedColor!].code.toString(),
                       "content" : _noteController.text
                     };
@@ -279,13 +279,12 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     Navigator.pop(context);
                     context.push('/main/home/${widget.id}');
                   } else {
-                    print('selectedCategory:' + selectedCategory.toString());
                     final newChallenge =
                     {
                       "title" : _titleController.text,
                       "durationInWeeks" : challengeWeeks!,
                       "weeklyGoalCount" : weeklyGoal!,
-                      "categoryId" : selectedCategory,
+                      "categoryId" : selectedCategory! + 1,
                       "color" : customColors[selectedColor!].code.toString(),
                       "content" : _noteController.text
                     };
