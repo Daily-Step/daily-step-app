@@ -29,8 +29,6 @@ Future<void> main() async {
   await FirebaseApi().initNotifications();
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
   runApp(ProviderScope(child: App()));
-
-
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

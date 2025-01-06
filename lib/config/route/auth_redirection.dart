@@ -48,34 +48,26 @@ class DailyStepAuth extends ChangeNotifier {
   }
 
   Future<void> signIn(BuildContext context) async {
-    _signedIn = true;
-    notifyListeners();
+    _signedIn = true; // 로그인 상태 업데이트
+    notifyListeners(); // 상태 변경 알림
 
-    // 로그인 후 라우팅 처리
-    if (!signedUp) {
-      GoRouter.of(context).go('/signUp');
-    } else {
-      // 이미 회원가입이 완료된 경우 메인 페이지 등으로 이동
-      GoRouter.of(context).go('/main/home');
-    }
+    GoRouter.of(context).go('/main/home'); // 메인 화면 이동
   }
 
-  String? guard(GoRouterState state, bool isLoggedIn) {
+  String? guard(GoRouterState state) {
     final isLoginPage = state.matchedLocation == '/signIn' || state.matchedLocation == '/signUp';
 
-    if (isLoggedIn) {
-      // 로그인한 경우 로그인 또는 회원가입 페이지로 가는 것을 막고 홈으로 리디렉션
-      if (isLoginPage) {
-        return '/main/home';
-      }
-    }
-
-    // 로그인되지 않은 경우 로그인 페이지로 리디렉션
-    if (!isLoggedIn && !isLoginPage) {
+    // 로그인되지 않은 경우
+    if (!_signedIn && !isLoginPage) {
       return '/signIn';
     }
 
-    return null; // 리디렉션이 필요 없으면 null 반환
+    // 로그인된 상태에서 로그인 페이지로 이동 차단
+    if (_signedIn && isLoginPage) {
+      return '/main/home';
+    }
+
+    return null; // 리디렉션 필요 없음
   }
 }
 
