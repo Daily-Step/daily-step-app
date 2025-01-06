@@ -22,15 +22,10 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   @override
   Future<ChallengesState> build() async {
     DateTime today = DateTime.now();
-
-    final categoryResult = await _challengeApi.getCategories() as List;
-    List<CategoryModel> categories = categoryResult.map((el) {
-      return CategoryModel.fromJson(el as Map<String, dynamic>);
-    }).toList();
-
-    final initialChallenges = await _handleGetChallenge(today);
+    final categories = await _fetchCategories();
+    final initialChallenges = await _fetchChallenges(today);
     final List<ChallengeModel> selectedChallenges =
-        _setChallengeList(challenges: initialChallenges, selectedDate: today);
+    _filterChallenges( initialChallenges, today);
     final List<DateTime> initialSuccessList = _setSuccessList(initialChallenges);
     return ChallengesState(
       initialChallengeList: initialChallenges,
@@ -61,30 +56,38 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       _handleChangeFirstDateOfWeekAction(action);
     }
   }
-  Future<List<ChallengeModel>> _handleGetChallenge(DateTime date) async {
-    List<dynamic> challengeResult = await _challengeApi.getChallenges(date.apiFormattedDate) as List;
-    List<ChallengeModel> result = challengeResult.map((el) {
-      return ChallengeModel.fromJson(el);
+
+  Future<List<CategoryModel>> _fetchCategories() async {
+    final categoryResult = await _challengeApi.getCategories() as List;
+    return categoryResult.map((el) => CategoryModel.fromJson(el)).toList();
+  }
+
+  Future<List<ChallengeModel>> _fetchChallenges(DateTime date) async {
+    final challengeResult = await _challengeApi.getChallenges(date.apiFormattedDate) as List;
+    return challengeResult.map((el) => ChallengeModel.fromJson(el)).toList();
+  }
+
+  List<ChallengeModel> _filterChallenges(List<ChallengeModel> challenges, DateTime selectedDate) {
+    return challenges.where((challenge) {
+      final startDttm = challenge.startDateTime;
+      final endDttm = challenge.endDateTime;
+      return (selectedDate.isAfter(startDttm) && selectedDate.isBefore(endDttm)) ||
+          selectedDate.isSameDate(startDttm) ||
+          selectedDate.isSameDate(endDttm);
     }).toList();
-    return result;
   }
 
   void _handleAddChallenge(AddChallengeAction action){
     state.whenData((currentState) async {
       await _challengeApi.addChallenge(action.data);
-      final newChallengeList = await _handleGetChallenge(DateTime.now());
-      state = AsyncValue.data(
-        currentState.copyWith(challengeList: newChallengeList),
-      );
+      await _refreshState();
     });
   }
 
   void _handleUpdateChallenge(UpdateChallengeAction action) {
     state.whenData((currentState) async {
       await _challengeApi.updateChallenge(action.id,action.data);
-      final newChallengeList = await _handleGetChallenge(DateTime.now());
-      state =
-          AsyncValue.data(currentState.copyWith(challengeList: newChallengeList));
+      await _refreshState();
     });
   }
 
@@ -97,21 +100,26 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       } else {
         await _challengeApi.deleteAchieveChallenge(action.id, currentState.selectedDate.apiFormattedDate);
       }
-      final newInitChallengeList = await _handleGetChallenge(DateTime.now());
-      final newChallengeList = await _setChallengeList(challenges: newInitChallengeList, selectedDate: currentState.selectedDate);
-      state =
-          AsyncValue.data(currentState.copyWith(initialChallengeList: newInitChallengeList, challengeList: newChallengeList));
+      await _refreshState();
     });
   }
 
   void _handleRemoveChallenge(DeleteChallengeAction action) {
     state.whenData((currentState) async {
       await _challengeApi.deleteChallenge(action.id);
-      final newInitChallengeList = await _handleGetChallenge(DateTime.now());
-      final newChallengeList = await _setChallengeList(challenges: newInitChallengeList, selectedDate: currentState.selectedDate);
+      await _refreshState();
+    });
+  }
+
+  Future<void> _refreshState() async {
+    state.whenData((currentState) async {
+      final newInitialChallenges = await _fetchChallenges(DateTime.now());
+      final newFilteredChallenges =
+      _filterChallenges(newInitialChallenges, currentState.selectedDate);
+
       state = AsyncValue.data(currentState.copyWith(
-        initialChallengeList: newInitChallengeList,
-        challengeList: newChallengeList
+        initialChallengeList: newInitialChallenges,
+        challengeList: newFilteredChallenges,
       ));
     });
   }
@@ -130,8 +138,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   void _handleChangeSelectedDate(ChangeSelectedDateAction action) {
     state.whenData((currentState) {
       final challenges = List.of(currentState.initialChallengeList);
-      List<ChallengeModel> newChallengeList = _setChallengeList(
-          challenges: challenges, selectedDate: action.selectedDate);
+      List<ChallengeModel> newChallengeList = _filterChallenges(
+          challenges, action.selectedDate);
       state = AsyncValue.data(currentState.copyWith(
           selectedDate: action.selectedDate, challengeList: newChallengeList));
     });
@@ -151,8 +159,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       if (newSelectedDate.isAfter(DateTime.now())) {
         newSelectedDate = DateTime.now();
       }
-      List<ChallengeModel> newChallengeList = _setChallengeList(
-          challenges: challenges, selectedDate: newSelectedDate);
+      List<ChallengeModel> newChallengeList = _filterChallenges(
+          challenges, newSelectedDate);
       state = AsyncValue.data(currentState.copyWith(
           firstDateOfWeek: newFirstDateOfWeek.getStartOfWeek(),
           selectedDate: newSelectedDate,
@@ -166,7 +174,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     for (int i = 1; i <= 60; i++) {
       DateTime targetDate = DateTime.now().subtract(Duration(days: i));
       List<ChallengeModel> challengeList =
-          _setChallengeList(challenges: challenges, selectedDate: targetDate);
+      _filterChallenges(challenges, targetDate);
       bool allChallengesSuccess = true;
 
       for (int j = 0; j < challengeList.length; j++) {
@@ -184,20 +192,6 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       }
     }
     return successList;
-  }
-
-  List<ChallengeModel> _setChallengeList(
-      {required List<ChallengeModel> challenges,
-      required DateTime selectedDate}) {
-    return challenges.where((challenge) {
-      DateTime today = selectedDate;
-      DateTime startDttm = challenge.startDateTime;
-      DateTime endDttm = challenge.endDateTime;
-
-      return (today.isAfter(startDttm) && today.isBefore(endDttm)) ||
-          today.isSameDate(startDttm) ||
-          today.isSameDate(endDttm);
-    }).toList();
   }
 
   void _checkIsFirstAchieved(

@@ -1,8 +1,10 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/string_extension.dart';
+import 'package:dailystep/model/challenge/challenge_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../widgets/widget_confirm_modal.dart';
 import '../../action/challenge_list_action.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_item.dart';
@@ -28,8 +30,13 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               itemCount: data.challengeList.length,
               itemBuilder: (context, index) {
                 final challenge = data.challengeList[index];
-                final bool isAchieved = challenge.record?.successDates
-                    .any((date) => date.toDateTime.isSameDate(data.selectedDate)) ?? false;
+                final List<String> successDates = challenge.record
+                    ?.successDates ?? [];
+                final bool isAchieved = successDates
+                    .any((date) =>
+                    date.toDateTime.isSameDate(data.selectedDate));
+                bool isAchievedWeeksGoal = checkIsAchieveWeeksGoal(
+                    challenge, successDates);
                 return ChallengeItem(
                   task: challenge,
                   index: index,
@@ -39,10 +46,20 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                     context.push('/main/challenge/${challenge.id}');
                   },
                   onClickAchieveButton: () async {
+                    if (!isAchieved && isAchievedWeeksGoal) {
+                      showConfirmModal(
+                          context: context,
+                          content: Text('이번주 목표를 모두 달성했어요'),
+                          confirmText: "확인",
+                          onClickConfirm: ()=> Navigator.pop(context),
+                          isCancelButton: false);
+                      return;
+                    }
                     await notifier.handleAction(AchieveChallengeAction(
-                        id: challenge.id,
-                        context: context,
-                        isCancel: isAchieved));
+                      id: challenge.id,
+                      context: context,
+                      isCancel: isAchieved,
+                    ));
                   },
                   isAchieved: isAchieved,
                 );
@@ -50,5 +67,13 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
         },
         error: (Object error, StackTrace stackTrace) => SizedBox(),
         loading: () => SizedBox());
+  }
+
+  bool checkIsAchieveWeeksGoal(ChallengeModel challenge,
+      List<String> successDates) {
+    final int elapsedWeeks = challenge.startDateTime.calculateWeeksBetween(
+        DateTime.now());
+    final int thisWeekGoal = elapsedWeeks * challenge.weekGoalCount;
+    return successDates.length >= thisWeekGoal;
   }
 }
