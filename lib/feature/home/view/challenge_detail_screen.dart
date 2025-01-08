@@ -40,67 +40,38 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               )),
           actions: [
-            PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert),
-              onSelected: (String value) {
-                if (value == '수정하기') {
-                  context.go('/main/challenge/edit/${id}');
-                } else if (value == '삭제하기') {
-                  showConfirmModal(
-                    context: context,
-                    content: Column(
-                      children: [
-                        Text(
-                          '정말로 삭제하시겠어요?',
-                          style: boldTextStyle,
-                        ),
-                        height5,
-                        Text(
-                          '한번 삭제하면 복구가 힘들어요',
-                          style: subTextStyle,
-                        )
-                      ],
-                    ),
-                    confirmText: '챌린지삭제',
-                    onClickConfirm: () {
-                      notifier.handleAction(DeleteChallengeAction(id));
-                      Navigator.pop(context);
-                      showConfirmModal(
-                          context: context,
-                          content: Column(
-                            children: [
-                              Text(
-                                '챌린지가 삭제되었습니다',
-                                style: boldTextStyle,
-                              ),
-                              height5,
-                              Text(
-                                '다른 챌린지를 만들어보세요!',
-                                style: subTextStyle,
-                              )
-                            ],
-                          ),
-                          confirmText: '닫기',
-                          onClickConfirm: () {
-                            Navigator.pop(context);
-                          },
-                          isCancelButton: false);
+            selectedChallengeState.when(
+              data: (state) {
+                bool isExpired = state.selectedChallenge!.endDateTime
+                    .isBefore(DateTime.now());
+                if (isExpired) {
+                  return SizedBox();
+                } else {
+                  return PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert),
+                    onSelected: (String value) {
+                      if (value == '수정하기') {
+                        context.go('/main/challenge/edit/${id}');
+                      } else if (value == '삭제하기') {
+                        _showModal(context, notifier);
+                      }
                     },
-                    isCancelButton: true,
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem(
+                        value: '수정하기',
+                        child: Text('수정하기'),
+                      ),
+                      PopupMenuItem(
+                        value: '삭제하기',
+                        child: Text('삭제하기'),
+                      ),
+                    ],
                   );
                 }
               },
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  value: '수정하기',
-                  child: Text('수정하기'),
-                ),
-                PopupMenuItem(
-                  value: '삭제하기',
-                  child: Text('삭제하기'),
-                ),
-              ],
-            ),
+              error: (Object error, StackTrace stackTrace) => SizedBox(),
+              loading: () => SizedBox(),
+            )
           ],
         ),
         body: selectedChallengeState.when(
@@ -304,6 +275,51 @@ class ChallengeDetailScreen extends ConsumerWidget {
         ));
   }
 
+  void _showModal(BuildContext context, ChallengeViewModel notifier) {
+    showConfirmModal(
+      context: context,
+      content: Column(
+        children: [
+          Text(
+            '정말로 삭제하시겠어요?',
+            style: boldTextStyle,
+          ),
+          height5,
+          Text(
+            '한번 삭제하면 복구가 힘들어요',
+            style: subTextStyle,
+          )
+        ],
+      ),
+      confirmText: '챌린지삭제',
+      onClickConfirm: () {
+        notifier.handleAction(DeleteChallengeAction(id));
+        Navigator.pop(context);
+        showConfirmModal(
+            context: context,
+            content: Column(
+              children: [
+                Text(
+                  '챌린지가 삭제되었습니다',
+                  style: boldTextStyle,
+                ),
+                height5,
+                Text(
+                  '다른 챌린지를 만들어보세요!',
+                  style: subTextStyle,
+                )
+              ],
+            ),
+            confirmText: '닫기',
+            onClickConfirm: () {
+              Navigator.pop(context);
+            },
+            isCancelButton: false);
+      },
+      isCancelButton: true,
+    );
+  }
+
   Expanded _card(String title, Widget contents, String iconPath) {
     return Expanded(
       child: WCard(
@@ -334,8 +350,14 @@ Widget _textWithSubText(String text, String subText) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
-      Text(text, style: boldTextStyle,),
-      Text(subText, style: boldTextStyle.copyWith(fontSize: 14, color:subTextColor),)
+      Text(
+        text,
+        style: boldTextStyle,
+      ),
+      Text(
+        subText,
+        style: boldTextStyle.copyWith(fontSize: 14, color: subTextColor),
+      )
     ],
   );
 }

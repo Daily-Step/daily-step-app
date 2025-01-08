@@ -30,13 +30,14 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               itemCount: data.challengeList.length,
               itemBuilder: (context, index) {
                 final challenge = data.challengeList[index];
-                final List<String> successDates = challenge.record
-                    ?.successDates ?? [];
-                final bool isAchieved = successDates
-                    .any((date) =>
-                    date.toDateTime.isSameDate(data.selectedDate));
-                bool isAchievedWeeksGoal = checkIsAchieveWeeksGoal(
-                    challenge, successDates);
+                final List<String> successDates =
+                    challenge.record?.successDates ?? [];
+                final bool isAchieved = successDates.any(
+                    (date) => date.toDateTime.isSameDate(data.selectedDate));
+                bool isAchievedWeeksGoal =
+                    checkIsAchieveWeeksGoal(challenge, successDates);
+                final bool isExpired =
+                    challenge.endDateTime.isBefore(DateTime.now());
                 return ChallengeItem(
                   task: challenge,
                   index: index,
@@ -46,12 +47,13 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                     context.push('/main/challenge/${challenge.id}');
                   },
                   onClickAchieveButton: () async {
+                    if (isExpired) return;
                     if (!isAchieved && isAchievedWeeksGoal) {
                       showConfirmModal(
                           context: context,
                           content: Text('이번주 목표를 모두 달성했어요'),
                           confirmText: "확인",
-                          onClickConfirm: (){},
+                          onClickConfirm: () {},
                           isCancelButton: false);
                       return;
                     }
@@ -62,6 +64,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                     ));
                   },
                   isAchieved: isAchieved,
+                  isExpired: isExpired,
                 );
               });
         },
@@ -69,10 +72,10 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
         loading: () => SizedBox());
   }
 
-  bool checkIsAchieveWeeksGoal(ChallengeModel challenge,
-      List<String> successDates) {
-    final int elapsedWeeks = challenge.startDateTime.calculateWeeksBetween(
-        DateTime.now()) + 1;
+  bool checkIsAchieveWeeksGoal(
+      ChallengeModel challenge, List<String> successDates) {
+    final int elapsedWeeks =
+        challenge.startDateTime.calculateWeeksBetween(DateTime.now()) + 1;
     print(elapsedWeeks);
     final int thisWeekGoal = elapsedWeeks * challenge.weekGoalCount;
     return successDates.length >= thisWeekGoal;

@@ -40,7 +40,9 @@ extension DateTimeExtension on DateTime {
   int lastDays(){
     final today = DateTime.now();
     Duration difference = this.difference(today);
-    return difference.inDays;
+    int result = difference.inDays;
+    if(result < 0) return 0;
+    return result;
   }
 
   DateTime getStartOfWeek(){
