@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../../common/util/size_util.dart';
 import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_scroll_picker.dart';
@@ -17,11 +18,15 @@ class JobTenureScreen extends ConsumerWidget {
     final jobTenure = ref.watch(jobTenureProvider);
     final isDataEntered = ref.watch(isDataEnteredProvider);
 
+    final TextEditingController controller = TextEditingController(
+      text: jobTenure != 0 ? dummyJobTenure[jobTenure - 1].name : '',
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '연차',
-          style: TextStyle(fontSize: 25),
+          style: WAppFontSize.titleXL(),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -46,9 +51,11 @@ class JobTenureScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              controller: controller,
               readOnly: true,
+              style: WAppFontSize.values(color: WAppColors.black),
               decoration: InputDecoration(
-                hintText: jobTenure != 0 ? dummyJobTenure[jobTenure - 1].name : '선택',
+                hintText: '선택',
                 hintStyle: hintTextStyle,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.keyboard_arrow_down),
@@ -61,6 +68,7 @@ class JobTenureScreen extends ConsumerWidget {
                       onSelected: (int selectedValue) {
                         // 선택된 값을 jobTenureProvider로 설정
                         ref.read(jobTenureProvider.notifier).selectJobTenure(selectedValue + 1); // +1로 수정
+                        controller.text = dummyJobTenure[selectedValue].name;
                       },
                       itemBuilder: (context, index, isSelected) {
                         return Text(

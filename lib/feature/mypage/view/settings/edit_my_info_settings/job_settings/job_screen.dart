@@ -16,12 +16,11 @@ class JobScreen extends ConsumerWidget {
     final selectedJob = ref.watch(jobProvider);
     final isDataEntered = ref.watch(isDataEnteredProvider);
 
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '직무',
-          style: TextStyle(fontSize: 25),
+          style: WAppFontSize.titleXL(),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -44,17 +43,17 @@ class JobScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 400,
+            height: 400 * su,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.0),
+              padding: EdgeInsets.symmetric(horizontal: 14.0 * su),
               child: SingleChildScrollView(
                 child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 8 * su,
+                  runSpacing: 8 * su,
                   children: jobCategories.map((jobItem) {
                     final isSelected = selectedJob == int.parse(jobItem.id); // 선택된 직업 확인
                     return Container(
-                      height: 40,
+                      height: 40 * su,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: isSelected ? Colors.black : Colors.white,
@@ -65,7 +64,7 @@ class JobScreen extends ConsumerWidget {
                               color: isSelected ? Colors.black : Colors.grey[300]!,
                             ),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(horizontal: 16 * su),
                         ),
                         onPressed: () {
                           // 직업을 선택했을 때 jobProvider의 상태를 업데이트
@@ -73,10 +72,7 @@ class JobScreen extends ConsumerWidget {
                         },
                         child: Text(
                           jobItem.name,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : subTextColor,
-                            fontSize: 12,
-                          ),
+                          style: WAppFontSize.values(color: isSelected ? Colors.white : subTextColor),
                         ),
                       ),
                     );
@@ -85,7 +81,7 @@ class JobScreen extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8 * su),
         ],
       ),
     );

@@ -31,7 +31,7 @@ class NickNameScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('닉네임', style: WAppFontSize.titleXL),
+        title: Text('닉네임', style: WAppFontSize.titleXL()),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -58,6 +58,8 @@ class NickNameScreen extends ConsumerWidget {
           WTextField(
             controller: nickNameState.controller,
             hintText: '사용하실 닉네임을 입력하세요',
+            hintStyle: WAppFontSize.values(),
+            textStyle: WAppFontSize.values(color: WAppColors.black),
             onChanged: (value) {
               nickNameNotifier.updateNickName(value);
             },
@@ -70,6 +72,7 @@ class NickNameScreen extends ConsumerWidget {
                   ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
                 },
                 text: '중복확인',
+                textStyle: WAppFontSize.values(color: WAppColors.gray09),
               ),
             ),
           ),

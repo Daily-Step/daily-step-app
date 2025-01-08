@@ -25,9 +25,9 @@ class NickNameFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
+        Text(
           '사용하실 닉네임을 입력하세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: WAppFontSize.titleXL(),
         ),
         height30,
         Column(
@@ -39,6 +39,7 @@ class NickNameFragment extends StatelessWidget {
                   offset: controller.text.length,
                 ),
               hintText: '사용하실 닉네임을 입력하세요',
+              hintStyle: WAppFontSize.values(),
               onChanged: (text) {
                 onChanged(text);
               },
@@ -47,6 +48,7 @@ class NickNameFragment extends StatelessWidget {
                 isEnabled: !isNicknameCheckInProgress && controller.text.isNotEmpty && validation.isEmpty,
                 onPressed: onCheckNickname,
                 text: '중복확인',
+                textStyle: WAppFontSize.values(),
               ),
             ),
             Padding(

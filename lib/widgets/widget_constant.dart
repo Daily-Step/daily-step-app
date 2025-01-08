@@ -13,6 +13,9 @@ class WAppColors {
   /// 2257FF
   static const Color secondary1 = Color(0xFF2257FF);
 
+  /// 000000
+  static const Color black = Color(0xFF000000);
+
   /// 1D1D1D
   static const Color gray09 = Color(0xFF1D1D1D);
 
@@ -58,90 +61,125 @@ class WAppTextStyle {
   static const FontWeight extraBold = FontWeight.w800;
 }
 
+/// 인자값 전달받아서 해당 색상 및 weight 변경
 class WAppFontSize {
-  /// Title XXL (Bold, Size 32)
-  static TextStyle titleXXL = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 32 * su,
-    height: 1.5 * su,
-  );
+  /// Title XXL (Size 32, 기본값: Bold, 기본색: black)
+  static TextStyle titleXXL({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 32 * su,
+      height: 1.5,
+      color: color,
+    );
+  }
 
-  /// Title XL (Bold, Size 25)
-  static TextStyle titleXL = TextStyle(
-    fontWeight: WAppTextStyle.bold,
-    fontSize: 25 * su,
-    height: 1.5 * su,
-  );
+  /// Title XL (Size 25, 기본값: Bold, 기본색: black)
+  static TextStyle titleXL({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 25 * su,
+      height: 1.5,
+      color: color,
+    );
+  }
 
-  /// Title L (Bold, Size 21)
-  static TextStyle titleL = TextStyle(
-    fontWeight: WAppTextStyle.bold,
-    fontSize: 21 * su,
-    height: 1.5 * su,
-  );
+  /// Title L (Size 21, 기본값: Bold, 기본색: black)
+  static TextStyle titleL({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 21 * su,
+      height: 1.5,
+      color: color,
+    );
+  }
 
-  /// Title M (Bold, Size 19)
-  static TextStyle titleM = TextStyle(
-    fontWeight: WAppTextStyle.bold,
-    fontSize: 19 * su,
-    height: 1.5 * su,
-  );
+  /// Title M (Size 19, 기본값: Bold, 기본색: black)
+  static TextStyle titleM({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 19 * su,
+      height: 1.5,
+      color: color,
+    );
+  }
 
-  /// Title S (Bold, Size 17)
-  static TextStyle titleS = TextStyle(
-    fontWeight: WAppTextStyle.bold,
-    fontSize: 17 * su,
-    height: 1.5 * su,
-  );
+  /// Title S (Size 17, 기본값: Bold, 기본색: black)
+  static TextStyle titleS({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 17 * su,
+      height: 1.5,
+      color: color,
+    );
+  }
 
-  static TextStyle bodyL1 = TextStyle(
-    fontWeight: WAppTextStyle.semiBold,
-    fontSize: 19 * su,
-    height: 1.3 * su,
-  );
+  /// Body L1 (Size 19, 기본값: SemiBold, 기본색: black)
+  static TextStyle bodyL1({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.semiBold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 19 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
 
-  static TextStyle values = TextStyle(
-    fontWeight: WAppTextStyle.regular,
-    fontSize: 15 * su,
-    height: 1.3 * su,
-  );
+  /// label L1 (Size 17, 기본값: Bold, 기본색: gray05)
+  static TextStyle labelL1({Color color = WAppColors.gray05, FontWeight fontWeight = WAppTextStyle.bold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 17 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
+
+  /// Values (Size 15, 기본값: Regular, 기본색: gray05)
+  static TextStyle values({Color color = WAppColors.gray05, FontWeight fontWeight = WAppTextStyle.regular}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 15 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
 }
+
 
 const spacer = Spacer();
 
-const width2 = Width(2);
-const width5 = Width(5);
-const width10 = Width(10);
-const width20 = Width(20);
-const width30 = Width(30);
+var width2 = Width(2 * su);
+var width5 = Width(5 * su);
+var width10 = Width(10 * su);
+var width20 = Width(20 * su);
+var width30 = Width(30 * su);
 
-const height2 = Height(2);
-const height5 = Height(5);
-const height10 = Height(10);
-const height15 = Height(15);
-const height20 = Height(20);
-const height30 = Height(30);
-const height40 = Height(40);
-const height60 = Height(60);
-const height70 = Height(70);
-const height80 = Height(80);
+var height2 = Height(2 * su);
+var height5 = Height(5 * su);
+var height10 = Height(10 * su);
+var height15 = Height(15 * su);
+var height20 = Height(20 * su);
+var height30 = Height(30 * su);
+var height40 = Height(40 * su);
+var height60 = Height(60 * su);
+var height70 = Height(70 * su);
+var height80 = Height(80 * su);
 
-const pickerFontSize = 24.0;
-const detailDataFontSize = 18.0;
-const subFontSize = 16.0;
+var pickerFontSize = 24.0 * su;
+var detailDataFontSize = 18.0 * su;
+var subFontSize = 16.0 * su;
 
 /// 좌우 마진
-const globalMargin = EdgeInsets.symmetric(horizontal: 20.0);
+var globalMargin = EdgeInsets.symmetric(horizontal: 20.0 * su);
 
 /// 박스 border radius
-var globalBorderRadius = BorderRadius.circular(10);
+var globalBorderRadius = BorderRadius.circular(10 * su);
 
 /// 텍스트 스타일
-var subTextStyle = TextStyle(fontSize: 14 ,color: Colors.grey.shade500);
-var labelTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
-var hintTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade400);
-var contentTextStyle = TextStyle(fontSize: 16 ,color: Colors.grey.shade600);
-var menuTextStyle = TextStyle(fontSize: 16 ,fontWeight: FontWeight.bold);
+var subTextStyle = TextStyle(fontSize: 15 * su ,color: Colors.grey.shade500);
+var labelTextStyle = TextStyle(fontSize: 15 * su, fontWeight: FontWeight.w600);
+var hintTextStyle = TextStyle(fontSize: 15 * su ,color: Colors.grey.shade400);
+var contentTextStyle = TextStyle(fontSize: 15 * su ,color: Colors.grey.shade600);
+var menuTextStyle = TextStyle(fontSize: 15 * su ,fontWeight: FontWeight.bold);
 var boldTextStyle = TextStyle(fontSize: detailDataFontSize ,fontWeight: FontWeight.bold, color:blackColor );
 
 /// 색상

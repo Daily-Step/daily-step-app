@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../../common/util/size_util.dart';
 import '../../../config/route/auth_redirection.dart';
 import 'end_fragment.dart';
 import 'sex_fragment.dart';
@@ -35,12 +36,14 @@ class SignUpScreen extends ConsumerWidget {
                 onPressed: signUpViewModel.beforeStep,
               )
             : const SizedBox.shrink(),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(24),
-          child: ProgressStepper(
-            currentStep: signUpState.step,
-          ),
-        ),
+        bottom: signUpState.step != 6 // 마지막 단계에서는 ProgressStepper 숨기기
+            ? PreferredSize(
+                preferredSize: Size.fromHeight(24 * su),
+                child: ProgressStepper(
+                  currentStep: signUpState.step,
+                ),
+              )
+            : null,
       ),
       body: Stack(
         children: [
@@ -53,7 +56,7 @@ class SignUpScreen extends ConsumerWidget {
                   signUpViewModel.checkValid(),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10 * su),
               if (signUpState.step == 1)
                 NickNameFragment(
                   controller: controller,
@@ -114,7 +117,8 @@ class SignUpScreen extends ConsumerWidget {
                     print('AccessToken: $accessToken');
 
                     if (accessToken != null) {
-                      await signUpViewModel.saveUserInfo(accessToken, context);  // 데이터 서버로 전송
+                      await signUpViewModel.saveUserInfo(accessToken, context); // 데이터 서버로 전송
+                      auth.signUp(context); // /main/home 경로로 이동
                     } else {
                       print("AccessToken이 없습니다.");
                     }
@@ -129,28 +133,33 @@ class SignUpScreen extends ConsumerWidget {
 
   Widget buildCheckIcon(bool isLastPage, bool isAvailable) {
     if (isLastPage) {
-      return SvgPicture.asset(
-        'assets/logo.svg',
-        width: 80,
-        height: 80,
-        allowDrawingOutsideViewBox: true,
-        cacheColorFilter: false,
+      return Column(
+        children: [
+          SizedBox(height: 100 * su),
+          SvgPicture.asset(
+            'assets/logo.svg',
+            width: 80 * su,
+            height: 80 * su,
+            allowDrawingOutsideViewBox: true,
+            cacheColorFilter: false,
+          ),
+        ],
       );
     }
     if (!isAvailable) {
       print('isAvaliable ${isAvailable}');
       return Icon(
         Icons.check_circle,
-        size: 80,
+        size: 80 * su,
         color: Colors.grey[300],
       );
     }
     return ShaderMask(
       shaderCallback: (Rect bounds) => mainGradient.createShader(bounds),
       blendMode: BlendMode.srcIn,
-      child: const Icon(
+      child: Icon(
         Icons.check_circle,
-        size: 80,
+        size: 80 * su,
         color: Colors.white,
       ),
     );

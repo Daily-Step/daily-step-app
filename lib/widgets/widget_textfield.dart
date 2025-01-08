@@ -12,6 +12,8 @@ class WTextField extends StatelessWidget {
   final bool isEnable;
   final String? errorMessage;
   final Widget? suffixButton;
+  final TextStyle? hintStyle;
+  final TextStyle? textStyle;
   final bool isBox;
 
   const WTextField({
@@ -27,6 +29,8 @@ class WTextField extends StatelessWidget {
     this.errorMessage,
     this.suffixButton,
     this.isBox = false,
+    this.hintStyle,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -44,6 +48,7 @@ class WTextField extends StatelessWidget {
             controller: controller,
             maxLength: maxCharacters ?? 10,
             maxLines: maxLines ?? 1,
+            style: textStyle,
             decoration: InputDecoration(
               border: isBox
                   ? OutlineInputBorder(
@@ -76,7 +81,7 @@ class WTextField extends StatelessWidget {
                       ),
                     ),
               hintText: hintText,
-              hintStyle: hintTextStyle,
+              hintStyle: hintStyle,
               counterText: counterText ?? '',
               errorText: isEnable ? null : errorMessage,
               suffixIcon: suffixButton != null

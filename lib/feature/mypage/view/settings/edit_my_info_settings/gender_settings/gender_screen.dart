@@ -1,4 +1,5 @@
 import 'package:dailystep/common/util/size_util.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,9 +19,9 @@ class GenderScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           '성별',
-          style: TextStyle(fontSize: 25),
+          style: WAppFontSize.titleXL(),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -41,14 +42,14 @@ class GenderScreen extends ConsumerWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * su),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _buildToggleButton('남성', 'MALE', genderState.selectedGender, ref),
-                const SizedBox(width: 12),
+                SizedBox(width: 12 * su),
                 _buildToggleButton('여성', 'FEMALE', genderState.selectedGender, ref),
               ],
             ),
@@ -67,7 +68,7 @@ class GenderScreen extends ConsumerWidget {
         ref.read(genderProvider.notifier).selectGender(isSelected ? null : value);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 40 * su, vertical: 12 * su),
         decoration: BoxDecoration(
           color: isSelected ? Colors.black : Colors.white, // 선택된 버튼 색
           borderRadius: BorderRadius.circular(16 * su),

@@ -34,7 +34,7 @@ class MyPageScreen extends ConsumerWidget {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("마이페이지", style: WAppFontSize.titleXL),
+          title: Text("마이페이지", style: WAppFontSize.titleXL()),
           backgroundColor: Colors.white,
         ),
         body: Center(child: CircularProgressIndicator()),
@@ -46,7 +46,7 @@ class MyPageScreen extends ConsumerWidget {
         centerTitle: true,
         title: Text(
           "마이페이지",
-          style: WAppFontSize.titleXL,
+          style: WAppFontSize.titleXL(),
         ),
         backgroundColor: Colors.white,
       ),

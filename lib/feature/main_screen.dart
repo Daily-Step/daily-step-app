@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav/nav.dart';
 
+import '../common/util/size_util.dart';
+
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -34,7 +36,7 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   GlobalKey<NavigatorState> get _currentTabNavigationKey =>
       navigatorKeys[_currentIndex];
-  static const bottomNavigationBarHeight = 60.0;
+  static var bottomNavigationBarHeight = 60.0 * su;
 
   @override
   void initState() {
@@ -116,9 +118,9 @@ class MainScreenState extends ConsumerState<MainScreen>
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
       height: bottomNavigationBarHeight,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10),
+          BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10 * su),
         ],
       ),
       child: BottomNavigationBar(

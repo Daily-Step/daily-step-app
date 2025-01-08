@@ -34,7 +34,7 @@ class MyInfoScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('내 정보 수정', style: WAppFontSize.titleXL,),
+        title: Text('내 정보 수정', style: WAppFontSize.titleXL(),),
         centerTitle: true,
       ),
       body: userState.when(
@@ -81,11 +81,11 @@ class MyInfoScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '닉네임', style: WAppFontSize.bodyL1,
+                        '닉네임', style: WAppFontSize.bodyL1(),
                       ),
                       Row(
                         children: [
-                          Text(user.nickname, style: WAppFontSize.values),
+                          Text(user.nickname, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
@@ -103,11 +103,11 @@ class MyInfoScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '생년월일',
-                        style: WAppFontSize.bodyL1,
+                        style: WAppFontSize.bodyL1(),
                       ),
                       Row(
                         children: [
-                          Text(DateFormat('yyyy-MM-dd').format(user.birth)),
+                          Text(DateFormat('yyyy-MM-dd').format(user.birth), style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/birthday/${user.birth ?? ""}');
@@ -126,11 +126,11 @@ class MyInfoScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '성별',
-                        style: WAppFontSize.bodyL1,
+                        style: WAppFontSize.bodyL1(),
                       ),
                       Row(
                         children: [
-                          Text(user.translatedGender, style: WAppFontSize.values),
+                          Text(user.translatedGender, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/gender');
@@ -149,11 +149,11 @@ class MyInfoScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '직무',
-                        style: WAppFontSize.bodyL1,
+                        style: WAppFontSize.bodyL1(),
                       ),
                       Row(
                         children: [
-                          Text(user.translatedJob, style: WAppFontSize.values),
+                          Text(user.translatedJob, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/job');
@@ -172,11 +172,11 @@ class MyInfoScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '연차',
-                        style: WAppFontSize.bodyL1,
+                        style: WAppFontSize.bodyL1(),
                       ),
                       Row(
                         children: [
-                          Text(user.translatedJobTenure, style: WAppFontSize.values),
+                          Text(user.translatedJobTenure, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
                               context.go('/main/myPage/myinfo/jobTenure');

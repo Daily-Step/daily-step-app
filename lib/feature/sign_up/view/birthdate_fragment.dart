@@ -29,11 +29,11 @@ class BirthDateFragment extends ConsumerWidget {
 
     return Column(
       children: [
-        const Text(
+        Text(
           '생년월일을 입력해 주세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: WAppFontSize.titleXL(),
         ),
-        height20, // 미리 정의된 height20
+        height20,
         WDatePicker(
           controller: controller,
           onChanged: (DateTime date) {
@@ -41,6 +41,7 @@ class BirthDateFragment extends ConsumerWidget {
             ref.read(birthDateValidationProvider .notifier).state = date;
           },
           value: selectedDate,
+          hintText: '캘린더를 누르면 생년월일을 선택할 수 있어요.',
         ),
       ],
     );

@@ -1,9 +1,11 @@
 import 'package:dailystep/feature/mypage/viewmodel/my_info_viewmodel.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../common/util/size_util.dart';
 import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/wigdet_date_picker.dart';
 import 'birthday_provider.dart';
@@ -28,7 +30,7 @@ class BirthdayScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('생년월일'),
+        title: Text('생년월일', style: WAppFontSize.titleXL(),),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -58,7 +60,7 @@ class BirthdayScreen extends ConsumerWidget {
             controller: controller,
             value: birthdayState.birthDate,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8 * su),
         ],
       ),
     );
