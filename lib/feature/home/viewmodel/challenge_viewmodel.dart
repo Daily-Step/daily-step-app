@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:dailystep/data/api/challenge_api.dart';
@@ -201,7 +199,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
       //가입 후 첫 달성
       if(isFirstAchieved == '0'){
-        ToastMsg toastMsg = _setToastMsg(0);
+        ToastMsg toastMsg = ToastMsg.create(0);
         WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
         await _secureStorageService.saveIsFirstAchieve('1');
         return;
@@ -218,24 +216,17 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       }
       if (successDate == 0) {
         //하루 첫 달성
-        ToastMsg toastMsg = _setToastMsg(1);
+        ToastMsg toastMsg = ToastMsg.create(1);
         WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
       } else {
         //일반 달성
-        ToastMsg toastMsg = _setToastMsg(2);
+        ToastMsg toastMsg = ToastMsg.create(2);
         WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
       }
     });
   }
 
-  ToastMsg _setToastMsg(int type) {
-    if (type == 1) {
-      return toastMsg.firstWhere((el) => el.type == 1);
-    } else {
-      int randomNum = 3 + Random().nextInt((7 + 1) - 3);
-      return toastMsg.firstWhere((el) => el.id == randomNum);
-    }
-  }
+
 }
 
 class ChallengesState {

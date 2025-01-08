@@ -1,4 +1,5 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_confirm_modal.dart';
+import '../../../widgets/widget_toast.dart';
 import '../action/challenge_list_action.dart';
 import 'settings/custom_color_dummies.dart';
 import '../../../widgets/widget_buttons.dart';
@@ -307,6 +309,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                         confirmText: '닫기',
                         onClickConfirm: () {
                           Navigator.pop(context);
+                          ToastMsg toastMsg = ToastMsg.create(3);
+                          WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
                         },
                         isCancelButton: false);
                   }

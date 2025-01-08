@@ -1,12 +1,37 @@
+import 'dart:math';
+
 class ToastMsg {
   final int id;
-  final int type;// 0: 회원가입 후 첫 달성, 1: 하루 첫 달성, 2: 일반 달성
+  final int type; // 0: 회원가입 후 첫 달성, 1: 하루 첫 달성, 2: 일반 달성, 3: 챌린지 생성
   final String title;
   final String content;
 
-  ToastMsg({required this.id, required this.type, required this.title,required this.content,});
-}
+  ToastMsg({
+    required this.id,
+    required this.type,
+    required this.title,
+    required this.content,
+  });
 
+  factory ToastMsg.create(int type) {
+    if (type == 1) {
+      // 하루 첫 달성 메시지
+      return toastMsg.firstWhere((el) => el.type == 1);
+    } else if (type == 2) {
+      // 일반 달성 메시지 (랜덤 선택)
+      int randomId = Random().nextInt(5) + 3; // IDs between 3 and 7
+      return toastMsg.firstWhere((el) => el.id == randomId);
+    } else if (type == 3) {
+      // 챌린지 생성 메시지 (랜덤 선택)
+      int randomId = Random().nextInt(2) + 8; // IDs between 8 and 9
+      return toastMsg.firstWhere((el) => el.id == randomId);
+    } else {
+      // 기본 메시지 (회원가입 후 첫 달성, 랜덤 선택)
+      int randomId = Random().nextInt(2); // IDs between 0 and 1
+      return toastMsg.firstWhere((el) => el.id == randomId);
+    }
+  }
+}
 List<ToastMsg> toastMsg = [
   ToastMsg( id: 0, type: 0, title: '첫 스타트를 끊었습니다! 🔫',content:'챌린지를 처음 달성했습니다'),
   ToastMsg( id: 1, type: 0, title: '첫 시작, 정말 멋져요! 🎊',content:'챌린지를 처음 달성했습니다'),
@@ -16,4 +41,6 @@ List<ToastMsg> toastMsg = [
   ToastMsg( id: 5, type: 2, title: '와우, 성공적인 한 걸음! 🚶',content:'챌린지를 달성했습니다'),
   ToastMsg( id: 6, type: 2, title: '와, 당신은 킹왕짱! 👑',content:'챌린지를 달성했습니다'),
   ToastMsg( id: 7, type: 2, title: '멋짐이 +1 상승했어요 😎',content:'챌린지를 달성했습니다'),
+  ToastMsg( id: 8, type: 3, title: '야호! 새 챌린지를 등록했어요',content:'새 챌린지를 등록했습니다'),
+  ToastMsg( id: 9, type: 3, title: '큰 결심 했네요! 응원합니다!',content:'새 챌린지를 등록했습니다'),
 ];
