@@ -1,4 +1,3 @@
-import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
@@ -71,8 +70,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           setState(() {
             selectedChallenge = data.selectedChallenge;
             _titleController.text = data.selectedChallenge!.title;
-            challengeWeeks = data.selectedChallenge!.startDateTime
-                .calculateWeeksBetween(data.selectedChallenge!.endDateTime);
+            challengeWeeks = data.selectedChallenge!.durationInWeeks;
             weeklyGoal = data.selectedChallenge!.weekGoalCount;
             selectedCategory = data.selectedChallenge!.category.id - 1;
             selectedColor = customColors

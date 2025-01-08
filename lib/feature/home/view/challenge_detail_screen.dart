@@ -77,6 +77,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
         body: selectedChallengeState.when(
           data: (ChallengesState data) {
             final selectedChallenge = data.selectedChallenge;
+            final totalGoalCount = selectedChallenge!.durationInWeeks * selectedChallenge.weekGoalCount;
+            final failDays = totalGoalCount - (selectedChallenge.record?.successDates.length ?? 0);
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -99,7 +101,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: WProgressIndicator(
-                                      percentage: selectedChallenge!
+                                      percentage: selectedChallenge
                                           .totalGoalCount
                                           .getProgress(selectedChallenge.record
                                                   ?.successDates.length ??
@@ -172,29 +174,16 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                         .toString() +
                                     '일',
                                 ' /' +
-                                    (selectedChallenge.startDateTime
-                                        .goalDays(selectedChallenge.endDateTime,
-                                            selectedChallenge.weekGoalCount)
-                                        .toString())),
+                                    totalGoalCount.toString()),
                             'assets/icons/success.svg'),
                         width2,
                         _card(
                             '미달성한 날',
                             _textWithSubText(
-                                selectedChallenge.startDateTime
-                                        .failDays(
-                                            selectedChallenge.endDateTime,
-                                            selectedChallenge.weekGoalCount,
-                                            selectedChallenge.record
-                                                    ?.successDates.length ??
-                                                0)
-                                        .toString() +
+                                failDays.toString() +
                                     '일',
                                 ' /' +
-                                    (selectedChallenge.startDateTime
-                                        .goalDays(selectedChallenge.endDateTime,
-                                            selectedChallenge.weekGoalCount)
-                                        .toString())),
+                                    totalGoalCount.toString()),
                             'assets/icons/fail.svg'),
                       ],
                     ),
