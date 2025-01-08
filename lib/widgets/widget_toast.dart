@@ -7,11 +7,13 @@ class WToast {
       String message, {
         String subMessage = '',
         Duration duration = const Duration(seconds: 2),
+        double? top
       }) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
       builder: (context) =>
           _ToastWidget(
+            top: top,
             message: message,
             subMessage: subMessage,
             duration: duration,
@@ -30,9 +32,11 @@ class _ToastWidget extends StatefulWidget {
   final String message;
   final String subMessage;
   final Duration duration;
+  final double? top;
 
   const _ToastWidget({
     Key? key,
+    this.top,
     required this.message,
     required this.subMessage,
     required this.duration,
@@ -70,7 +74,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 0,
+      top: widget.top ?? 0,
       left: MediaQuery
           .of(context)
           .size

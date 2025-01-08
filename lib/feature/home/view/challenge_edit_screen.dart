@@ -309,7 +309,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                           Navigator.pop(context);
                           ToastMsg toastMsg = ToastMsg.create(3);
                           WToast.show(context, toastMsg.title,
-                              subMessage: toastMsg.content);
+                              subMessage: toastMsg.content,top: 22.0);
                         },
                         isCancelButton: false);
                   }
