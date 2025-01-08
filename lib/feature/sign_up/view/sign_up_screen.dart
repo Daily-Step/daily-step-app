@@ -36,6 +36,19 @@ class SignUpScreen extends ConsumerWidget {
                 onPressed: signUpViewModel.beforeStep,
               )
             : const SizedBox.shrink(),
+        actions: [
+          // "건너뛰기" 버튼
+          if (signUpState.step == 4 || signUpState.step == 5)
+            TextButton(
+              onPressed: () {
+                ref.read(signUpProvider.notifier).nextStep(); // 다음 단계로 이동
+              },
+              child: Text(
+                '건너뛰기',
+                style: WAppFontSize.titleL(color: WAppColors.gray03)
+              ),
+            ),
+        ],
         bottom: signUpState.step != 6 // 마지막 단계에서는 ProgressStepper 숨기기
             ? PreferredSize(
                 preferredSize: Size.fromHeight(24 * su),

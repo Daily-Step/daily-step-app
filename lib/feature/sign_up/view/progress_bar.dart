@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../common/util/size_util.dart';
 
 class ProgressStepper extends StatelessWidget {
   final int currentStep;
@@ -19,7 +22,7 @@ class ProgressStepper extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomPaint(
-                        size: Size(double.infinity, 2),
+                        size: Size(double.infinity, 13 * su),
                         painter: DashedLinePainter(
                           isDashed: index >= currentStep,
                           color: index < currentStep ? Colors.black : Colors.grey[300]!,
@@ -27,40 +30,52 @@ class ProgressStepper extends StatelessWidget {
                       ),
                     ),
                     if (index < totalSteps - 1)
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: index < currentStep ? Colors.black : Colors.grey[300],
-                        ),
+                      Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: index <= currentStep - 1 ? Colors.black : Colors.grey[300]!,
+                                    width: 1,
+                                  ),
+                                  color: index == currentStep - 1
+                                      ? Colors.black
+                                      : Colors.transparent,
+                                ),
+                                child: index < currentStep - 1
+                                    ? Center(
+                                  child: SvgPicture.asset(
+                                    'assets/icons/check.svg',
+                                    width: 12,
+                                    height: 12,
+                                    color: Colors.black,
+                                  ),
+                                )
+                                    : null,
+                              ),
+                            ],
+                          ),
+                          if (index < stepLabels.length)
+                            Text(
+                              stepLabels[index],
+                              style: TextStyle(
+                                fontSize: 11 * su,
+                                color: index <= currentStep - 1 ? Colors.black : Colors.grey[500],
+                                fontWeight: index == currentStep - 1 ? FontWeight.bold : FontWeight.normal,
+                              ),
+                            ),
+                        ],
                       ),
                   ],
                 ),
               );
             }),
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(
-              stepLabels.length,
-                  (index) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    stepLabels[index],
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: index < currentStep ? Colors.black : Colors.grey[500],
-                      fontWeight: index == currentStep ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                  if(index == 4)
-                  SizedBox(width: 12),
-                ],
-              ),
-            ),
           ),
         ],
       ),
@@ -81,8 +96,8 @@ class DashedLinePainter extends CustomPainter {
       ..strokeWidth = 2;
 
     if (isDashed) {
-      final dashWidth = 5.0;
-      final dashSpace = 3.0;
+      final dashWidth = 5.0 * su;
+      final dashSpace = 3.0 * su;
       double startX = 0;
 
       while (startX < size.width) {

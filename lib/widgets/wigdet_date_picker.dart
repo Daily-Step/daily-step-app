@@ -36,10 +36,10 @@ class WDatePicker extends StatelessWidget {
               children: [
                 WDateScrollPicker(
                   onDateSelected: (DateTime date) {
-                    selectedDate = date; // 날짜가 선택되면 selectedDate를 업데이트
-                    controller.text = _formatDate(selectedDate);
-                    onChanged(selectedDate); // 선택된 날짜 바로 반영
-                    setModalState(() {}); // 상태를 갱신하여 UI가 반영되도록 처리
+                    selectedDate = date; // 선택된 날짜 업데이트
+                    controller.text = _formatDate(selectedDate); // 텍스트 필드 업데이트
+                    onChanged(selectedDate); // 상태 갱신
+                    setModalState(() {}); // 모달 내 상태 갱신
                   },
                 ),
               ],
@@ -61,9 +61,9 @@ class WDatePicker extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          labelText: label ?? null,
+          labelText: label,
           labelStyle: WAppFontSize.values(color: WAppColors.black),
-          hintText: hintText ?? null,
+          hintText: hintText,
           hintStyle: WAppFontSize.values(),
           suffixIcon: const Icon(Icons.calendar_today),
           focusedBorder: UnderlineInputBorder(
@@ -73,7 +73,7 @@ class WDatePicker extends StatelessWidget {
           ),
         ),
         onTap: () async {
-          // 날짜를 선택할 때마다 자동으로 값 업데이트
+          // 날짜 선택 모달 표시
           await _showDateScrollPicker(context);
         },
         readOnly: true, // 사용자가 직접 입력할 수 없도록 설정

@@ -86,7 +86,7 @@ class AccountSettingScreen extends ConsumerWidget  {
                 children: [
                   Text(
                     '로그아웃',
-                    style: WAppFontSize.values(),
+                    style: WAppFontSize.values(color: WAppColors.black),
                   ),
                   IconButton(
                     onPressed: () => handleLogout(context, ref),
@@ -100,7 +100,7 @@ class AccountSettingScreen extends ConsumerWidget  {
                 children: [
                   Text(
                     '회원탈퇴',
-                    style: WAppFontSize.values(),
+                    style: WAppFontSize.values(color: WAppColors.black),
                   ),
                   IconButton(
                     onPressed: () => handleAccountDeletion(context),
