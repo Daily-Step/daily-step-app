@@ -32,6 +32,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   int? selectedCategory;
   int? selectedColor;
   ChallengeModel? selectedChallenge;
+
   // 에러 상태
   Map<String, bool> errors = {
     'title': false,
@@ -46,7 +47,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   final TextEditingController _noteController = TextEditingController();
   final int maxCharacters = 500;
 
-  Color textColor () => widget.id != null ? disabledColor: Colors.grey.shade600;
+  Color textColor() => widget.id != null ? disabledColor : Colors.grey.shade600;
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   void _initializeData() async {
     if (widget.id != null) {
       final state = ref.watch(challengeViewModelProvider);
-      state.whenData((data){
+      state.whenData((data) {
         if (data.selectedChallenge != null) {
           setState(() {
             selectedChallenge = data.selectedChallenge;
@@ -89,7 +90,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
     final notifier = ref.read(challengeViewModelProvider.notifier);
     final state = ref.watch(challengeViewModelProvider);
 
-    return state.when(data:(data) {
+    return state.when(
+        data: (data) {
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -109,6 +111,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                   WTextField(
                     controller: _titleController,
                     hintText: '챌린지 이름을 입력하세요',
+                    hintStyle: hintTextStyle,
                     label: '챌린지 이름',
                     onChanged: (String value) {
                       if (value != '') {
@@ -137,10 +140,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     child: challengeWeeks != null
                         ? Text(
                             '${challengeWeeks}주',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: textColor(),
-                            ),
+                            style: contentTextStyle,
                           )
                         : Text(
                             '선택',
@@ -167,10 +167,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     child: weeklyGoal != null
                         ? Text(
                             '주 ${weeklyGoal} 회',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: textColor(),
-                            ),
+                            style: contentTextStyle,
                           )
                         : Text(
                             '선택',
@@ -185,7 +182,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     onTap: () => _showModal(WScrollPicker(
                       value: selectedCategory != null ? selectedCategory! : 1,
                       childCount: data.categories.length,
-                      childList: data.categories.map((item) => item.name).toList(),
+                      childList:
+                          data.categories.map((item) => item.name).toList(),
                       onSelected: (int) {
                         setState(() {
                           errors['category'] = false;
@@ -196,7 +194,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     label: '카테고리',
                     child: selectedCategory != null
                         ? Text(
-                      data.categories[selectedCategory!].name,
+                            data.categories[selectedCategory!].name,
                             style: contentTextStyle,
                           )
                         : Text(
@@ -219,7 +217,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                           });
                         },
                         itemBuilder: (context, index, bool) {
-                          return customColors[index].widget;
+                          return customColors[index]
+                              .getWidget(selectedColor ?? -1, index);
                         })),
                     label: '컬러',
                     child: selectedColor != null
@@ -243,6 +242,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     counterText:
                         '${_noteController.text.length}/$maxCharacters자 이내',
                     hintText: '챌린지에 대한 상세 내용을 입력하세요',
+                    hintStyle: hintTextStyle,
                     isBox: true,
                     onChanged: (text) {
                       final lines = text.split('\n');
@@ -269,26 +269,24 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               child: WCtaButton('저장하기', onPressed: () {
                 if (_validateInputs() == true) {
                   if (widget.id != null) {
-                    final newChallenge =
-                    {
-                      "title" : _titleController.text,
-                      "categoryId" : selectedCategory! + 1,
-                      "color" : customColors[selectedColor!].code.toString(),
-                      "content" : _noteController.text
+                    final newChallenge = {
+                      "title": _titleController.text,
+                      "categoryId": selectedCategory! + 1,
+                      "color": customColors[selectedColor!].code.toString(),
+                      "content": _noteController.text
                     };
                     notifier.handleAction(
                         UpdateChallengeAction(widget.id, newChallenge));
                     Navigator.pop(context);
                     context.push('/main/home/${widget.id}');
                   } else {
-                    final newChallenge =
-                    {
-                      "title" : _titleController.text,
-                      "durationInWeeks" : challengeWeeks!,
-                      "weeklyGoalCount" : weeklyGoal!,
-                      "categoryId" : selectedCategory! + 1,
-                      "color" : customColors[selectedColor!].code.toString(),
-                      "content" : _noteController.text
+                    final newChallenge = {
+                      "title": _titleController.text,
+                      "durationInWeeks": challengeWeeks!,
+                      "weeklyGoalCount": weeklyGoal!,
+                      "categoryId": selectedCategory! + 1,
+                      "color": customColors[selectedColor!].code.toString(),
+                      "content": _noteController.text
                     };
                     notifier.handleAction(AddChallengeAction(newChallenge));
                     showConfirmModal(
@@ -310,7 +308,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                         onClickConfirm: () {
                           Navigator.pop(context);
                           ToastMsg toastMsg = ToastMsg.create(3);
-                          WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+                          WToast.show(context, toastMsg.title,
+                              subMessage: toastMsg.content);
                         },
                         isCancelButton: false);
                   }
@@ -318,7 +317,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
               }),
             ),
           );
-        }, error: (Object error, StackTrace stackTrace)=>SizedBox(), loading: () => SizedBox());
+        },
+        error: (Object error, StackTrace stackTrace) => SizedBox(),
+        loading: () => SizedBox());
   }
 
   void _showModal(Widget child) {

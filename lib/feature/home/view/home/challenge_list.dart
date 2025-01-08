@@ -75,8 +75,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
   bool checkIsAchieveWeeksGoal(
       ChallengeModel challenge, List<String> successDates) {
     final int elapsedWeeks =
-        challenge.startDateTime.calculateWeeksBetween(DateTime.now()) + 1;
-    print(elapsedWeeks);
+        challenge.startDateTime.calculateWeeksBetween(DateTime.now());
     final int thisWeekGoal = elapsedWeeks * challenge.weekGoalCount;
     return successDates.length >= thisWeekGoal;
   }
