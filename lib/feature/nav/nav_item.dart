@@ -1,5 +1,6 @@
 import 'package:dailystep/feature/mypage/view/mypage_screen.dart';
 import 'package:flutter/material.dart';
+import '../../common/util/size_util.dart';
 import '../home/view/home/home_fragment.dart';
 
 enum TabItem {
@@ -24,6 +25,7 @@ enum TabItem {
           key: ValueKey(tabName),
           isActivated ? activeIcon : inActiveIcon,
           color: isActivated ? Colors.black : Colors.grey,
+          size: 24 * su,
         ),
         label: tabName
     );

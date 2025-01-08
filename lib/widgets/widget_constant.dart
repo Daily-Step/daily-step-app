@@ -142,6 +142,16 @@ class WAppFontSize {
       color: color,
     );
   }
+
+  /// Values (Size 11, 기본값: Regular, 기본색: black)
+  static TextStyle navbar({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.regular}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 11 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
 }
 
 
