@@ -3,6 +3,7 @@ import 'package:dailystep/common/extension/mun_duration_extension.dart';
 import 'package:dailystep/common/util/flutter_async.dart';
 import 'package:dailystep/feature/nav/nav_item.dart';
 import 'package:dailystep/feature/nav/nav_navigator.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -116,22 +117,26 @@ class MainScreenState extends ConsumerState<MainScreen>
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
-    return Container(
-      height: bottomNavigationBarHeight,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10 * su),
-        ],
-      ),
-      child: BottomNavigationBar(
-        items: navigationBarItems(context),
-        currentIndex: _currentIndex,
-        onTap: _handleOnTapNavigationBarItem,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
+    return SafeArea(
+      child: Container(
+        height: bottomNavigationBarHeight,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10 * su),
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: navigationBarItems(context),
+          currentIndex: _currentIndex,
+          onTap: _handleOnTapNavigationBarItem,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: Colors.black,
+          selectedLabelStyle: WAppFontSize.navbar(),
+          unselectedLabelStyle: WAppFontSize.navbar(color: WAppColors.gray05),
+        ),
       ),
     );
   }
