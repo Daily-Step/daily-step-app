@@ -21,15 +21,11 @@ class JobTenureFragment extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        const Text(
+        Text(
           '연차를 선택해 주세요',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: WAppFontSize.titleXL(),
         ),
         height5,
-        Text(
-          '없다면 1년 미만을 입력해 주세요',
-          style: TextStyle(fontSize: 12, color: subTextColor),
-        ),
         height20,
         Padding(
           padding: globalMargin,
@@ -51,11 +47,11 @@ class JobTenureFragment extends ConsumerWidget {
             child: jobTenure != null
                 ? Text(
                     dummyJobTenure[jobTenure!-1].name,
-                    style: contentTextStyle,
+                    style: WAppFontSize.values(color: WAppColors.black),
                   )
                 : Text(
-                    '선택',
-                    style: hintTextStyle,
+                    '해당하는 연차를 선택하세요',
+                    style: WAppFontSize.values(),
                   ),
           ),
         ),

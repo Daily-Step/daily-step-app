@@ -7,34 +7,35 @@ class WRoundButton extends StatelessWidget {
   final bool isEnabled;
   final VoidCallback onPressed;
   final String text;
+  final TextStyle? textStyle;
 
-  const WRoundButton(
-      {required this.isEnabled, required this.onPressed, required this.text});
+  const WRoundButton({
+    required this.isEnabled,
+    required this.onPressed,
+    required this.text,
+    this.textStyle,
+  });
 
   Widget build(BuildContext context) {
     return Container(
       height: 18 * su,
       width: 83 * su,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30 * su),
         border: Border.all(
           color: Colors.grey.shade300,
           width: 1,
         ),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18 * su),
         onTap: isEnabled ? onPressed : null,
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 10 * su),
             child: Text(
               text,
-              style: TextStyle(
-                color: isEnabled ? Colors.black : Colors.grey.shade300,
-                fontSize: 14 * su,
-                fontWeight: FontWeight.w500,
-              ),
+              style: textStyle
             ),
           ),
         ),
@@ -48,7 +49,8 @@ class WCtaFloatingButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final LinearGradient? gradient;
 
-  const WCtaFloatingButton(this.text, {
+  const WCtaFloatingButton(
+    this.text, {
     Key? key,
     required this.onPressed,
     this.gradient,
@@ -63,9 +65,9 @@ class WCtaFloatingButton extends StatelessWidget {
       child: Column(
         children: [
           WCtaButton(
-              text,
-              onPressed: onPressed,
-              gradient: gradient,
+            text,
+            onPressed: onPressed,
+            gradient: gradient,
           ),
         ],
       ),
@@ -77,7 +79,9 @@ class WCtaButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final LinearGradient? gradient;
-  const WCtaButton(this.text, {
+
+  const WCtaButton(
+    this.text, {
     Key? key,
     required this.onPressed,
     this.gradient,
@@ -101,9 +105,7 @@ class WCtaButton extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: globalBorderRadius,
-            gradient: gradient != null && isEnabled
-                ? gradient
-                : null,
+            gradient: gradient != null && isEnabled ? gradient : null,
             color: gradient != null ? null : (isEnabled ? Colors.black : Colors.grey[200]),
           ),
           child: Container(

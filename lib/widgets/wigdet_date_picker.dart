@@ -1,5 +1,8 @@
 import 'package:dailystep/widgets/widget_calendar_scroll_picker.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
+
+import '../common/util/size_util.dart';
 
 class WDatePicker extends StatelessWidget {
   final TextEditingController controller;
@@ -23,7 +26,7 @@ class WDatePicker extends StatelessWidget {
     await showModalBottomSheet<DateTime>(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20 * su)),
       ),
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -54,12 +57,14 @@ class WDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0), // 적당한 여백 설정
+      padding: EdgeInsets.all(16.0 * su),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label ?? null,
+          labelStyle: WAppFontSize.values(color: WAppColors.black),
           hintText: hintText ?? null,
+          hintStyle: WAppFontSize.values(),
           suffixIcon: const Icon(Icons.calendar_today),
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(

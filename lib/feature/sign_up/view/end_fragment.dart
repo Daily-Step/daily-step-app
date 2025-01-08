@@ -14,12 +14,12 @@ class EndFragment extends StatelessWidget {
         height20,
         Text(
           '가입이 완료되었습니다',
-          style: TextStyle(fontSize: 14, color: subTextColor),
+          style: WAppFontSize.titleL(color: WAppColors.gray05),
         ),
-        height5,
+        height10,
         Text(
           '함께 도전해 볼까요?',
-          style: TextStyle(fontSize: 24,fontWeight: FontWeight.w600 ),
+          style: WAppFontSize.titleXXL(),
         ),
         height20,
       ],

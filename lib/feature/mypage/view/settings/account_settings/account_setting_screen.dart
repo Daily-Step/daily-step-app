@@ -1,11 +1,14 @@
 import 'package:dailystep/config/route/auth_redirection.dart';
 import 'package:dailystep/feature/auth/viewmodel/login_viewmodel.dart';
 import 'package:dailystep/widgets/widget_confirm_modal.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../../common/util/size_util.dart';
 
 class AccountSettingScreen extends ConsumerWidget  {
   const AccountSettingScreen({Key? key}) : super(key: key);
@@ -64,7 +67,7 @@ class AccountSettingScreen extends ConsumerWidget  {
       appBar: AppBar(
         titleSpacing: 0,
         centerTitle: true,
-        title: Text('계정 설정'),
+        title: Text('계정 설정', style: WAppFontSize.titleXL(),),
         leading: IconButton(
           onPressed: () {
             context.go('/main/myPage');
@@ -75,7 +78,7 @@ class AccountSettingScreen extends ConsumerWidget  {
       body: Container(
         width: double.infinity,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0 * su),
           child: Column(
             children: [
               Row(
@@ -83,7 +86,7 @@ class AccountSettingScreen extends ConsumerWidget  {
                 children: [
                   Text(
                     '로그아웃',
-                    style: TextStyle(fontSize: 16),
+                    style: WAppFontSize.values(),
                   ),
                   IconButton(
                     onPressed: () => handleLogout(context, ref),
@@ -97,7 +100,7 @@ class AccountSettingScreen extends ConsumerWidget  {
                 children: [
                   Text(
                     '회원탈퇴',
-                    style: TextStyle(fontSize: 16),
+                    style: WAppFontSize.values(),
                   ),
                   IconButton(
                     onPressed: () => handleAccountDeletion(context),
