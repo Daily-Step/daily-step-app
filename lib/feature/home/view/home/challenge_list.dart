@@ -1,10 +1,8 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/string_extension.dart';
-import 'package:dailystep/model/challenge/challenge_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../widgets/widget_confirm_modal.dart';
 import '../../action/challenge_list_action.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_item.dart';

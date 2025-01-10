@@ -114,10 +114,12 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       final newInitialChallenges = await _fetchChallenges(DateTime.now());
       final newFilteredChallenges =
       _filterChallenges(newInitialChallenges, currentState.selectedDate);
+      final newSuccessList = _setSuccessList(newInitialChallenges);
 
       state = AsyncValue.data(currentState.copyWith(
         initialChallengeList: newInitialChallenges,
         challengeList: newFilteredChallenges,
+        successList: newSuccessList,
       ));
     });
   }
@@ -169,7 +171,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   List<DateTime> _setSuccessList(List<ChallengeModel> challenges) {
     final List<DateTime> successList = [];
 
-    for (int i = 1; i <= 60; i++) {
+    for (int i = 0; i <= 60; i++) {
       DateTime targetDate = DateTime.now().subtract(Duration(days: i));
       List<ChallengeModel> challengeList =
       _filterChallenges(challenges, targetDate);
