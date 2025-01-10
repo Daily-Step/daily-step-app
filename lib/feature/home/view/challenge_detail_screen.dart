@@ -78,7 +78,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
           data: (ChallengesState data) {
             final selectedChallenge = data.selectedChallenge;
             final totalGoalCount = selectedChallenge!.durationInWeeks * selectedChallenge.weekGoalCount;
-            final failDays = totalGoalCount - (selectedChallenge.record?.successDates.length ?? 0);
+            final recordLength = selectedChallenge.record?.successDates.length ?? 0;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -180,7 +180,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         _card(
                             '미달성한 날',
                             _textWithSubText(
-                                failDays.toString() +
+                                _calcFailDays(totalGoalCount, recordLength) +
                                     '일',
                                 ' /' +
                                     totalGoalCount.toString()),
@@ -262,6 +262,14 @@ class ChallengeDetailScreen extends ConsumerWidget {
           error: (Object error, StackTrace stackTrace) => SizedBox(),
           loading: () => SizedBox(),
         ));
+  }
+
+  String _calcFailDays(int totalGoalCount, int successLength){
+    int result = totalGoalCount - successLength;
+    if(result < 0) {
+      return '0';
+    }
+    return '$result';
   }
 
   void _showModal(BuildContext context, ChallengeViewModel notifier) {

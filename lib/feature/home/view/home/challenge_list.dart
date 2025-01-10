@@ -34,8 +34,6 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                     challenge.record?.successDates ?? [];
                 final bool isAchieved = successDates.any(
                     (date) => date.toDateTime.isSameDate(data.selectedDate));
-                bool isAchievedWeeksGoal =
-                    checkIsAchieveWeeksGoal(challenge, successDates);
                 final bool isExpired =
                     challenge.endDateTime.isBefore(DateTime.now());
                 return ChallengeItem(
@@ -48,15 +46,6 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                   },
                   onClickAchieveButton: () async {
                     if (isExpired) return;
-                    if (!isAchieved && isAchievedWeeksGoal) {
-                      showConfirmModal(
-                          context: context,
-                          content: Text('이번주 목표를 모두 달성했어요'),
-                          confirmText: "확인",
-                          onClickConfirm: () {},
-                          isCancelButton: false);
-                      return;
-                    }
                     await notifier.handleAction(AchieveChallengeAction(
                       id: challenge.id,
                       context: context,
@@ -70,13 +59,5 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
         },
         error: (Object error, StackTrace stackTrace) => SizedBox(),
         loading: () => SizedBox());
-  }
-
-  bool checkIsAchieveWeeksGoal(
-      ChallengeModel challenge, List<String> successDates) {
-    DateTime today = DateTime.now();
-    final int elapsedWeeks =(today.difference(challenge.startDateTime).inDays / 7).ceil();
-    final int thisWeekGoal = elapsedWeeks * challenge.weekGoalCount;
-    return successDates.length >= thisWeekGoal;
   }
 }
