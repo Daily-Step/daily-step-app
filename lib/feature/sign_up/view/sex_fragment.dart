@@ -49,7 +49,7 @@ class SexFragment extends ConsumerWidget  {
         padding: EdgeInsets.symmetric(horizontal: 40 * su, vertical: 12 * su),
         decoration: BoxDecoration(
           color: isSelected ? Colors.black : Colors.white,
-          borderRadius: BorderRadius.circular(8 * su),
+          borderRadius: BorderRadius.circular(16 * su),
           border: Border.all(
             color: isSelected ? Colors.black : Colors.grey.shade300,
           ),

@@ -62,7 +62,7 @@ class SignUpScreen extends ConsumerWidget {
         children: [
           Column(
             children: [
-              height60,
+              SizedBox(height: 100 * su,),
               Center(
                 child: buildCheckIcon(
                   signUpState.step == 6,
@@ -148,7 +148,7 @@ class SignUpScreen extends ConsumerWidget {
     if (isLastPage) {
       return Column(
         children: [
-          SizedBox(height: 100 * su),
+          SizedBox(height: 150 * su),
           SvgPicture.asset(
             'assets/logo.svg',
             width: 80 * su,
@@ -159,22 +159,52 @@ class SignUpScreen extends ConsumerWidget {
         ],
       );
     }
+
     if (!isAvailable) {
-      print('isAvaliable ${isAvailable}');
-      return Icon(
-        Icons.check_circle,
-        size: 80 * su,
-        color: Colors.grey[300],
+      print('isAvailable $isAvailable');
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          // 원형 배경
+          Container(
+            width: 64 * su, // 원 크기
+            height: 64 * su,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[200], // 배경색
+            ),
+          ),
+          // SVG 아이콘
+          SvgPicture.asset(
+            'assets/icons/check.svg', // SVG 경로
+            width: 30 * su, // 아이콘 크기
+            height: 30 * su,
+            color: Colors.grey[300], // SVG 색상
+          ),
+        ],
       );
     }
-    return ShaderMask(
-      shaderCallback: (Rect bounds) => mainGradient.createShader(bounds),
-      blendMode: BlendMode.srcIn,
-      child: Icon(
-        Icons.check_circle,
-        size: 80 * su,
-        color: Colors.white,
-      ),
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // 원형 배경
+        Container(
+          width: 64 * su, // 원 크기
+          height: 64 * su,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: mainGradient, // 메인 그라데이션 배경
+          ),
+        ),
+        // SVG 아이콘
+        SvgPicture.asset(
+          'assets/icons/check.svg', // SVG 경로
+          width: 34 * su, // 아이콘 크기
+          height: 34 * su,
+          color: Colors.white, // SVG 색상
+        ),
+      ],
     );
   }
 }

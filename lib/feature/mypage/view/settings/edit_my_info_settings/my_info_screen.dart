@@ -1,17 +1,44 @@
 import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/feature/mypage/model/mypage_state.dart';
+import 'package:dailystep/widgets/widget_confirm_modal.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../viewmodel/my_info_viewmodel.dart';
 
 class MyInfoScreen extends ConsumerWidget {
   const MyInfoScreen({Key? key}) : super(key: key);
+
+  Future<void> _checkPermissionAndPickImage(BuildContext context, WidgetRef ref) async {
+    // 권한 확인
+    if (await Permission.photos.isGranted || await Permission.storage.isGranted) {
+      // 권한이 이미 허용된 경우 이미지 선택
+      await _pickImage(context, ref);
+      return;
+    }
+
+    // 권한 요청
+    PermissionStatus permissionStatus;
+    if (await Permission.photos.isDenied) {
+      permissionStatus = await Permission.photos.request();
+    } else {
+      permissionStatus = await Permission.storage.request();
+    }
+
+    if (permissionStatus.isGranted) {
+      // 권한 허용 후 이미지 선택
+      await _pickImage(context, ref);
+    } else {
+      // 권한 거부된 경우 경고 메시지 표시
+      _showPermissionDialog(context);
+    }
+  }
 
   Future<void> _pickImage(BuildContext context, WidgetRef ref) async {
     final picker = ImagePicker();
@@ -21,6 +48,26 @@ class MyInfoScreen extends ConsumerWidget {
       ref.read(myInfoViewModelProvider.notifier).uploadProfileImage(pickedFile);
     }
   }
+
+  void _showPermissionDialog(BuildContext context) {
+    showConfirmModal(
+      context: context,
+      content: Text(
+        '갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 16 * su,
+          color: Colors.black,
+        ),
+      ),
+      confirmText: '설정 열기',
+      onClickConfirm: () {
+        openAppSettings(); // 앱 설정 화면 열기
+      },
+      isCancelButton: true, // "닫기" 버튼 표시
+    );
+  }
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +111,7 @@ class MyInfoScreen extends ConsumerWidget {
                           right: 0,
                           bottom: 0,
                           child: GestureDetector(
-                            onTap: () => _pickImage(context, ref),
+                            onTap: () => _checkPermissionAndPickImage(context, ref),
                             child: CircleAvatar(
                               radius: 16 * su,
                               backgroundColor: Colors.black,
@@ -88,7 +135,7 @@ class MyInfoScreen extends ConsumerWidget {
                           Text(user.nickname, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
-                              context.go('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
+                              context.push('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
                             },
                             icon: const Icon(Icons.keyboard_arrow_right),
                           ),
@@ -110,7 +157,7 @@ class MyInfoScreen extends ConsumerWidget {
                           Text(DateFormat('yyyy-MM-dd').format(user.birth), style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
-                              context.go('/main/myPage/myinfo/birthday/${user.birth ?? ""}');
+                              context.push('/main/myPage/myinfo/birthday/${user.birth ?? ""}');
                             },
                             icon: const Icon(Icons.keyboard_arrow_right),
                           ),
@@ -133,7 +180,7 @@ class MyInfoScreen extends ConsumerWidget {
                           Text(user.translatedGender, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
-                              context.go('/main/myPage/myinfo/gender');
+                              context.push('/main/myPage/myinfo/gender');
                             },
                             icon: const Icon(Icons.keyboard_arrow_right),
                           ),
@@ -156,7 +203,7 @@ class MyInfoScreen extends ConsumerWidget {
                           Text(user.translatedJob, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
-                              context.go('/main/myPage/myinfo/job');
+                              context.push('/main/myPage/myinfo/job');
                             },
                             icon: const Icon(Icons.keyboard_arrow_right),
                           ),
@@ -179,7 +226,7 @@ class MyInfoScreen extends ConsumerWidget {
                           Text(user.translatedJobTenure, style: WAppFontSize.values(color: WAppColors.black),),
                           IconButton(
                             onPressed: () {
-                              context.go('/main/myPage/myinfo/jobTenure');
+                              context.push('/main/myPage/myinfo/jobTenure');
                             },
                             icon: const Icon(Icons.keyboard_arrow_right),
                           ),

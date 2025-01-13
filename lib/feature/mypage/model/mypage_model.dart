@@ -67,7 +67,7 @@ extension MyPageModelExtensions on MyPageModel {
       19: '의료·제약·바이오',
       20: '공공·복지·환경',
     };
-    return jobCategories[jobId] ?? '알 수 없음';
+    return jobCategories[jobId] ?? '없음';
   }
 
   // 연차 치환
@@ -78,6 +78,6 @@ extension MyPageModelExtensions on MyPageModel {
       3: '3~5년',
       4: '6년 이상',
     };
-    return jobTenures[jobYearId] ?? '알 수 없음';
+    return jobTenures[jobYearId] ?? '없음';
   }
 }

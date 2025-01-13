@@ -49,7 +49,9 @@ class MainScreenState extends ConsumerState<MainScreen>
   void didUpdateWidget(covariant MainScreen oldWidget) {
     if (oldWidget.firstTab != widget.firstTab) {
       delay(() {
-        ref.read(currentTabProvider.notifier).state = widget.firstTab;
+        ref
+            .read(currentTabProvider.notifier)
+            .state = widget.firstTab;
       }, 0.ms);
     }
     super.didUpdateWidget(oldWidget);
@@ -80,7 +82,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                   color: Colors.white,
                 )),
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+            FloatingActionButtonLocation.centerDocked,
           ),
         ]),
       ),
@@ -89,19 +91,21 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   bool get isRootPage =>
       _currentTab == TabItem.home &&
-      _currentTabNavigationKey.currentState?.canPop() == false;
+          _currentTabNavigationKey.currentState?.canPop() == false;
 
-  IndexedStack get pages => IndexedStack(
-      index: _currentIndex,
-      children: tabs
-          .mapIndexed((tab, index) => Offstage(
+  IndexedStack get pages =>
+      IndexedStack(
+          index: _currentIndex,
+          children: tabs
+              .mapIndexed((tab, index) =>
+              Offstage(
                 offstage: _currentTab != tab,
                 child: TabNavigator(
                   navigatorKey: navigatorKeys[index],
                   tabItem: tab,
                 ),
               ))
-          .toList());
+              .toList());
 
   void _handleBackPressed(bool didPop, _) {
     if (!didPop) {
@@ -119,12 +123,15 @@ class MainScreenState extends ConsumerState<MainScreen>
   Widget _buildBottomNavigationBar(BuildContext context) {
     return SafeArea(
       child: Container(
-        height: bottomNavigationBarHeight,
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 10 * su),
-          ],
+          border: Border(
+            top: BorderSide(
+              color: WAppColors.gray03, // 회색 테두리 색상
+              width: 1.0, // 테두리 두께
+            ),
+          ),
         ),
+        height: bottomNavigationBarHeight,
         child: BottomNavigationBar(
           items: navigationBarItems(context),
           currentIndex: _currentIndex,
@@ -136,6 +143,7 @@ class MainScreenState extends ConsumerState<MainScreen>
           selectedItemColor: Colors.black,
           selectedLabelStyle: WAppFontSize.navbar(),
           unselectedLabelStyle: WAppFontSize.navbar(color: WAppColors.gray05),
+          elevation: 0,
         ),
       ),
     );
@@ -144,16 +152,19 @@ class MainScreenState extends ConsumerState<MainScreen>
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
-          (tab, index) => tab.toNavigationBarItem(
+          (tab, index) =>
+          tab.toNavigationBarItem(
             context,
             isActivated: _currentIndex == index,
           ),
-        )
+    )
         .toList();
   }
 
   void _changeTab(int index) {
-    ref.read(currentTabProvider.notifier).state = tabs[index];
+    ref
+        .read(currentTabProvider.notifier)
+        .state = tabs[index];
   }
 
   BottomNavigationBarItem bottomItem(bool activate, IconData iconData,

@@ -1,3 +1,4 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 
@@ -12,17 +13,20 @@ void showConfirmModal({
       context: context,
       builder: (context) {
         return Dialog(
+          backgroundColor: WAppColors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16 * su),
           ),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+            width: 380 * su,
+            height: 250 * su,
+            padding: EdgeInsets.symmetric(horizontal: 20.0 * su, vertical: 10 * su),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                height20,
+                height60,
                 content,
-                height20,
+                height60,
                 Row(
                   children: [
                     if (isCancelButton) ...[
@@ -31,7 +35,7 @@ void showConfirmModal({
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey.shade300,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16 * su),
                             ),
                           ),
                           onPressed: () {
@@ -51,7 +55,7 @@ void showConfirmModal({
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16 * su),
                             ),
                           ),
                           onPressed: () {

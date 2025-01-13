@@ -1,10 +1,12 @@
 import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/secure_storage/secure_storage_provider.dart';
@@ -18,8 +20,7 @@ class MyPageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(myPageViewModelProvider);
 
-    final secureStorage =
-        ref.watch(secureStorageServiceProvider).getAccessToken();
+    final secureStorage = ref.watch(secureStorageServiceProvider).getAccessToken();
 
     // 비동기적으로 SecureStorage에서 데이터 읽기
     Future<void> readAndLog() async {
@@ -188,22 +189,20 @@ class MyPageScreen extends ConsumerWidget {
                   value: ref.watch(myPageViewModelProvider)?.isPushNotificationEnabled ?? false,
                   onToggle: (value) async {
                     final notifier = ref.read(myPageViewModelProvider.notifier);
-                    notifier.state = notifier.state?.copyWith(isPushNotificationEnabled: value);
 
-                    await notifier.savePushNotificationState(value);
-
-                    if (value) {
-                      await notifier.handleFcmToken();
-                    } else {
-                      await notifier.deleteFcmToken();
+                    try {
+                      // 푸시 알림 상태 변경 요청
+                      await notifier.togglePushNotification(context, value: value);
+                    } catch (e) {
+                      // 오류 발생 시 로그 출력 (필요시 사용자 안내 가능)
+                      print('푸시 알림 상태 변경 중 오류: $e');
                     }
                   },
                   activeColor: Colors.black,
-                  inactiveColor: Color(0xffD2D2D2),
+                  inactiveColor: const Color(0xffD2D2D2),
                   activeToggleColor: Colors.white,
                   inactiveToggleColor: Colors.white,
                   width: 50.0 * su,
-                  // 반응형 크기 적용
                   height: 24.0 * su,
                   toggleSize: 20.0 * su,
                   borderRadius: 20.0 * su,
@@ -211,7 +210,7 @@ class MyPageScreen extends ConsumerWidget {
                   activeText: "ON",
                   inactiveText: "OFF",
                   showOnOff: false,
-                )
+                ),
               ],
             ),
             SizedBox(
@@ -232,8 +231,7 @@ class MyPageScreen extends ConsumerWidget {
               title: Text("문의하기", style: TextStyle(fontSize: 16 * su)),
               trailing: Icon(Icons.arrow_forward_ios, size: 16 * su),
               onTap: () async {
-                const url =
-                    'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
+                const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfNdMgr94MfE46QLKCgEQ8NgTVYdCXQjakzJvuRwHJcucCsKQ/viewform';
 
                 final Uri uri = Uri.parse(url);
 

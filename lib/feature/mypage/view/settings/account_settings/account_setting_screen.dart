@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../common/util/size_util.dart';
 
-class AccountSettingScreen extends ConsumerWidget  {
+class AccountSettingScreen extends ConsumerWidget {
   const AccountSettingScreen({Key? key}) : super(key: key);
 
   final _secureStorage = const FlutterSecureStorage();
@@ -24,18 +24,27 @@ class AccountSettingScreen extends ConsumerWidget  {
     final auth = DailyStepAuthScope.of(context); // 인스턴스 가져오기
 
     showConfirmModal(
-      context: context,
-      content: const Text(
-        '로그아웃 하시겠습니까?',
-        style: TextStyle(fontSize: 16),
-      ),
-      confirmText: '로그아웃',
-      isCancelButton: true,
-      onClickConfirm: () async {
-        await _deleteAccessToken();
-        auth.signOut(); // 인스턴스 메서드 호출
-        context.go('/signIn');
-      },
+        context: context,
+        content: Column(
+          children: [
+            Text(
+              '정말로 로그아웃 하시겠어요?',
+              style: WAppFontSize.titleL(),
+            ),
+            height5,
+            Text(
+              '챌린지 수행은 로그인 후 가능해요',
+              style: WAppFontSize.bodyS1(),
+            )
+          ],
+        ),
+        confirmText: '로그아웃',
+        isCancelButton: true,
+        onClickConfirm: () async {
+          await _deleteAccessToken();
+          auth.signOut(); // 인스턴스 메서드 호출
+          context.go('/signIn');
+        },
     );
   }
 
@@ -45,9 +54,18 @@ class AccountSettingScreen extends ConsumerWidget  {
 
     showConfirmModal(
       context: context,
-      content: const Text(
-        '회원탈퇴 하시겠습니까?',
-        style: TextStyle(fontSize: 16),
+      content: Column(
+        children: [
+          Text(
+            '정말로 탈퇴하시겠어요??',
+            style: WAppFontSize.titleL(),
+          ),
+          height5,
+          Text(
+            '한 번 탈퇴하면 복구가 힘들어요',
+            style: WAppFontSize.bodyS1(),
+          )
+        ],
       ),
       confirmText: '회원탈퇴',
       isCancelButton: true,

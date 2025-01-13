@@ -18,14 +18,6 @@ Future<void> main() async {
 
   final apiClient = ApiClient();
 
-  final initialToken = await FirebaseMessaging.instance.getToken();
-  if (initialToken != null) {
-    await apiClient.post('fcm', data: {'token': initialToken});
-    print('초기 FCM 토큰 서버에 전송 완료: $initialToken');
-  } else {
-    print('초기 FCM 토큰을 가져오지 못했습니다.');
-  }
-
   await FirebaseApi().initNotifications();
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
   runApp(ProviderScope(child: App()));
