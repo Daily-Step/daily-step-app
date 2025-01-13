@@ -123,6 +123,16 @@ class WAppFontSize {
     );
   }
 
+  /// Body bodyS1 (Size 15, 기본값: SemiBold, 기본색: gray05)
+  static TextStyle bodyS1({Color color = WAppColors.gray05, FontWeight fontWeight = WAppTextStyle.semiBold}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 15 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
+
   /// label L1 (Size 17, 기본값: Bold, 기본색: gray05)
   static TextStyle labelL1({Color color = WAppColors.gray05, FontWeight fontWeight = WAppTextStyle.bold}) {
     return TextStyle(
@@ -152,6 +162,13 @@ class WAppFontSize {
       color: color,
     );
   }
+}
+
+class WAppIconSvg {
+  static const String homeActive = 'assets/icons/home.svg';
+  static const String homeInactive = 'assets/icons/home_inactive.svg';
+  static const String personActive = 'assets/icons/person.svg';
+  static const String personInactive = 'assets/icons/person_inactive.svg';
 }
 
 
@@ -204,11 +221,11 @@ var borderColor =  Colors.grey.shade300;
 
 /// 그라디언트
 const mainGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
   colors: [
-    Color(0xFF15C5EC),
     Color(0xFF2F41F2),
+    Color(0xFF7DF6FF),
   ],
   tileMode: TileMode.mirror,
 );

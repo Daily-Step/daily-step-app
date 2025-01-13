@@ -19,16 +19,16 @@ class WRoundButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 18 * su,
-      width: 83 * su,
+      width: 93 * su,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30 * su),
+        borderRadius: BorderRadius.circular(1000 * su),
         border: Border.all(
           color: Colors.grey.shade300,
           width: 1,
         ),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18 * su),
+        borderRadius: BorderRadius.circular(1000 * su),
         onTap: isEnabled ? onPressed : null,
         child: Center(
           child: Padding(

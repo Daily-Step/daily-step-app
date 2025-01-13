@@ -1,7 +1,9 @@
+import 'package:dailystep/config/app.dart';
 import 'package:dailystep/config/route/auth_redirection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../common/util/size_util.dart';
 import '../../../config/secure_storage/secure_storage_provider.dart';
@@ -47,7 +49,8 @@ class LoginScreen extends ConsumerWidget {
                   padding: EdgeInsets.only(right: 16.0 * su, left: 16.0 * su),
                   child: ElevatedButton(
                     onPressed: () async {
-                      await ref.read(secureStorageServiceProvider).deleteTokens();
+                      //await ref.read(secureStorageServiceProvider).deleteTokens();
+
                       final savedToken = await ref.read(secureStorageServiceProvider).getAccessToken();
 
                       if (savedToken != null) {
@@ -57,7 +60,6 @@ class LoginScreen extends ConsumerWidget {
                       }
 
                       await viewModel.handleLogin(context);
-
                       if (viewModel.state.isLoggedIn) {
                         await auth.signIn(context); // DailyStepAuth 상태 동기화
                       }

@@ -28,7 +28,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   image_picker: ^1.1.2
   package_info_plus: ^8.1.0
-  flutter_svg: ^1.0.1
+  flutter_svg: ^2.0.17
 
   #login
   flutter_naver_login: ^2.0.0
