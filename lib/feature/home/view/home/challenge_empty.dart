@@ -1,3 +1,4 @@
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:flutter/material.dart';
 import '../../../../widgets/widget_constant.dart';
 import '../../../../widgets/widget_dashed_border.dart';
@@ -16,20 +17,25 @@ class ChallengeEmpty extends StatelessWidget {
           decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(40)),
           padding: EdgeInsets.all(16),
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Icon(
-                Icons.add_circle_outline,
-                color: Colors.grey.shade300,
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  '새 챌린지를 등록해보세요',
+                  style: TextStyle(
+                      color: Colors.grey.shade300,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
-              width5,
-              Text(
-                '새 챌린지를 등록해보세요',
-                style: TextStyle(
-                    color: Colors.grey.shade300,
-                    fontWeight: FontWeight.w600),
-              )
+              height5,
+              Icon(
+                Icons.arrow_downward,
+                color: Colors.grey.shade300,
+                size: 30 * su,
+              ),
             ],
           ), // 원하는 위젯 배치
         ),
