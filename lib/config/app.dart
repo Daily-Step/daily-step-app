@@ -23,6 +23,9 @@ import '../feature/splash/splash_screen.dart';
 import '../widgets/widget_constant.dart';
 import 'route/auth_redirection.dart';
 
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerStateKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class App extends ConsumerWidget with WidgetsBindingObserver {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   final DailyStepAuth _auth = DailyStepAuth(socialLoginRepository: SocialLoginRepository());
@@ -36,6 +39,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
     return DailyStepAuthScope(
       notifier: _auth,
       child: MaterialApp.router(
+        scaffoldMessengerKey: scaffoldMessengerStateKey,
         locale: const Locale('ko'),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

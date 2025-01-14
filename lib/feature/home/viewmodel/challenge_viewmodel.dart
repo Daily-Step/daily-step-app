@@ -202,7 +202,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       //가입 후 첫 달성
       if(isFirstAchieved == '0'){
         ToastMsg toastMsg = ToastMsg.create(0);
-        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+        WToast.show(toastMsg.title, subMessage: toastMsg.content);
         await _secureStorageService.saveIsFirstAchieve('1');
         return;
       }
@@ -219,11 +219,11 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       if (successDate == 0) {
         //하루 첫 달성
         ToastMsg toastMsg = ToastMsg.create(1);
-        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+        WToast.show(toastMsg.title, subMessage: toastMsg.content);
       } else {
         //일반 달성
         ToastMsg toastMsg = ToastMsg.create(2);
-        WToast.show(context, toastMsg.title, subMessage: toastMsg.content);
+        WToast.show(toastMsg.title, subMessage: toastMsg.content);
       }
     });
   }
