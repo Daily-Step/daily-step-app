@@ -95,8 +95,8 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                widget.id != null ? '챌린지 수정' : '새 챌린지 추가하긴',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                widget.id != null ? '챌린지 수정' : '새 챌린지 추가하기',
+                style: WAppFontSize.titleXL(),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
