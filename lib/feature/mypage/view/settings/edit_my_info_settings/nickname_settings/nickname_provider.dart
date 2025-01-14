@@ -60,6 +60,18 @@ class NickNameProvider extends StateNotifier<NickNameState> {
     updateNickName(state.controller.text);
   }
 
+  void resetState(String initialNickname) {
+    state.controller.dispose(); // 기존 컨트롤러 해제
+    state = NickNameState(
+      nickName: initialNickname,
+      isValid: initialNickname.isNotEmpty && initialNickname.length >= 4 && initialNickname.length <= 10,
+      controller: TextEditingController(text: initialNickname), // 새로운 컨트롤러 생성
+      validationMessage: '',
+      validationColor: Colors.red,
+    );
+  }
+
+
   bool _validateNickName(String nickName) {
     if (nickName.length < 4 || nickName.length > 10) {
       return false;
@@ -165,13 +177,20 @@ class NickNameProvider extends StateNotifier<NickNameState> {
 
   @override
   void dispose() {
-    state.controller.dispose();
+    state.controller.dispose(); // 컨트롤러 해제
+    state = state.copyWith(
+      nickName: '',
+      isValid: false,
+      validationMessage: '',
+      validationColor: Colors.red,
+    );
     super.dispose();
   }
 }
 
 final isNickNameValidProvider = StateProvider<bool>((ref) => false);
 
-final nickNameProvider = StateNotifierProvider.family<NickNameProvider, NickNameState, String>(
-      (ref, initialNickname) => NickNameProvider(ref, initialNickname),
-);
+final nickNameProvider = StateNotifierProvider.autoDispose
+    .family<NickNameProvider, NickNameState, String>((ref, initialNickname) {
+  return NickNameProvider(ref, initialNickname);
+});

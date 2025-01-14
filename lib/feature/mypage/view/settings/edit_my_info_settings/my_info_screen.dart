@@ -68,7 +68,6 @@ class MyInfoScreen extends ConsumerWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(myInfoViewModelProvider); // 변수명 변경
@@ -81,164 +80,181 @@ class MyInfoScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('내 정보 수정', style: WAppFontSize.titleXL(),),
+        title: Text(
+          '내 정보 수정',
+          style: WAppFontSize.titleXL(),
+        ),
         centerTitle: true,
       ),
       body: userState.when(
         initial: () => const SizedBox.shrink(),
         loading: () => const Center(child: CircularProgressIndicator()),
-        loaded: (user) => Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16.0 * su),
-              child: Column(
-                children: [
-                  // 프로필 이미지
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 64,
-                          backgroundColor: const Color(0xff2257FF),
-                          backgroundImage: user.profileImageUrl.isEmpty
-                              ? null
-                              : NetworkImage(user.profileImageUrl),
-                          child: user.profileImageUrl.isEmpty
-                              ? Text('🥰', style: TextStyle(fontSize: 45 * su))
-                              : null,
-                        ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
-                            onTap: () => _checkPermissionAndPickImage(context, ref),
-                            child: CircleAvatar(
-                              radius: 16 * su,
-                              backgroundColor: Colors.black,
-                              child: Icon(Icons.camera_alt, color: Colors.white, size: 16 * su),
+        loaded: (user) => SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.0 * su),
+                child: Column(
+                  children: [
+                    // 프로필 이미지
+                    Center(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 64,
+                            backgroundColor: const Color(0xff2257FF),
+                            backgroundImage: user.profileImageUrl.isEmpty ? null : NetworkImage(user.profileImageUrl),
+                            child: user.profileImageUrl.isEmpty ? Text('🥰', style: TextStyle(fontSize: 45 * su)) : null,
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: GestureDetector(
+                              onTap: () => _checkPermissionAndPickImage(context, ref),
+                              child: CircleAvatar(
+                                radius: 16 * su,
+                                backgroundColor: Colors.black,
+                                child: Icon(Icons.camera_alt, color: Colors.white, size: 16 * su),
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20 * su),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '닉네임',
+                          style: WAppFontSize.bodyL1(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              user.nickname,
+                              style: WAppFontSize.values(color: WAppColors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.push('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 20 * su),
+                    SizedBox(height: 40 * su),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '닉네임', style: WAppFontSize.bodyL1(),
-                      ),
-                      Row(
-                        children: [
-                          Text(user.nickname, style: WAppFontSize.values(color: WAppColors.black),),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/main/myPage/myinfo/nickname/${user.nickname ?? ""}');
-                            },
-                            icon: const Icon(Icons.keyboard_arrow_right),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40 * su),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '생년월일',
+                          style: WAppFontSize.bodyL1(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              DateFormat('yyyy-MM-dd').format(user.birth),
+                              style: WAppFontSize.values(color: WAppColors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.push('/main/myPage/myinfo/birthday/${user.birth ?? ""}');
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 40 * su),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '생년월일',
-                        style: WAppFontSize.bodyL1(),
-                      ),
-                      Row(
-                        children: [
-                          Text(DateFormat('yyyy-MM-dd').format(user.birth), style: WAppFontSize.values(color: WAppColors.black),),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/main/myPage/myinfo/birthday/${user.birth ?? ""}');
-                            },
-                            icon: const Icon(Icons.keyboard_arrow_right),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40 * su),
+                    // 성별 선택
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '성별',
+                          style: WAppFontSize.bodyL1(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              user.translatedGender,
+                              style: WAppFontSize.values(color: WAppColors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.push('/main/myPage/myinfo/gender');
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 40 * su),
 
-                  // 성별 선택
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '성별',
-                        style: WAppFontSize.bodyL1(),
-                      ),
-                      Row(
-                        children: [
-                          Text(user.translatedGender, style: WAppFontSize.values(color: WAppColors.black),),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/main/myPage/myinfo/gender');
-                            },
-                            icon: const Icon(Icons.keyboard_arrow_right),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40 * su),
+                    // 직무 선택
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '직무',
+                          style: WAppFontSize.bodyL1(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              user.translatedJob,
+                              style: WAppFontSize.values(color: WAppColors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.push('/main/myPage/myinfo/job');
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 40 * su),
 
-                  // 직무 선택
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '직무',
-                        style: WAppFontSize.bodyL1(),
-                      ),
-                      Row(
-                        children: [
-                          Text(user.translatedJob, style: WAppFontSize.values(color: WAppColors.black),),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/main/myPage/myinfo/job');
-                            },
-                            icon: const Icon(Icons.keyboard_arrow_right),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40 * su),
-
-                  // 연차 선택
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '연차',
-                        style: WAppFontSize.bodyL1(),
-                      ),
-                      Row(
-                        children: [
-                          Text(user.translatedJobTenure, style: WAppFontSize.values(color: WAppColors.black),),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/main/myPage/myinfo/jobTenure');
-                            },
-                            icon: const Icon(Icons.keyboard_arrow_right),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10 * su),
-                ],
+                    // 연차 선택
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '연차',
+                          style: WAppFontSize.bodyL1(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              user.translatedJobTenure,
+                              style: WAppFontSize.values(color: WAppColors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.push('/main/myPage/myinfo/jobTenure');
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10 * su),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         error: (message) => Center(
           child: Text('오류: $message', style: TextStyle(color: Colors.red)),

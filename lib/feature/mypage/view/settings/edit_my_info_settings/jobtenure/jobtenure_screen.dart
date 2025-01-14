@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../common/util/size_util.dart';
-import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../../widgets/widget_scroll_picker.dart';
 import '../../../../../sign_up/view/jobtenure_dummies.dart';
@@ -35,15 +34,6 @@ class JobTenureScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
-        actions: [
-          WConfirmButton(
-            onPressed: () async {
-              await ref.read(jobTenureProvider.notifier).saveJobTenure();
-              context.go('/main/myPage/myinfo');
-            },
-            isValidProvider: isDataEntered,
-          )
-        ],
       ),
       body: Padding(
         padding: globalMargin,
@@ -55,7 +45,7 @@ class JobTenureScreen extends ConsumerWidget {
               readOnly: true,
               style: WAppFontSize.values(color: WAppColors.black),
               decoration: InputDecoration(
-                hintText: '선택',
+                hintText: '해당하는 연차를 선택하세요.',
                 hintStyle: hintTextStyle,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.keyboard_arrow_down),
@@ -89,6 +79,32 @@ class JobTenureScreen extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0 * su, vertical: 16.0 * su),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50.0 * su,
+          child: ElevatedButton(
+            onPressed: isDataEntered
+                ? () async {
+              await ref.read(jobTenureProvider.notifier).saveJobTenure();
+              context.go('/main/myPage/myinfo');
+            }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDataEntered ? Colors.black : Colors.grey[300],
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0 * su),
+              ),
+            ),
+            child: Text(
+              '저장하기',
+              style: WAppFontSize.values(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );

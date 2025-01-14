@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/gender_settings/gender_provider.dart';
 
-import '../../../../../../widgets/widget_confirm_text.dart';
-
 class GenderScreen extends ConsumerWidget {
   const GenderScreen({super.key});
 
@@ -15,7 +13,6 @@ class GenderScreen extends ConsumerWidget {
     final genderState = ref.watch(genderProvider);
     final isDataEntered = ref.watch(isDataEnteredProvider);
     final genderNotifier = ref.read(genderProvider.notifier);
-
 
     return Scaffold(
       appBar: AppBar(
@@ -30,16 +27,6 @@ class GenderScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
-        actions: [
-          WConfirmButton(
-            onPressed: () async {
-              await genderNotifier.saveGender();
-
-              context.go('/main/myPage/myinfo');
-            },
-            isValidProvider: isDataEntered,
-          )
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0 * su),
@@ -54,6 +41,32 @@ class GenderScreen extends ConsumerWidget {
               ],
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0 * su, vertical: 16.0 * su),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50.0 * su,
+          child: ElevatedButton(
+            onPressed: isDataEntered
+                ? () async {
+              await genderNotifier.saveGender();
+              context.go('/main/myPage/myinfo');
+            }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDataEntered ? Colors.black : Colors.grey[300],
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0 * su),
+              ),
+            ),
+            child: Text(
+              '저장하기',
+              style: WAppFontSize.values(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );

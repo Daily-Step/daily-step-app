@@ -21,7 +21,6 @@ class NickNameScreen extends ConsumerWidget {
     final nickNameNotifier = ref.read(nickNameProvider(initialNickname).notifier);
     bool isSaveButtonEnabled = nickNameState.isValid && nickNameState.validationMessage == '사용 가능한 닉네임입니다. :)';
 
-
     // 화면에 기존 닉네임을 표시
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (nickNameState.nickName.isEmpty) {
@@ -39,52 +38,69 @@ class NickNameScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
-        actions: [
-          WConfirmButton(
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            height20,
+            WTextField(
+              controller: nickNameState.controller,
+              hintText: '사용하실 닉네임을 입력하세요',
+              hintStyle: WAppFontSize.values(),
+              textStyle: WAppFontSize.values(color: WAppColors.black),
+              onChanged: (value) {
+                nickNameNotifier.updateNickName(value);
+              },
+              isEnable: nickNameState.isValid || nickNameState.nickName.isEmpty,
+              suffixButton: Container(
+                child: WRoundButton(
+                  isEnabled: nickNameState.isValid,
+                  onPressed: () {
+                    // 중복 확인 로직 추가
+                    ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
+                  },
+                  text: '중복확인',
+                  textStyle: WAppFontSize.values(color: WAppColors.gray09),
+                ),
+              ),
+            ),
+            SizedBox(height: 8 * su),
+            Padding(
+              padding: EdgeInsets.only(left: 16.0 * su),
+              child: Text(
+                nickNameState.validationMessage,
+                style: TextStyle(color: nickNameState.validationColor),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0 * su, vertical: 16.0 * su),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50.0 * su,
+          child: ElevatedButton(
             onPressed: isSaveButtonEnabled
                 ? () async {
               await nickNameNotifier.saveNickName(nickNameState.nickName);
               context.go('/main/myPage/myinfo');
             }
-                : () {},  // 버튼 비활성화 시 null로 설정
-            isValidProvider: isNickNameValid,
-          )
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          height20,
-          WTextField(
-            controller: nickNameState.controller,
-            hintText: '사용하실 닉네임을 입력하세요',
-            hintStyle: WAppFontSize.values(),
-            textStyle: WAppFontSize.values(color: WAppColors.black),
-            onChanged: (value) {
-              nickNameNotifier.updateNickName(value);
-            },
-            isEnable: nickNameState.isValid || nickNameState.nickName.isEmpty,
-            suffixButton: Container(
-              child: WRoundButton(
-                isEnabled: nickNameState.isValid,
-                onPressed: () {
-                  // 중복 확인 로직 추가
-                  ref.read(nickNameProvider(initialNickname).notifier).checkNicknameDuplication(nickNameState.nickName);
-                },
-                text: '중복확인',
-                textStyle: WAppFontSize.values(color: WAppColors.gray09),
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isSaveButtonEnabled ? WAppColors.black : WAppColors.gray03,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0 * su),
               ),
             ),
-          ),
-          SizedBox(height: 8 * su),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0 * su),
             child: Text(
-              nickNameState.validationMessage,
-              style: TextStyle(color: nickNameState.validationColor),
+              '저장하기',
+              style: WAppFontSize.values(color: Colors.white),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

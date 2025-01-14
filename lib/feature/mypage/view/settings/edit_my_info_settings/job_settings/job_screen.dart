@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:dailystep/feature/mypage/view/settings/edit_my_info_settings/job_settings/job_provider.dart';
 
 import '../../../../../../common/util/size_util.dart';
-import '../../../../../../widgets/widget_confirm_text.dart';
 import '../../../../../../widgets/widget_constant.dart';
 import '../../../../../sign_up/view/job_dummies.dart';
 
@@ -29,15 +28,6 @@ class JobScreen extends ConsumerWidget {
             context.go('/main/myPage/myinfo');
           },
         ),
-        actions: [
-          WConfirmButton(
-            onPressed: () async {
-              await ref.read(jobProvider.notifier).saveJob();
-              context.go('/main/myPage/myinfo');
-            },
-            isValidProvider: isDataEntered,
-          )
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +73,32 @@ class JobScreen extends ConsumerWidget {
           ),
           SizedBox(height: 8 * su),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0 * su, vertical: 16.0 * su),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50.0 * su,
+          child: ElevatedButton(
+            onPressed: isDataEntered
+                ? () async {
+              await ref.read(jobProvider.notifier).saveJob();
+              context.go('/main/myPage/myinfo');
+            }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDataEntered ? Colors.black : Colors.grey[300],
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0 * su),
+              ),
+            ),
+            child: Text(
+              '저장하기',
+              style: WAppFontSize.values(color: Colors.white),
+            ),
+          ),
+        ),
       ),
     );
   }
