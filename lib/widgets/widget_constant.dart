@@ -176,6 +176,7 @@ const spacer = Spacer();
 
 var width2 = Width(2 * su);
 var width5 = Width(5 * su);
+var width8 = Width(8 * su);
 var width10 = Width(10 * su);
 var width20 = Width(20 * su);
 var width30 = Width(30 * su);
@@ -199,7 +200,7 @@ var subFontSize = 16.0 * su;
 var globalMargin = EdgeInsets.symmetric(horizontal: 20.0 * su);
 
 /// 박스 border radius
-var globalBorderRadius = BorderRadius.circular(10 * su);
+var globalBorderRadius = BorderRadius.circular(16 * su);
 
 /// 텍스트 스타일
 var subTextStyle = TextStyle(fontSize: 15 * su ,color: Colors.grey.shade500);

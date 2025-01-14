@@ -78,6 +78,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   /// 서버에 로그인 요청 보내기
   Future<Map<String, dynamic>?> _signUpToServer(String accessToken) async {
+    print('login to server');
     try {
       final requestData = {'accessToken': accessToken};
       final response = await ApiClient().post('/auth/login/kakao', data: requestData);

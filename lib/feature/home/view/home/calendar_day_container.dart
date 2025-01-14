@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../widgets/widget_constant.dart';
+
 class CalendarDayContainer extends StatelessWidget {
   final bool isSelected;
   final bool isSuccess;
@@ -22,7 +24,7 @@ class CalendarDayContainer extends StatelessWidget {
                 : isSuccess
                     ? Colors.blue
                     : Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: globalBorderRadius,
       ),
       alignment: Alignment.center,
       child: Text(

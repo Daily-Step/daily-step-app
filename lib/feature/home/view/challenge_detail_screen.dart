@@ -37,7 +37,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                     data: (state) => state.selectedChallenge!.title,
                     error: (Object error, StackTrace stackTrace) => '',
                     loading: () => ''),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               )),
           actions: [
             selectedChallengeState.when(
@@ -225,7 +225,6 @@ class ChallengeDetailScreen extends ConsumerWidget {
                               width: 18,
                               height: 18,
                               allowDrawingOutsideViewBox: true,
-                              cacheColorFilter: false,
                             ),
                             Text('달성한 날', style: TextStyle(color: Colors.grey)),
                           ],
@@ -330,8 +329,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 width: 18,
                 height: 18,
                 allowDrawingOutsideViewBox: true,
-                cacheColorFilter: false,
               ),
+              width8,
               Text(title, style: TextStyle(color: Colors.grey)),
             ],
           ),

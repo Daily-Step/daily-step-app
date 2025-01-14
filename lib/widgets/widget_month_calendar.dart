@@ -20,7 +20,7 @@ class _WMonthModalState extends State<WMonthModal> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: globalBorderRadius,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),

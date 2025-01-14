@@ -3,8 +3,10 @@ import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../common/util/size_util.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_confirm_modal.dart';
 import '../../../widgets/widget_toast.dart';
@@ -93,7 +95,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                widget.id != null ? '챌린지 수정' : '새로운 챌린지 추가',
+                widget.id != null ? '챌린지 수정' : '새 챌린지 추가하긴',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: IconButton(
@@ -120,6 +122,12 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                     },
                     isEnable: !errors['title']!,
                     errorMessage: '챌린지 이름을 입력하세요',
+                    suffixButton: SvgPicture.asset(
+                      'assets/icons/pencil.svg',
+                      width: 10 * su,
+                      height: 10 * su,
+                      allowDrawingOutsideViewBox: true,
+                    ),
                   ),
                   height20,
                   WSelectInputWithLabel(
@@ -307,7 +315,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                           Navigator.pop(context);
                           ToastMsg toastMsg = ToastMsg.create(3);
                           WToast.show(context, toastMsg.title,
-                              subMessage: toastMsg.content,top: 22.0);
+                              subMessage: toastMsg.content, top: 22.0);
                         },
                         isCancelButton: false);
                   }
