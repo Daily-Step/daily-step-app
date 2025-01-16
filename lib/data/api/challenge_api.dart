@@ -61,7 +61,7 @@ class ChallengeApi {
       print('챌린지 수정 중 오류 발생: $e');
     }
   }
-  ///TODO: delete 테스트 필요
+
   Future<void> deleteChallenge(int id) async {
     try {
       final response =
@@ -89,10 +89,8 @@ class ChallengeApi {
       print('챌린지 달성 중 오류 발생: $e');
     }
   }
-  ///TODO: delete 테스트 필요
+
   Future<void> deleteAchieveChallenge(int id, String cancelDate) async {
-    print('-------achieveDelete------');
-    print(cancelDate);
     final requestData = {'cancelDate': cancelDate};
     try {
       final response = await _apiClient.post('/challenges/$id/cancel', data: requestData);

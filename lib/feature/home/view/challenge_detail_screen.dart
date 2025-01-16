@@ -226,6 +226,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                               height: 18,
                               allowDrawingOutsideViewBox: true,
                             ),
+                            width8,
                             Text('달성한 날', style: TextStyle(color: Colors.grey)),
                           ],
                         ),
