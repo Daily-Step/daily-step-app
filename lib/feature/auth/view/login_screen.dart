@@ -1,5 +1,6 @@
 import 'package:dailystep/config/app.dart';
 import 'package:dailystep/config/route/auth_redirection.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,6 +21,7 @@ class LoginScreen extends ConsumerWidget {
     final auth = DailyStepAuthScope.of(context);
 
     return Scaffold(
+      backgroundColor: WAppColors.white,
       body: Stack(
         children: [
           Center(
@@ -31,11 +33,6 @@ class LoginScreen extends ConsumerWidget {
                   child: Image.asset('assets/splash/splash_logo.png'),
                 ),
                 SizedBox(height: 20 * su),
-                if (loginState.errorMessage != null)
-                  Text(
-                    loginState.errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
               ],
             ),
           ),

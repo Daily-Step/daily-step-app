@@ -26,7 +26,7 @@ void showConfirmModal({
               children: [
                 height60,
                 content,
-                height60,
+                height50,
                 Row(
                   children: [
                     if (isCancelButton) ...[

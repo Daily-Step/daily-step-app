@@ -3,6 +3,7 @@ import 'package:dailystep/data/api/firebase_api.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,11 +16,18 @@ Future<void> main() async {
   SizeUtil().setSizeUnit();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-
-  final apiClient = ApiClient();
-
   await FirebaseApi().initNotifications();
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // 상태 표시줄 색상 투명
+      statusBarIconBrightness: Brightness.dark, // 아이콘 밝기 설정
+      systemNavigationBarColor: Colors.transparent, // 내비게이션 바 투명
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+
   runApp(ProviderScope(child: App()));
 }
 

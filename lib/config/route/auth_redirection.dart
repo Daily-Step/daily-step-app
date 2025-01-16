@@ -59,7 +59,7 @@ class DailyStepAuth extends ChangeNotifier {
 
     // 로그인되지 않은 경우
     if (!_signedIn && !isLoginPage) {
-      return '/signIn';
+      return '/';
     }
 
     // 로그인된 상태에서 로그인 페이지로 이동 차단

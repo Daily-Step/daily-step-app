@@ -56,6 +56,7 @@ class App extends ConsumerWidget with WidgetsBindingObserver {
 
   GoRouter _router(bool isLoggedIn) {
     return GoRouter(
+      initialLocation: '/',
       navigatorKey: navigatorKey,
       routes: <GoRoute>[
         GoRoute(

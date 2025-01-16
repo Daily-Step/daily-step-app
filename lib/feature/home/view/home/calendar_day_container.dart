@@ -19,18 +19,17 @@ class CalendarDayContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isSelected
-            ? Colors.black
-                : isSuccess
+        color: isSelected ? Colors.black : Colors.transparent,
+                /*: isSuccess
                     ? Colors.blue
-                    : Colors.transparent,
+                    : Colors.transparent,*/
         borderRadius: globalBorderRadius,
       ),
       alignment: Alignment.center,
       child: Text(
         '${date.day}',
         style: TextStyle(
-          color: isSelected || isSuccess
+          color: isSelected // || isSuccess
               ? Colors.white
               : isCurrentPeriod
                   ? Colors.black

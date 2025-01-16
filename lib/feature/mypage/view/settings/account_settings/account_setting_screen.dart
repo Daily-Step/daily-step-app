@@ -57,7 +57,7 @@ class AccountSettingScreen extends ConsumerWidget {
       content: Column(
         children: [
           Text(
-            '정말로 탈퇴하시겠어요??',
+            '정말로 탈퇴하시겠어요?',
             style: WAppFontSize.titleL(),
           ),
           height5,
@@ -81,6 +81,8 @@ class AccountSettingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final auth = DailyStepAuthScope.of(context);
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -107,7 +109,11 @@ class AccountSettingScreen extends ConsumerWidget {
                     style: WAppFontSize.values(color: WAppColors.black),
                   ),
                   IconButton(
-                    onPressed: () => handleLogout(context, ref),
+                    onPressed: () async{
+                      await _deleteAccessToken();
+                      auth.signOut(); // 인스턴스 메서드 호출
+                      context.go('/signIn');
+                    },
                     icon: Icon(Icons.keyboard_arrow_right),
                   )
                 ],
