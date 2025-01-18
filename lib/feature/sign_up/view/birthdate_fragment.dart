@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/util/size_util.dart';
-import '../../../widgets/widget_cancel_toast.dart';
-import '../../../widgets/widget_constant.dart';
 import '../../../widgets/widget_toast.dart';
+import '../../../widgets/widget_constant.dart';
 import '../../../widgets/wigdet_date_picker.dart';
 import '../viewmodel/validation_providers.dart';
 
@@ -41,10 +39,15 @@ class BirthDateFragment extends ConsumerWidget {
           onChanged: (DateTime date) {
             if (!_validateDate(date)) {
               // WToast를 사용해 경고 메시지 표시
-              WToastCancel.show(
+              WToast.show(
                 context,
                 "잘못된 날짜 선택",
                 subMessage: "오늘 날짜와 선택할 수 없습니다.",
+                icon: Icon(
+                  Icons.cancel_outlined,
+                  color: Colors.red,
+                  size: 50,
+                ),
               );
               return;
             }

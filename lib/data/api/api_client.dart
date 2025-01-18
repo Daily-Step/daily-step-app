@@ -1,8 +1,6 @@
-import 'package:dailystep/data/api/result/api_error.dart';
-import 'package:dailystep/widgets/widget_toast.dart';
 import 'package:dio/dio.dart';
+import '../../config/route/go_router.dart';
 import '../../config/secure_storage/secure_storage_service.dart';
-import '../../feature/home/view/settings/toast_msg.dart';
 import 'dio/dio_set.dart';
 
 class ApiClient {
@@ -78,10 +76,7 @@ class ApiClient {
             }
           }
         }
-        ApiError.createErrorResult(error).runIfFailure((data){
-          ToastMsg toastMsg = ToastMsg.create(4);
-          WToast.show(toastMsg.title, subMessage: toastMsg.content);
-        });
+        navigateToPage('/error');
         return handler.next(error); // 다른 에러 진행
       },
     ));
