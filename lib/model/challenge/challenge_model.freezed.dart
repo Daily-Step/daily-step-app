@@ -31,6 +31,7 @@ mixin _$ChallengeModel {
   String get color => throw _privateConstructorUsedError;
   DateTime get startDateTime => throw _privateConstructorUsedError;
   DateTime get endDateTime => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
 
   /// Serializes this ChallengeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -59,7 +60,8 @@ abstract class $ChallengeModelCopyWith<$Res> {
       int totalGoalCount,
       String color,
       DateTime startDateTime,
-      DateTime endDateTime});
+      DateTime endDateTime,
+      String status});
 
   $CategoryModelCopyWith<$Res> get category;
   $RecordModelCopyWith<$Res>? get record;
@@ -91,6 +93,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? color = null,
     Object? startDateTime = null,
     Object? endDateTime = null,
+    Object? status = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -137,6 +140,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.endDateTime
           : endDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -184,7 +191,8 @@ abstract class _$$ChallengeImplCopyWith<$Res>
       int totalGoalCount,
       String color,
       DateTime startDateTime,
-      DateTime endDateTime});
+      DateTime endDateTime,
+      String status});
 
   @override
   $CategoryModelCopyWith<$Res> get category;
@@ -216,6 +224,7 @@ class __$$ChallengeImplCopyWithImpl<$Res>
     Object? color = null,
     Object? startDateTime = null,
     Object? endDateTime = null,
+    Object? status = null,
   }) {
     return _then(_$ChallengeImpl(
       id: null == id
@@ -262,6 +271,10 @@ class __$$ChallengeImplCopyWithImpl<$Res>
           ? _value.endDateTime
           : endDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -280,7 +293,8 @@ class _$ChallengeImpl implements _Challenge {
       required this.totalGoalCount,
       required this.color,
       required this.startDateTime,
-      required this.endDateTime});
+      required this.endDateTime,
+      required this.status});
 
   factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeImplFromJson(json);
@@ -307,10 +321,12 @@ class _$ChallengeImpl implements _Challenge {
   final DateTime startDateTime;
   @override
   final DateTime endDateTime;
+  @override
+  final String status;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, category: $category, record: $record, title: $title, content: $content, durationInWeeks: $durationInWeeks, weekGoalCount: $weekGoalCount, totalGoalCount: $totalGoalCount, color: $color, startDateTime: $startDateTime, endDateTime: $endDateTime)';
+    return 'ChallengeModel(id: $id, category: $category, record: $record, title: $title, content: $content, durationInWeeks: $durationInWeeks, weekGoalCount: $weekGoalCount, totalGoalCount: $totalGoalCount, color: $color, startDateTime: $startDateTime, endDateTime: $endDateTime, status: $status)';
   }
 
   @override
@@ -334,7 +350,8 @@ class _$ChallengeImpl implements _Challenge {
             (identical(other.startDateTime, startDateTime) ||
                 other.startDateTime == startDateTime) &&
             (identical(other.endDateTime, endDateTime) ||
-                other.endDateTime == endDateTime));
+                other.endDateTime == endDateTime) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -351,7 +368,8 @@ class _$ChallengeImpl implements _Challenge {
       totalGoalCount,
       color,
       startDateTime,
-      endDateTime);
+      endDateTime,
+      status);
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -381,7 +399,8 @@ abstract class _Challenge implements ChallengeModel {
       required final int totalGoalCount,
       required final String color,
       required final DateTime startDateTime,
-      required final DateTime endDateTime}) = _$ChallengeImpl;
+      required final DateTime endDateTime,
+      required final String status}) = _$ChallengeImpl;
 
   factory _Challenge.fromJson(Map<String, dynamic> json) =
       _$ChallengeImpl.fromJson;
@@ -408,6 +427,8 @@ abstract class _Challenge implements ChallengeModel {
   DateTime get startDateTime;
   @override
   DateTime get endDateTime;
+  @override
+  String get status;
 
   /// Create a copy of ChallengeModel
   /// with the given fields replaced by the non-null parameter values.

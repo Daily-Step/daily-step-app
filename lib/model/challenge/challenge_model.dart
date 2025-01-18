@@ -18,6 +18,7 @@ class ChallengeModel with _$ChallengeModel {
     required final String color,
     required final DateTime startDateTime,
     required final DateTime endDateTime,
+    required final String status,
   }) = _Challenge;
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>
