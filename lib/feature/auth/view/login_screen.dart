@@ -52,13 +52,13 @@ class LoginScreen extends ConsumerWidget {
 
                       if (savedToken != null) {
                         print('유효한 저장된 토큰이 있습니다. 서버 요청을 건너뜁니다.');
-                        await auth.signIn(context); // DailyStepAuth 상태 업데이트
+                        auth.signIn(context); // DailyStepAuth 상태 업데이트
                         return;
                       }
 
                       await viewModel.handleLogin(context);
                       if (viewModel.state.isLoggedIn) {
-                        await auth.signIn(context); // DailyStepAuth 상태 동기화
+                        auth.signIn(context); // DailyStepAuth 상태 동기화
                       }
                     },
                     style: ElevatedButton.styleFrom(

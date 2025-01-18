@@ -10,6 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:nav/nav.dart';
 
 import '../common/util/size_util.dart';
+import '../widgets/widget_confirm_modal.dart';
+import 'home/viewmodel/challenge_viewmodel.dart';
 
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
@@ -59,6 +61,7 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(challengeViewModelProvider);
     return Material(
       child: PopScope(
         canPop: isRootPage,
@@ -71,16 +74,42 @@ class MainScreenState extends ConsumerState<MainScreen>
               ),
             ),
             bottomNavigationBar: _buildBottomNavigationBar(context),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  context.go('/main/challenge/new');
-                },
-                shape: const CircleBorder(),
-                backgroundColor: Colors.black,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                )),
+            floatingActionButton: state.when(
+                data: (data) => FloatingActionButton(
+                    onPressed: () {
+                      ///진행중인 챌리지가 5개 이하인 경우에만 추가 가능
+                      print(data.onGoingChallengeCount);
+                      if(data.onGoingChallengeCount < 5){
+                        context.go('/main/challenge/new');
+                      } else {
+                        showConfirmModal(
+                            context: context,
+                            content: Column(
+                              children: [
+                                Text(
+                                  '챌린지 등록 개수 초과',
+                                  style: boldTextStyle,
+                                ),
+                                height5,
+                                Text(
+                                  '진행중인 챌린지는 5개까지 등록할 수 있어요',
+                                  style: subTextStyle,
+                                )
+                              ],
+                            ),
+                            confirmText: '닫기',
+                            onClickConfirm: (){},
+                            isCancelButton: false);
+                      }
+                    },
+                    shape: const CircleBorder(),
+                    backgroundColor: Colors.black,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    )),
+                error: (Object error, StackTrace stackTrace) => SizedBox(),
+                loading: () => SizedBox()),
             floatingActionButtonLocation:
             FloatingActionButtonLocation.centerDocked,
           ),

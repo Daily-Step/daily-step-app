@@ -18,15 +18,13 @@ void showConfirmModal({
             borderRadius: BorderRadius.circular(16 * su),
           ),
           child: Container(
-            width: 380 * su,
-            height: 250 * su,
             padding: EdgeInsets.symmetric(horizontal: 20.0 * su, vertical: 10 * su),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                height60,
+                height20,
                 content,
-                height50,
+                height20,
                 Row(
                   children: [
                     if (isCancelButton) ...[

@@ -176,7 +176,6 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                 ' /' +
                                     totalGoalCount.toString()),
                             'assets/icons/success.svg'),
-                        width2,
                         _card(
                             '미달성한 날',
                             _textWithSubText(
@@ -200,7 +199,6 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                     '일',
                                 style: boldTextStyle),
                             'assets/icons/medal.svg'),
-                        width2,
                         _card(
                             '남은 기간',
                             Text(
