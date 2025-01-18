@@ -78,7 +78,7 @@ final birthdayProvider = StateNotifierProvider.autoDispose<BirthdayProvider, Bir
       loaded: (user) => user.birth,
       orElse: () => DateTime.now(),
     );
-    return BirthdayProvider(ref, initialDate);
+    return BirthdayProvider(ref, initialDate!);
   },
 );
 // ApiClient Provider 정의 (필요시 사용)

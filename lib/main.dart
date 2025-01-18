@@ -17,6 +17,8 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
   await FirebaseApi().initNotifications();
+  var hashkey =await KakaoSdk.origin;
+  print('hash key  ${hashkey}');
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
   SystemChrome.setSystemUIOverlayStyle(

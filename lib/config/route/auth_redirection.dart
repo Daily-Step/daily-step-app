@@ -51,20 +51,16 @@ class DailyStepAuth extends ChangeNotifier {
     _signedIn = true; // 로그인 상태 업데이트
     notifyListeners(); // 상태 변경 알림
 
-    GoRouter.of(context).go('/main/home'); // 메인 화면 이동
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      GoRouter.of(context).go('/main/home'); // 메인 화면 이동
+    });
   }
 
   String? guard(GoRouterState state) {
     final isLoginPage = state.matchedLocation == '/signIn' || state.matchedLocation == '/signUp';
 
-    // 로그인되지 않은 경우
-    if (!_signedIn && !isLoginPage) {
-      return '/';
-    }
-
-    // 로그인된 상태에서 로그인 페이지로 이동 차단
     if (_signedIn && isLoginPage) {
-      return '/main/home';
+      return '/main/home'; // 이미 로그인된 경우 홈으로 리디렉션
     }
 
     return null; // 리디렉션 필요 없음

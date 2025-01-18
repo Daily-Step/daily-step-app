@@ -332,7 +332,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 allowDrawingOutsideViewBox: true,
               ),
               width8,
-              Text(title, style: TextStyle(color: Colors.grey)),
+              Text(title, style: WAppFontSize.values()),
             ],
           ),
           SizedBox(height: 8),

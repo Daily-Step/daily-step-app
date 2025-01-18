@@ -1,6 +1,7 @@
 import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/feature/mypage/model/mypage_state.dart';
+import 'package:dailystep/feature/mypage/mypage.dart';
 import 'package:dailystep/widgets/widget_confirm_modal.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,7 @@ class MyInfoScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(myInfoViewModelProvider); // 변수명 변경
+    final userProfile = ref.watch(myPageViewModelProvider);
 
     if (userState is MyPageStateInitial) {
       Future.delayed(Duration.zero, () {
@@ -103,8 +105,12 @@ class MyInfoScreen extends ConsumerWidget {
                           CircleAvatar(
                             radius: 64,
                             backgroundColor: const Color(0xff2257FF),
-                            backgroundImage: user.profileImageUrl.isEmpty ? null : NetworkImage(user.profileImageUrl),
-                            child: user.profileImageUrl.isEmpty ? Text('🥰', style: TextStyle(fontSize: 45 * su)) : null,
+                            backgroundImage: userProfile?.profileImageUrl.isNotEmpty ?? false
+                                ? NetworkImage(userProfile!.profileImageUrl) // MyPage의 이미지 사용
+                                : null,
+                            child: userProfile?.profileImageUrl.isEmpty ?? true
+                                ? Text('🥰', style: TextStyle(fontSize: 45 * su))
+                                : null,
                           ),
                           Positioned(
                             right: 0,
@@ -158,7 +164,7 @@ class MyInfoScreen extends ConsumerWidget {
                         Row(
                           children: [
                             Text(
-                              DateFormat('yyyy-MM-dd').format(user.birth),
+                              DateFormat('yyyy-MM-dd').format(user.birth!),
                               style: WAppFontSize.values(color: WAppColors.black),
                             ),
                             IconButton(

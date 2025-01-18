@@ -7,8 +7,6 @@ class MyPageModel with _$MyPageModel {
   const factory MyPageModel({
     required String nickname,
     @Default('') String profileImageUrl,
-    required DateTime birth,
-    required String gender,
     @Default(0) int ongoingChallenges,
     @Default(0) int completedChallenges,
     @Default(0) int totalChallenges,
@@ -16,14 +14,21 @@ class MyPageModel with _$MyPageModel {
     int? jobId,
     String? job,
     int? jobYearId,
+    DateTime? birth, // 선택적 필드로 변경
+    String? gender,  // 선택적 필드로 변경
   }) = _UserModel;
 
   factory MyPageModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>;
     return MyPageModel(
-      nickname: data['nickname'] as String,
-      birth: DateTime.parse(data['birth'] as String),
-      gender: data['gender'] as String,
+      nickname: data['nickname'] ?? "Unknown",
+      profileImageUrl: data['profileImg'] ?? "",
+      ongoingChallenges: data['ongoingCount'] ?? 0,
+      completedChallenges: data['succeedCount'] ?? 0,
+      totalChallenges: data['totalCount'] ?? 0,
+      isPushNotificationEnabled: false, // 기본값
+      birth: data['birth'] != null ? DateTime.parse(data['birth']) : null, // Null 처리
+      gender: data['gender'], // Null 처리
       jobId: data['jobId'] as int?,
       job: data['job'] as String?,
       jobYearId: data['jobYearId'] as int?,

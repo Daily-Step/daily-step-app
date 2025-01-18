@@ -80,7 +80,7 @@ class ApiClient {
         }
         ApiError.createErrorResult(error).runIfFailure((data){
           ToastMsg toastMsg = ToastMsg.create(4);
-          WToast.show(toastMsg.title, subMessage: toastMsg.content);
+          //WToast.show(toastMsg.title, subMessage: toastMsg.content);
         });
         return handler.next(error); // 다른 에러 진행
       },
