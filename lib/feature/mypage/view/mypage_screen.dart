@@ -174,21 +174,23 @@ class MyPageScreen extends ConsumerWidget {
                         SizedBox(width: 16 * su),
                         CircleAvatar(
                           radius: 40 * su,
-                          backgroundColor: Colors.transparent, // 배경색 투명으로 설정
+                          backgroundColor: user.profileImageUrl.isNotEmpty
+                              ? Colors.transparent
+                              : const Color(0xff2257FF),
                           child: user.profileImageUrl.isNotEmpty
                               ? ClipOval(
                             child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/images/ellipse.png', // 로딩 중 보여줄 이미지
+                              placeholder: 'assets/images/ellipse.png',
                               image: user.profileImageUrl,
                               fit: BoxFit.cover,
-                              fadeInDuration: const Duration(milliseconds: 700), // 페이드 애니메이션
+                              fadeInDuration: const Duration(milliseconds: 500),
                               width: 80 * su, // CircleAvatar 크기
                               height: 80 * su,
                             ),
                           )
-                              : Text(
+                              : Text( // 이미지가 없으면 텍스트 표시
                             '🥰',
-                            style: TextStyle(fontSize: 30 * su),
+                            style: TextStyle(fontSize: 30 * su, color: Colors.white),
                           ),
                         ),
                       ],
