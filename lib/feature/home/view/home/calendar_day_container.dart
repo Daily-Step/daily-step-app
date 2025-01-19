@@ -15,7 +15,7 @@ class CalendarDayContainer extends StatelessWidget {
     required this.date,
     this.isCurrentPeriod = true,
     this.isToday = false,
-  required this.borderRadius,
+    required this.borderRadius,
   });
 
   @override
@@ -35,11 +35,11 @@ class CalendarDayContainer extends StatelessWidget {
       child: Text(
         '${date.day}',
         style: TextStyle(
-          color: isSelected || isSuccess
-              ? WAppColors.white
-              : isCurrentPeriod
-                  ? WAppColors.black
-                  : WAppColors.gray05,
+          color: isSelected || isSuccess && !isToday
+                  ? WAppColors.white
+                  : isCurrentPeriod
+                      ? WAppColors.black
+                      : WAppColors.gray05,
           fontSize: 14,
         ),
       ),
