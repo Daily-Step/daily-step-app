@@ -294,30 +294,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                       "color": customColors[selectedColor!].code.toString(),
                       "content": _noteController.text
                     };
-                    notifier.handleAction(AddChallengeAction(newChallenge));
-                    showConfirmModal(
-                        context: context,
-                        content: Column(
-                          children: [
-                            Text(
-                              '챌린지 등록이 완료되었습니다',
-                              style: boldTextStyle,
-                            ),
-                            height5,
-                            Text(
-                              '닫기버튼을 누르면 홈으로 이동합니다',
-                              style: subTextStyle,
-                            )
-                          ],
-                        ),
-                        confirmText: '닫기',
-                        onClickConfirm: () {
-                          Navigator.pop(context);
-                          ToastMsg toastMsg = ToastMsg.create(3);
-                          WToast.show( context,toastMsg.title,
-                              subMessage: toastMsg.content);
-                        },
-                        isCancelButton: false);
+                    notifier.handleAction(AddChallengeAction(newChallenge, context));
                   }
                 }
               }),

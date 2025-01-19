@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'api_client.dart';
 
 class ChallengeApi {
@@ -11,7 +13,7 @@ class ChallengeApi {
         return response.data['data'];
       }
     } catch (e) {
-      print('카테고리 API 호출 중 오류 발생: $e');
+      debugPrint('카테고리 API 호출 중 오류 발생: $e');
       return [];
     }
   }
@@ -25,7 +27,7 @@ class ChallengeApi {
         return response.data['data'];
       }
     } catch (e) {
-      print('챌린지 API 호출 중 오류 발생: $e');
+      debugPrint('챌린지 API 호출 중 오류 발생: $e');
       return [];
     }
   }
@@ -35,10 +37,10 @@ class ChallengeApi {
       final response =
           await _apiClient.post('/challenges', data: challengeData);
       if (response.statusCode == 200) {
-        print('챌린지 추가 성공');
+        debugPrint('챌린지 추가 성공');
       }
     } catch (e) {
-      print('챌린지 추가 중 오류 발생: $e');
+      throw Exception('챌린지 추가 중 오류 발생: $e');
     }
   }
 
@@ -47,10 +49,10 @@ class ChallengeApi {
       final response =
           await _apiClient.put('/challenges/$id', data: challengeData);
       if (response.statusCode == 200) {
-        print('챌린지 수정 성공');
+        debugPrint('챌린지 수정 성공');
       }
     } catch (e) {
-      print('챌린지 수정 중 오류 발생: $e');
+      debugPrint('챌린지 수정 중 오류 발생: $e');
     }
   }
 
@@ -59,10 +61,10 @@ class ChallengeApi {
       final response =
           await _apiClient.delete('/challenges/$id');
       if (response.statusCode == 200) {
-        print('챌린지 삭제 성공');
+        debugPrint('챌린지 삭제 성공');
       }
     } catch (e) {
-      print('챌린지 삭제 중 오류 발생: $e');
+      throw Exception('챌린지 삭제 중 오류 발생: $e');
     }
   }
 
@@ -71,10 +73,10 @@ class ChallengeApi {
     try {
       final response = await _apiClient.post('/challenges/$id/achieve', data: requestData);
       if (response.statusCode == 200) {
-        print('챌린지 달성 성공');
+        debugPrint('챌린지 달성 성공');
       }
     } catch (e) {
-      print('챌린지 달성 중 오류 발생: $e');
+      throw Exception('챌린지 달성 중 오류 발생:$e');
     }
   }
 
@@ -83,10 +85,10 @@ class ChallengeApi {
     try {
       final response = await _apiClient.post('/challenges/$id/cancel', data: requestData);
       if (response.statusCode == 200) {
-        print('챌린지 달성 취소 성공');
+        debugPrint('챌린지 달성 취소 성공');
       }
     } catch (e) {
-      print('챌린지 달성 취소 중 오류 발생: $e');
+      debugPrint('챌린지 달성 취소 중 오류 발생: $e');
     }
   }
 }

@@ -290,28 +290,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
       ),
       confirmText: '챌린지삭제',
       onClickConfirm: () {
-        notifier.handleAction(DeleteChallengeAction(id));
-        Navigator.pop(context);
-        showConfirmModal(
-            context: context,
-            content: Column(
-              children: [
-                Text(
-                  '챌린지가 삭제되었습니다',
-                  style: boldTextStyle,
-                ),
-                height5,
-                Text(
-                  '다른 챌린지를 만들어보세요!',
-                  style: subTextStyle,
-                )
-              ],
-            ),
-            confirmText: '닫기',
-            onClickConfirm: () {
-              Navigator.pop(context);
-            },
-            isCancelButton: false);
+        notifier.handleAction(DeleteChallengeAction(id, context));
       },
       isCancelButton: true,
     );

@@ -7,8 +7,9 @@ abstract class ChallengeListAction {
 
 class AddChallengeAction extends ChallengeListAction {
   final Map<String,dynamic> data;
+  final BuildContext context;
 
-  const AddChallengeAction(this.data);
+  const AddChallengeAction(this.data, this.context);
 }
 
 class UpdateChallengeAction extends ChallengeListAction {
@@ -31,8 +32,9 @@ class AchieveChallengeAction extends ChallengeListAction {
 
 class DeleteChallengeAction extends ChallengeListAction {
   final int id;
+  final BuildContext context;
 
-  const DeleteChallengeAction(this.id);
+  const DeleteChallengeAction(this.id, this.context);
 }
 
 class FindChallengeAction extends ChallengeListAction {

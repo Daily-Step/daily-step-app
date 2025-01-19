@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
 import '../../../model/challenge/challenge_model.dart';
+import '../../../widgets/widget_confirm_modal.dart';
+import '../../../widgets/widget_constant.dart';
 import '../../../widgets/widget_toast.dart';
 import '../action/challenge_list_action.dart';
 
@@ -83,8 +85,35 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _handleAddChallenge(AddChallengeAction action) {
     state.whenData((currentState) async {
-      await _challengeApi.addChallenge(action.data);
-      await _refreshState();
+      try {
+        await _challengeApi.addChallenge(action.data);
+        await _refreshState();
+        showConfirmModal(
+            context: action.context,
+            content: Column(
+              children: [
+                Text(
+                  '챌린지 등록이 완료되었습니다',
+                  style: boldTextStyle,
+                ),
+                height5,
+                Text(
+                  '닫기버튼을 누르면 홈으로 이동합니다',
+                  style: subTextStyle,
+                )
+              ],
+            ),
+            confirmText: '닫기',
+            onClickConfirm: () {
+              Navigator.pop(action.context);
+              ToastMsg toastMsg = ToastMsg.create(3);
+              WToast.show(action.context, toastMsg.title,
+                  subMessage: toastMsg.content);
+            },
+            isCancelButton: false);
+      } catch (e) {
+        debugPrint('$e');
+      }
     });
   }
 
@@ -97,23 +126,52 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   void _handleAchieveChallenge(AchieveChallengeAction action) {
     state.whenData((currentState) async {
-      if (!action.isCancel) {
-        _checkIsFirstAchieved(
-            List.of(currentState.challengeList), action.context);
-        await _challengeApi.achieveChallenge(
-            action.id, currentState.selectedDate.apiFormattedDate);
-      } else {
-        await _challengeApi.deleteAchieveChallenge(
-            action.id, currentState.selectedDate.apiFormattedDate);
+      try {
+        if (!action.isCancel) {
+          await _challengeApi.achieveChallenge(
+              action.id, currentState.selectedDate.apiFormattedDate);
+          _checkIsFirstAchieved(
+              List.of(currentState.challengeList), action.context);
+        } else {
+          await _challengeApi.deleteAchieveChallenge(
+              action.id, currentState.selectedDate.apiFormattedDate);
+        }
+        await _refreshState();
+      } catch (e) {
+        debugPrint('$e');
       }
-      await _refreshState();
     });
   }
 
   void _handleRemoveChallenge(DeleteChallengeAction action) {
     state.whenData((currentState) async {
-      await _challengeApi.deleteChallenge(action.id);
-      await _refreshState();
+      try{
+        await _challengeApi.deleteChallenge(action.id);
+        await _refreshState();
+        Navigator.pop(action.context);
+        showConfirmModal(
+            context: action.context,
+            content: Column(
+              children: [
+                Text(
+                  '챌린지가 삭제되었습니다',
+                  style: boldTextStyle,
+                ),
+                height5,
+                Text(
+                  '다른 챌린지를 만들어보세요!',
+                  style: subTextStyle,
+                )
+              ],
+            ),
+            confirmText: '닫기',
+            onClickConfirm: () {
+              Navigator.pop(action.context);
+            },
+            isCancelButton: false);
+      } catch(e) {
+        debugPrint('$e');
+      }
     });
   }
 
@@ -123,7 +181,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       final newFilteredChallenges =
           _filterChallenges(newInitialChallenges, currentState.selectedDate);
       final newSuccessList = _setSuccessList(newInitialChallenges);
-      final onGoingChallengeCount = _ongoingChallengeCount(newInitialChallenges);
+      final onGoingChallengeCount =
+          _ongoingChallengeCount(newInitialChallenges);
 
       state = AsyncValue.data(currentState.copyWith(
         initialChallengeList: newInitialChallenges,
@@ -237,10 +296,10 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     });
   }
 
-  int _ongoingChallengeCount(List<ChallengeModel> challenges){
+  int _ongoingChallengeCount(List<ChallengeModel> challenges) {
     int result = 0;
-    for(int i = 0; i < challenges.length; i ++){
-      if(challenges[i].status == 'ONGOING'){
+    for (int i = 0; i < challenges.length; i++) {
+      if (challenges[i].status == 'ONGOING') {
         result += 1;
       }
     }
@@ -306,7 +365,7 @@ class ChallengesState {
       selectedDate: selectedDate ?? this.selectedDate,
       categories: categories ?? this.categories,
       onGoingChallengeCount:
-      onGoingChallengeCount ?? this.onGoingChallengeCount,
+          onGoingChallengeCount ?? this.onGoingChallengeCount,
     );
   }
 }
