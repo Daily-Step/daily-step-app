@@ -9,7 +9,8 @@ import 'challenge_empty.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_list.dart';
 
-const int WEEK_TOTAL_PAGE = 26;
+const int WEEK_TOTAL_PAGE = 104;
+const int WEEK_START_PAGE = 26;
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});

@@ -284,7 +284,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
           height5,
           Text(
             '한번 삭제하면 복구가 힘들어요',
-            style: subTextStyle,
+            style: WAppFontSize.bodyS1(),
           )
         ],
       ),

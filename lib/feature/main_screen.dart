@@ -78,7 +78,6 @@ class MainScreenState extends ConsumerState<MainScreen>
                 data: (data) => FloatingActionButton(
                     onPressed: () {
                       ///진행중인 챌리지가 5개 이하인 경우에만 추가 가능
-                      print(data.onGoingChallengeCount);
                       if(data.onGoingChallengeCount < 5){
                         context.go('/main/challenge/new');
                       } else {

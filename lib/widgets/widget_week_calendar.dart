@@ -23,6 +23,15 @@ class WWeekPageView extends ConsumerStatefulWidget {
 
 class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.weekPageController.hasClients) {
+        widget.weekPageController.jumpToPage(WEEK_START_PAGE); // 특정 페이지로 이동
+      }
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     final notifier = ref.read(challengeViewModelProvider.notifier);
 
@@ -30,7 +39,7 @@ class _WWeekPageViewState extends ConsumerState<WWeekPageView> {
       controller: widget.weekPageController,
       onPageChanged: (page) {
         notifier.handleAction(ChangeFirstDateOfWeekAction(
-          addPage: page - WEEK_TOTAL_PAGE,
+          addPage: page - WEEK_START_PAGE ,
         ));
       },
       itemCount: WEEK_TOTAL_PAGE + 1,
@@ -80,17 +89,12 @@ class WWeekCalendar extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final date = weekDays[index];
                   final isSelected = date.isSameDate(data.selectedDate);
-                  final isCurrentPeriod =
-                          date.isBefore(DateTime.now());
-                  ;
+                  final isToday = date.isSameDate(DateTime.now());
                   final isSuccess = successDates
                       .any((successDate) => successDate.isSameDate(date));
 
                   return InkWell(
                     onTap: () {
-                      if (date.isAfter(DateTime.now())) {
-                        return;
-                      }
                       notifier.handleAction(ChangeSelectedDateAction(
                         selectedDate: date,
                       ));
@@ -99,7 +103,9 @@ class WWeekCalendar extends ConsumerWidget {
                       isSelected: isSelected,
                       isSuccess: isSuccess,
                       date: date,
-                      isCurrentPeriod: isCurrentPeriod,
+                      isCurrentPeriod: true,
+                      isToday: isToday,
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   );
                 },

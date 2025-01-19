@@ -166,9 +166,6 @@ class ChallengeViewModel extends _$ChallengeViewModel {
           .inDays;
       DateTime newSelectedDate =
           newFirstDateOfWeek.add(Duration(days: daysOff));
-      if (newSelectedDate.isAfter(DateTime.now())) {
-        newSelectedDate = DateTime.now();
-      }
       List<ChallengeModel> newChallengeList =
           _filterChallenges(challenges, newSelectedDate);
       state = AsyncValue.data(currentState.copyWith(

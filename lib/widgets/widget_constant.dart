@@ -31,8 +31,8 @@ class WAppColors {
   /// 8E8E8E
   static const Color gray05 = Color(0xFF8E8E8E);
 
-  /// C6C6C6
-  static const Color gray04 = Color(0xFFC6C6C6);
+  /// E9E9E9
+  static const Color gray04 = Color(0xFFE9E9E9);
 
   /// D8D8D8
   static const Color gray03 = Color(0xFFD8D8D8);

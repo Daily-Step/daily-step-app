@@ -1,6 +1,7 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
+import '../common/util/size_util.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
 
@@ -159,7 +160,6 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
           final date = firstDayOfCalendar.add(Duration(days: index));
           final isSelected = date.isSameDate(widget.selectedDate);
           final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
-          print(widget.successDates);
           final isSuccess = widget.successDates
               .any((successDate) => successDate.isSameDate(date));
 
@@ -167,7 +167,9 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
               isSelected: isSelected,
               isSuccess: isSuccess,
               date: date,
-              isCurrentPeriod: isCurrentPeriod);
+              isCurrentPeriod: isCurrentPeriod,
+              borderRadius: BorderRadius.circular(12 * su),
+          );
         },
       ),
     );
