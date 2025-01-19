@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 import '../../common/util/size_util.dart';
 
-class ErrorScreen extends StatefulWidget {
+class NetworkErrorScreen extends StatefulWidget {
   @override
-  _ErrorScreenState createState() => _ErrorScreenState();
+  _NetworkErrorScreenState createState() => _NetworkErrorScreenState();
 }
 
-class _ErrorScreenState extends State<ErrorScreen> {
+class _NetworkErrorScreenState extends State<NetworkErrorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,13 +27,13 @@ class _ErrorScreenState extends State<ErrorScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 105.0 * su),
             child: Center(
-              child: Image.asset('assets/splash/splash_logo.png'),
+              child: Icon(Icons.error,size: 80, color: Colors.orange,)
             ),
           ),
           height10,
-          Text('시스템 오류가 발생했습니다.', style: WAppFontSize.titleM(),),
+          Text('네트워크 오류가 발생했습니다.', style: WAppFontSize.titleM(),),
               height10,
-          Text('문제를 해결하기 위해 노력하고 있습니다.\n잠시후 다시 확인해주세요.',textAlign: TextAlign.center,)
+          Text('서버에 접속할 수 없습니다.\n네트워크 연결을 확인해주세요.', textAlign: TextAlign.center,style: subTextStyle,)
         ]),
       ),
     );

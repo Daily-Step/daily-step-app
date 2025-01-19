@@ -14,11 +14,6 @@ class DailyStepAuth extends ChangeNotifier {
 
   bool get signedUp => _signedUp;
 
-  void serverError() {
-    // _signedIn = false;
-    // _signedUp = false;
-    // notifyListeners();
-  }
   void signOut() {
     _signedIn = false;
     _signedUp = false;

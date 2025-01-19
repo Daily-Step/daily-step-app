@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import '../../config/route/go_router.dart';
 import '../../config/secure_storage/secure_storage_service.dart';
@@ -76,7 +78,15 @@ class ApiClient {
             }
           }
         }
-        navigateToPage('/error');
+
+        if (error.type == DioExceptionType.connectionError && error.error is SocketException) {
+          navigateToPage('/networkError');
+        } else if (error.type == DioExceptionType.connectionTimeout) {
+          navigateToPage('/networkError');
+        } else if (error.response?.statusCode == 500) {
+          navigateToPage('/systemError');
+        }
+
         return handler.next(error); // 다른 에러 진행
       },
     ));

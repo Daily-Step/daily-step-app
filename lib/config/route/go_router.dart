@@ -1,8 +1,9 @@
+import 'package:dailystep/feature/error/network_error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../feature/auth/view/login_screen.dart';
-import '../../feature/error/error_screen.dart';
+import '../../feature/error/system_error_screen.dart';
 import '../../feature/home/view/challenge_detail_screen.dart';
 import '../../feature/home/view/challenge_edit_screen.dart';
 import '../../feature/main_screen.dart';
@@ -42,9 +43,14 @@ GoRouter router(bool isLoggedIn) {
         ),
       ),
       GoRoute(
-        path: '/error',
+        path: '/systemError',
         pageBuilder: (BuildContext context, GoRouterState state) =>
-            FadeTransitionPage(key: state.pageKey, child: ErrorScreen()),
+            FadeTransitionPage(key: state.pageKey, child: SystemErrorScreen()),
+      ),
+      GoRoute(
+        path: '/networkError',
+        pageBuilder: (BuildContext context, GoRouterState state) =>
+            FadeTransitionPage(key: state.pageKey, child: NetworkErrorScreen()),
       ),
       GoRoute(
         path: '/signIn',
