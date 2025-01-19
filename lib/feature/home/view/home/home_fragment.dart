@@ -1,8 +1,10 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../common/util/size_util.dart';
 import '../../../../widgets/widget_constant.dart';
 import '../../../../widgets/widget_week_calendar.dart';
+import '../../../mypage/viewmodel/mypage_viewmodel.dart';
 import 'challenge_empty.dart';
 import '../../viewmodel/challenge_viewmodel.dart';
 import 'challenge_list.dart';
@@ -29,6 +31,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(challengeViewModelProvider);
+    final user = ref.watch(myPageViewModelProvider);
 
     return state.when(
         data: (data) {
@@ -47,11 +50,23 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     ]),
                     Spacer(),
                     CircleAvatar(
-                      backgroundColor: Color(0xff2257FF),
-                      child: Text(
-                        '🥰',
-                        style: TextStyle(fontSize: 17),
-                      ),
+                      backgroundColor: Colors.transparent,
+                      child: user!.profileImageUrl.isNotEmpty
+                          ? ClipOval(
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/ellipse.png',
+                                image: user.profileImageUrl,
+                                fit: BoxFit.cover,
+                                fadeInDuration:
+                                    const Duration(milliseconds: 700),
+                                width: 80 * su,
+                                height: 80 * su,
+                              ),
+                            )
+                          : Text(
+                              '🥰',
+                              style: TextStyle(fontSize: 17),
+                            ),
                     ),
                   ],
                 ),

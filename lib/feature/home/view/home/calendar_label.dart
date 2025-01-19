@@ -16,7 +16,7 @@ class CalendarLabel extends StatelessWidget {
                     color: day == 'Sun'
                         ? Colors.red
                         : day == 'Sat'
-                            ? Colors.blue
+                            ? Color(0xFF2768FF)
                             : Colors.black54,
                     fontSize: 12,
                   ),

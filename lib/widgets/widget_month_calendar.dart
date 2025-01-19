@@ -6,42 +6,78 @@ import '../feature/home/view/home/calendar_label.dart';
 
 class WMonthModal extends StatefulWidget {
   final List<DateTime> successList;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
 
-  const WMonthModal({super.key, required this.successList});
+  const WMonthModal(
+      {super.key,
+      required this.successList,
+      required this.startDateTime,
+      required this.endDateTime});
 
   @override
   State<WMonthModal> createState() => _WMonthModalState();
 }
 
 class _WMonthModalState extends State<WMonthModal> {
-  late DateTime selectedMonth = DateTime.now();
+  late DateTime endMonth = widget.endDateTime.isBefore(DateTime.now())
+      ? DateTime(widget.endDateTime.year, widget.endDateTime.month, 1)
+      : DateTime.now();
+
+  late DateTime selectedMonth =
+      widget.endDateTime.isBefore(DateTime.now()) ? endMonth : DateTime.now();
+
+  late DateTime startMonth =
+      DateTime(widget.startDateTime.year, widget.startDateTime.month, 1);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: globalBorderRadius,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Row(
+              children: [
+                Text(
+                  ' 달성한 날',
+                  style: WAppFontSize.titleS(),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop(); // 닫기 동작
+                  },
+                  child: Icon(Icons.close,
+                      size: 24.0, color: subTextColor // 아이콘 크기 설정
+                      ),
+                ),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
                   icon: Icon(
                     Icons.chevron_left,
-                    color: subTextColor,
+                    color: selectedMonth.isSameMonth(startMonth)
+                        ? backgroundColor
+                        : subTextColor,
                   ),
                   onPressed: () {
+                    if (selectedMonth.isSameMonth(startMonth)) return;
                     setState(() {
                       selectedMonth = DateTime(
                           selectedMonth.year, selectedMonth.month - 1, 1);
                     });
                   },
                 ),
+                Spacer(),
                 Text(
                   selectedMonth.formattedMonth,
                   style: TextStyle(
@@ -49,15 +85,16 @@ class _WMonthModalState extends State<WMonthModal> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Spacer(),
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.isSameMonth(DateTime.now())
+                    color: selectedMonth.isSameMonth(endMonth)
                         ? backgroundColor
                         : subTextColor,
                   ),
                   onPressed: () {
-                    if (selectedMonth.isSameMonth(DateTime.now())) return;
+                    if (selectedMonth.isSameMonth(endMonth)) return;
                     setState(() {
                       selectedMonth = DateTime(
                           selectedMonth.year, selectedMonth.month + 1, 1);
@@ -120,10 +157,11 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
         itemCount: 35,
         itemBuilder: (context, index) {
           final date = firstDayOfCalendar.add(Duration(days: index));
-          final isSelected = date.isSameDate(widget.selectedDate) && date.isSameMonth(widget.firstDateOfRange);
+          final isSelected = date.isSameDate(widget.selectedDate);
           final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
+          print(widget.successDates);
           final isSuccess = widget.successDates
-              .any((successDate) => successDate.isSameDate(date)) && date.isSameMonth(widget.firstDateOfRange);
+              .any((successDate) => successDate.isSameDate(date));
 
           return CalendarDayContainer(
               isSelected: isSelected,

@@ -239,6 +239,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                             .map((String el) => el.toDateTime)
                                             .toList() ??
                                         [],
+                                    startDateTime:selectedChallenge.startDateTime,
+                                    endDateTime:selectedChallenge.endDateTime,
                                   );
                                 }))
                       ],
