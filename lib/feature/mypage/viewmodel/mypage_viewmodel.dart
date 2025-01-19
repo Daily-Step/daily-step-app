@@ -16,6 +16,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   final ApiClient _apiClient;
   final SecureStorageService _secureStorageService;
   final FcmTokenStore _fcmTokenStore;
+  bool _isLoaded = false;
 
   MyPageViewModel(
       this._apiClient,
@@ -26,7 +27,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   }
 
   Future<void> _initialize() async {
-    _loadDummyUserData();
+    loadUserData();
     await _initializePushNotification();
     _initializeFCMListeners();
   }
@@ -34,25 +35,30 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   @override
   void handleEvent(MyPageAction action, ) {
     if (action is FetchUserDataAction) {
-      _loadDummyUserData();
+      loadUserData();
     } else if (action is UpdateUserProfileAction) {
       _updateUserProfile(action.newUserName, action.birth, action.gender);
     }
   }
 
+  Future<void> loadUserDataOnce() async {
+    if (_isLoaded) return;
+    _isLoaded = true;
+    await loadUserData();
+  }
+
   // 사용자 데이터 초기화
-  void _loadDummyUserData() async {
-    final isEnabled = await _loadPushNotificationState();
-    state = MyPageModel(
-      nickname: "챌린저123",
-      profileImageUrl: "",
-      ongoingChallenges: 3,
-      completedChallenges: 1,
-      totalChallenges: 4,
-      isPushNotificationEnabled: isEnabled,
-      birth: DateTime(1999, 1, 1),
-      gender: "남성",
-    );
+  Future<void> loadUserData() async {
+    try {
+      final response = await _apiClient.get('member/mypage');
+      if (response.statusCode == 200 && response.data != null) {
+        state = MyPageModel.fromJson(response.data);
+      } else {
+        throw Exception('데이터 로드 실패');
+      }
+    } catch (e) {
+      print('사용자 데이터 로드 실패: $e');
+    }
   }
 
   // 프로필 업데이트

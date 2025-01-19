@@ -18,8 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MyPageModel {
   String get nickname => throw _privateConstructorUsedError;
   String get profileImageUrl => throw _privateConstructorUsedError;
-  DateTime get birth => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
   int get ongoingChallenges => throw _privateConstructorUsedError;
   int get completedChallenges => throw _privateConstructorUsedError;
   int get totalChallenges => throw _privateConstructorUsedError;
@@ -27,6 +25,8 @@ mixin _$MyPageModel {
   int? get jobId => throw _privateConstructorUsedError;
   String? get job => throw _privateConstructorUsedError;
   int? get jobYearId => throw _privateConstructorUsedError;
+  DateTime? get birth => throw _privateConstructorUsedError; // 선택적 필드로 변경
+  String? get gender => throw _privateConstructorUsedError;
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -44,15 +44,15 @@ abstract class $MyPageModelCopyWith<$Res> {
   $Res call(
       {String nickname,
       String profileImageUrl,
-      DateTime birth,
-      String gender,
       int ongoingChallenges,
       int completedChallenges,
       int totalChallenges,
       bool isPushNotificationEnabled,
       int? jobId,
       String? job,
-      int? jobYearId});
+      int? jobYearId,
+      DateTime? birth,
+      String? gender});
 }
 
 /// @nodoc
@@ -72,8 +72,6 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
   $Res call({
     Object? nickname = null,
     Object? profileImageUrl = null,
-    Object? birth = null,
-    Object? gender = null,
     Object? ongoingChallenges = null,
     Object? completedChallenges = null,
     Object? totalChallenges = null,
@@ -81,6 +79,8 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
     Object? jobId = freezed,
     Object? job = freezed,
     Object? jobYearId = freezed,
+    Object? birth = freezed,
+    Object? gender = freezed,
   }) {
     return _then(_value.copyWith(
       nickname: null == nickname
@@ -90,14 +90,6 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
       profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
               as String,
       ongoingChallenges: null == ongoingChallenges
           ? _value.ongoingChallenges
@@ -127,6 +119,14 @@ class _$MyPageModelCopyWithImpl<$Res, $Val extends MyPageModel>
           ? _value.jobYearId
           : jobYearId // ignore: cast_nullable_to_non_nullable
               as int?,
+      birth: freezed == birth
+          ? _value.birth
+          : birth // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -142,15 +142,15 @@ abstract class _$$UserModelImplCopyWith<$Res>
   $Res call(
       {String nickname,
       String profileImageUrl,
-      DateTime birth,
-      String gender,
       int ongoingChallenges,
       int completedChallenges,
       int totalChallenges,
       bool isPushNotificationEnabled,
       int? jobId,
       String? job,
-      int? jobYearId});
+      int? jobYearId,
+      DateTime? birth,
+      String? gender});
 }
 
 /// @nodoc
@@ -168,8 +168,6 @@ class __$$UserModelImplCopyWithImpl<$Res>
   $Res call({
     Object? nickname = null,
     Object? profileImageUrl = null,
-    Object? birth = null,
-    Object? gender = null,
     Object? ongoingChallenges = null,
     Object? completedChallenges = null,
     Object? totalChallenges = null,
@@ -177,6 +175,8 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? jobId = freezed,
     Object? job = freezed,
     Object? jobYearId = freezed,
+    Object? birth = freezed,
+    Object? gender = freezed,
   }) {
     return _then(_$UserModelImpl(
       nickname: null == nickname
@@ -186,14 +186,6 @@ class __$$UserModelImplCopyWithImpl<$Res>
       profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      birth: null == birth
-          ? _value.birth
-          : birth // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      gender: null == gender
-          ? _value.gender
-          : gender // ignore: cast_nullable_to_non_nullable
               as String,
       ongoingChallenges: null == ongoingChallenges
           ? _value.ongoingChallenges
@@ -223,6 +215,14 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.jobYearId
           : jobYearId // ignore: cast_nullable_to_non_nullable
               as int?,
+      birth: freezed == birth
+          ? _value.birth
+          : birth // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -233,25 +233,21 @@ class _$UserModelImpl implements _UserModel {
   const _$UserModelImpl(
       {required this.nickname,
       this.profileImageUrl = '',
-      required this.birth,
-      required this.gender,
       this.ongoingChallenges = 0,
       this.completedChallenges = 0,
       this.totalChallenges = 0,
       this.isPushNotificationEnabled = false,
       this.jobId,
       this.job,
-      this.jobYearId});
+      this.jobYearId,
+      this.birth,
+      this.gender});
 
   @override
   final String nickname;
   @override
   @JsonKey()
   final String profileImageUrl;
-  @override
-  final DateTime birth;
-  @override
-  final String gender;
   @override
   @JsonKey()
   final int ongoingChallenges;
@@ -270,10 +266,15 @@ class _$UserModelImpl implements _UserModel {
   final String? job;
   @override
   final int? jobYearId;
+  @override
+  final DateTime? birth;
+// 선택적 필드로 변경
+  @override
+  final String? gender;
 
   @override
   String toString() {
-    return 'MyPageModel(nickname: $nickname, profileImageUrl: $profileImageUrl, birth: $birth, gender: $gender, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, jobId: $jobId, job: $job, jobYearId: $jobYearId)';
+    return 'MyPageModel(nickname: $nickname, profileImageUrl: $profileImageUrl, ongoingChallenges: $ongoingChallenges, completedChallenges: $completedChallenges, totalChallenges: $totalChallenges, isPushNotificationEnabled: $isPushNotificationEnabled, jobId: $jobId, job: $job, jobYearId: $jobYearId, birth: $birth, gender: $gender)';
   }
 
   @override
@@ -285,8 +286,6 @@ class _$UserModelImpl implements _UserModel {
                 other.nickname == nickname) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
                 other.profileImageUrl == profileImageUrl) &&
-            (identical(other.birth, birth) || other.birth == birth) &&
-            (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.ongoingChallenges, ongoingChallenges) ||
                 other.ongoingChallenges == ongoingChallenges) &&
             (identical(other.completedChallenges, completedChallenges) ||
@@ -299,7 +298,9 @@ class _$UserModelImpl implements _UserModel {
             (identical(other.jobId, jobId) || other.jobId == jobId) &&
             (identical(other.job, job) || other.job == job) &&
             (identical(other.jobYearId, jobYearId) ||
-                other.jobYearId == jobYearId));
+                other.jobYearId == jobYearId) &&
+            (identical(other.birth, birth) || other.birth == birth) &&
+            (identical(other.gender, gender) || other.gender == gender));
   }
 
   @override
@@ -307,15 +308,15 @@ class _$UserModelImpl implements _UserModel {
       runtimeType,
       nickname,
       profileImageUrl,
-      birth,
-      gender,
       ongoingChallenges,
       completedChallenges,
       totalChallenges,
       isPushNotificationEnabled,
       jobId,
       job,
-      jobYearId);
+      jobYearId,
+      birth,
+      gender);
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
@@ -330,24 +331,20 @@ abstract class _UserModel implements MyPageModel {
   const factory _UserModel(
       {required final String nickname,
       final String profileImageUrl,
-      required final DateTime birth,
-      required final String gender,
       final int ongoingChallenges,
       final int completedChallenges,
       final int totalChallenges,
       final bool isPushNotificationEnabled,
       final int? jobId,
       final String? job,
-      final int? jobYearId}) = _$UserModelImpl;
+      final int? jobYearId,
+      final DateTime? birth,
+      final String? gender}) = _$UserModelImpl;
 
   @override
   String get nickname;
   @override
   String get profileImageUrl;
-  @override
-  DateTime get birth;
-  @override
-  String get gender;
   @override
   int get ongoingChallenges;
   @override
@@ -362,6 +359,10 @@ abstract class _UserModel implements MyPageModel {
   String? get job;
   @override
   int? get jobYearId;
+  @override
+  DateTime? get birth; // 선택적 필드로 변경
+  @override
+  String? get gender;
 
   /// Create a copy of MyPageModel
   /// with the given fields replaced by the non-null parameter values.
