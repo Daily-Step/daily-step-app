@@ -86,12 +86,12 @@ class MainScreenState extends ConsumerState<MainScreen>
                             content: Column(
                               children: [
                                 Text(
-                                  '챌린지 등록 개수 초과',
+                                  '챌린지 등록은 최대 5개입니다',
                                   style: boldTextStyle,
                                 ),
                                 height5,
                                 Text(
-                                  '진행중인 챌린지는 5개까지 등록할 수 있어요',
+                                  '기존에 등록된 챌린지를 삭제하고 등록해주세요',
                                   style: subTextStyle,
                                 )
                               ],

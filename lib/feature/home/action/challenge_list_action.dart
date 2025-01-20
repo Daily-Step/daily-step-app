@@ -1,4 +1,3 @@
-import 'package:dailystep/model/challenge/challenge_model.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class ChallengeListAction {

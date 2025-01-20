@@ -65,6 +65,10 @@ class _WeekPickerModalState extends State<WScrollPicker> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                if(widget.subText == '회')
+                Text( '주',
+                  style: const TextStyle(fontSize: 24),
+                ),
                 SizedBox(
                   width: 200,
                   child: NotificationListener<ScrollNotification>(

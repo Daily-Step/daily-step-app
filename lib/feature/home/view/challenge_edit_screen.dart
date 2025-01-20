@@ -1,4 +1,3 @@
-import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:dailystep/widgets/widget_textfield.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../common/util/size_util.dart';
 import '../../../model/challenge/challenge_model.dart';
-import '../../../widgets/widget_confirm_modal.dart';
-import '../../../widgets/widget_toast.dart';
+import '../../mypage/viewmodel/mypage_viewmodel.dart';
 import '../action/challenge_list_action.dart';
 import 'settings/custom_color_dummies.dart';
 import '../../../widgets/widget_buttons.dart';
@@ -89,19 +87,24 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
   Widget build(BuildContext context) {
     final notifier = ref.read(challengeViewModelProvider.notifier);
     final state = ref.watch(challengeViewModelProvider);
+    final myNotifier = ref.read(myPageViewModelProvider.notifier);
 
     return state.when(
         data: (data) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(
-                widget.id != null ? '챌린지 수정' : '새 챌린지 추가하기',
-                style: WAppFontSize.titleXL(),
+              title: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  widget.id != null ? '챌린지 수정' : '새 챌린지 추가하기',
+                  style: WAppFontSize.titleXL(),
+                ),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context),
               ),
+              actions: [SizedBox(width: 48,)],
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -169,7 +172,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                         });
                       },
                     )),
-                    label: '실천 횟수',
+                    label: '주간 실천 목표',
                     child: weeklyGoal != null
                         ? Text(
                             '주 ${weeklyGoal} 회',
@@ -180,7 +183,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                             style: hintTextStyle,
                           ),
                     hasError: errors['weeklyGoal']!,
-                    errorMessage: '실천 횟수를 선택해주세요',
+                    errorMessage: '실천 목표를 선택해주세요',
                     disabled: widget.id != null,
                   ),
                   height20,
@@ -272,7 +275,7 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
             ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: WCtaButton('저장하기', onPressed: () {
+              child: WCtaButton('저장하기', onPressed: () async {
                 if (_validateInputs() == true) {
                   if (widget.id != null) {
                     final newChallenge = {
@@ -294,7 +297,9 @@ class _ChallengeCreationScreenState extends ConsumerState<ChallengeEditScreen> {
                       "color": customColors[selectedColor!].code.toString(),
                       "content": _noteController.text
                     };
-                    notifier.handleAction(AddChallengeAction(newChallenge, context));
+                    await notifier.handleAction(
+                        AddChallengeAction(newChallenge, context));
+                    await myNotifier.loadUserData();
                   }
                 }
               }),

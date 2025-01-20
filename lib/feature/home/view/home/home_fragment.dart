@@ -74,7 +74,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               ),
               AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                height: 80,
+                height: 60,
                 curve: Curves.easeInOut,
                 child: WWeekPageView(
                   weekPageController: weekPageController,
@@ -87,6 +87,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                   : Expanded(
                       child: ChallengeList(),
                     ),
+              height40,
             ],
           );
         },

@@ -11,6 +11,7 @@ import '../../../widgets/widget_card.dart';
 import '../../../widgets/widget_confirm_modal.dart';
 import '../../../widgets/widget_month_calendar.dart';
 import '../../../widgets/widget_progress_indicator.dart';
+import '../../mypage/viewmodel/mypage_viewmodel.dart';
 import '../action/challenge_list_action.dart';
 import '../viewmodel/challenge_viewmodel.dart';
 
@@ -23,6 +24,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedChallengeState = ref.watch(challengeViewModelProvider);
     final notifier = ref.read(challengeViewModelProvider.notifier);
+    final myNotifier = ref.read(myPageViewModelProvider.notifier);
 
     return Scaffold(
         appBar: AppBar(
@@ -45,7 +47,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 bool isExpired = state.selectedChallenge!.endDateTime
                     .isBefore(DateTime.now());
                 if (isExpired) {
-                  return SizedBox();
+                  return SizedBox(width: 48,);
                 } else {
                   return PopupMenuButton<String>(
                     icon: Icon(Icons.more_vert),
@@ -53,7 +55,11 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       if (value == '수정하기') {
                         context.go('/main/challenge/edit/${id}');
                       } else if (value == '삭제하기') {
-                        _showModal(context, notifier);
+                        _showModal(context, () async {
+                          await notifier
+                              .handleAction(DeleteChallengeAction(id, context));
+                          await myNotifier.loadUserData();
+                        });
                       }
                     },
                     itemBuilder: (BuildContext context) => [
@@ -138,12 +144,12 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                           '주 챌린지',
                                       style: boldTextStyle),
                                   height10,
-                                  Text('실천 횟수',
+                                  Text('주간 실천 목표',
                                       style: TextStyle(color: Colors.grey)),
                                   Text(
-                                      selectedChallenge.weekGoalCount
+                                      '주 '+selectedChallenge.weekGoalCount
                                               .toString() +
-                                          '회 실천',
+                                          '회',
                                       style: boldTextStyle),
                                   height10,
                                   Text('카테고리',
@@ -173,16 +179,14 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                             0)
                                         .toString() +
                                     '일',
-                                ' /' +
-                                    totalGoalCount.toString()),
+                                ' /' + totalGoalCount.toString()),
                             'assets/icons/success.svg'),
                         _card(
                             '미달성한 날',
                             _textWithSubText(
                                 _calcFailDays(totalGoalCount, recordLength) +
                                     '일',
-                                ' /' +
-                                    totalGoalCount.toString()),
+                                ' /' + totalGoalCount.toString()),
                             'assets/icons/fail.svg'),
                       ],
                     ),
@@ -272,7 +276,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
     return '$result';
   }
 
-  void _showModal(BuildContext context, ChallengeViewModel notifier) {
+  void _showModal(BuildContext context, VoidCallback onClickConfirm) {
     showConfirmModal(
       context: context,
       content: Column(
@@ -289,9 +293,7 @@ class ChallengeDetailScreen extends ConsumerWidget {
         ],
       ),
       confirmText: '챌린지삭제',
-      onClickConfirm: () {
-        notifier.handleAction(DeleteChallengeAction(id, context));
-      },
+      onClickConfirm: onClickConfirm,
       isCancelButton: true,
     );
   }
