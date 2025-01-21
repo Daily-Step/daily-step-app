@@ -9,12 +9,14 @@ class WMonthModal extends StatefulWidget {
   final List<DateTime> successList;
   final DateTime startDateTime;
   final DateTime endDateTime;
+  final Color color;
 
   const WMonthModal(
       {super.key,
       required this.successList,
       required this.startDateTime,
-      required this.endDateTime});
+      required this.endDateTime,
+      required this.color});
 
   @override
   State<WMonthModal> createState() => _WMonthModalState();
@@ -110,6 +112,7 @@ class _WMonthModalState extends State<WMonthModal> {
               firstDateOfRange: selectedMonth,
               isModal: true,
               selectedDate: DateTime.now(),
+              color: widget.color,
             ),
             height20,
           ],
@@ -124,6 +127,7 @@ class WMonthCalendar extends StatefulWidget {
   final DateTime firstDateOfRange;
   final bool isModal;
   final DateTime selectedDate;
+  final Color color;
 
   const WMonthCalendar({
     super.key,
@@ -131,6 +135,7 @@ class WMonthCalendar extends StatefulWidget {
     required this.firstDateOfRange,
     required this.isModal,
     required this.selectedDate,
+    required this.color,
   });
 
   @override
@@ -163,12 +168,23 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
           final isSuccess = widget.successDates
               .any((successDate) => successDate.isSameDate(date));
 
+          Color containerColor = Colors.transparent;
+          Color textColor =
+              isCurrentPeriod ? WAppColors.black : WAppColors.gray05;
+          if (isSuccess) {
+            containerColor = widget.color;
+            textColor = WAppColors.white;
+          }
+          if (isSelected) {
+            containerColor = WAppColors.black;
+            textColor = WAppColors.white;
+          }
+
           return CalendarDayContainer(
-              isSelected: isSelected,
-              isSuccess: isSuccess,
-              date: date,
-              isCurrentPeriod: isCurrentPeriod,
-              borderRadius: BorderRadius.circular(12 * su),
+            containerColor: containerColor,
+            textColor: textColor,
+            date: date,
+            borderRadius: BorderRadius.circular(12 * su),
           );
         },
       ),

@@ -47,7 +47,9 @@ class ChallengeDetailScreen extends ConsumerWidget {
                 bool isExpired = state.selectedChallenge!.endDateTime
                     .isBefore(DateTime.now());
                 if (isExpired) {
-                  return SizedBox(width: 48,);
+                  return SizedBox(
+                    width: 48,
+                  );
                 } else {
                   return PopupMenuButton<String>(
                     icon: Icon(Icons.more_vert),
@@ -83,8 +85,10 @@ class ChallengeDetailScreen extends ConsumerWidget {
         body: selectedChallengeState.when(
           data: (ChallengesState data) {
             final selectedChallenge = data.selectedChallenge;
-            final totalGoalCount = selectedChallenge!.durationInWeeks * selectedChallenge.weekGoalCount;
-            final recordLength = selectedChallenge.record?.successDates.length ?? 0;
+            final totalGoalCount = selectedChallenge!.durationInWeeks *
+                selectedChallenge.weekGoalCount;
+            final recordLength =
+                selectedChallenge.record?.successDates.length ?? 0;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -147,7 +151,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                   Text('주간 실천 목표',
                                       style: TextStyle(color: Colors.grey)),
                                   Text(
-                                      '주 '+selectedChallenge.weekGoalCount
+                                      '주 ' +
+                                          selectedChallenge.weekGoalCount
                                               .toString() +
                                           '회',
                                       style: boldTextStyle),
@@ -238,14 +243,18 @@ class ChallengeDetailScreen extends ConsumerWidget {
                                 context: context,
                                 builder: (context) {
                                   return WMonthModal(
-                                    successList: selectedChallenge
-                                            .record?.successDates
-                                            .map((String el) => el.toDateTime)
-                                            .toList() ??
-                                        [],
-                                    startDateTime:selectedChallenge.startDateTime,
-                                    endDateTime:selectedChallenge.endDateTime,
-                                  );
+                                      successList: selectedChallenge
+                                              .record?.successDates
+                                              .map((String el) => el.toDateTime)
+                                              .toList() ??
+                                          [],
+                                      startDateTime:
+                                          selectedChallenge.startDateTime,
+                                      endDateTime:
+                                          selectedChallenge.endDateTime,
+                                      color: Color(
+                                        int.parse(selectedChallenge.color),
+                                      ));
                                 }))
                       ],
                     )),
@@ -268,9 +277,9 @@ class ChallengeDetailScreen extends ConsumerWidget {
         ));
   }
 
-  String _calcFailDays(int totalGoalCount, int successLength){
+  String _calcFailDays(int totalGoalCount, int successLength) {
     int result = totalGoalCount - successLength;
-    if(result < 0) {
+    if (result < 0) {
       return '0';
     }
     return '$result';

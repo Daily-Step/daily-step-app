@@ -1,5 +1,6 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/feature/home/view/home/calendar_day_container.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../feature/home/action/challenge_list_action.dart';
@@ -93,6 +94,21 @@ class WWeekCalendar extends ConsumerWidget {
                   final isSuccess = successDates
                       .any((successDate) => successDate.isSameDate(date));
 
+                  Color containerColor = Colors.transparent;
+                  Color textColor = WAppColors.black;
+                  if(isSuccess){
+                    containerColor = WAppColors.secondary;
+                    textColor = WAppColors.white;
+                  }
+                  if(isToday){
+                    containerColor = WAppColors.gray04;
+                    textColor = WAppColors.black;
+                  }
+                  if(isSelected){
+                    containerColor = WAppColors.black;
+                    textColor = WAppColors.white;
+                  }
+
                   return InkWell(
                     onTap: () {
                       notifier.handleAction(ChangeSelectedDateAction(
@@ -100,11 +116,9 @@ class WWeekCalendar extends ConsumerWidget {
                       ));
                     },
                     child: CalendarDayContainer(
-                      isSelected: isSelected,
-                      isSuccess: isSuccess,
+                      containerColor: containerColor,
+                      textColor: textColor,
                       date: date,
-                      isCurrentPeriod: true,
-                      isToday: isToday,
                       borderRadius: BorderRadius.circular(14),
                     ),
                   );
