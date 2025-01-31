@@ -28,20 +28,25 @@ void showConfirmModal({
                 Row(
                   children: [
                     if (isCancelButton) ...[
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade300,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16 * su),
+                      Container(
+                        child: Expanded(
+                          child: Container(
+                            height: 42 * su,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade300,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14 * su),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                '닫기',
+                                style: TextStyle(color: Colors.grey.shade600),
+                              ),
                             ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            '닫기',
-                            style: TextStyle(color: Colors.grey.shade600),
                           ),
                         ),
                       ),
@@ -49,18 +54,21 @@ void showConfirmModal({
                     if (isCancelButton)
                       SizedBox(width: 8),
                       Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16 * su),
+                        child: Container(
+                          height: 42 * su,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16 * su),
+                              ),
                             ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              onClickConfirm();
+                            },
+                            child: Text(confirmText, style: TextStyle(color: Colors.white),),
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onClickConfirm();
-                          },
-                          child: Text(confirmText, style: TextStyle(color: Colors.white),),
                         ),
                       ),
                   ],

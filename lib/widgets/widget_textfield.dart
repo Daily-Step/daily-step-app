@@ -86,7 +86,7 @@ class WTextField extends StatelessWidget {
               errorText: isEnable ? null : errorMessage,
               suffixIcon: suffixButton != null
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 4, bottom: 6),
+                      padding: const EdgeInsets.all(10),
                       child: suffixButton,
                     )
                   : null,

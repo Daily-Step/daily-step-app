@@ -3,8 +3,12 @@ import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:dailystep/data/api/challenge_api.dart';
 import 'package:dailystep/feature/home/view/settings/toast_msg.dart';
 import 'package:dailystep/model/category/category_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../common/util/size_util.dart';
 import '../../../config/secure_storage/secure_storage_service.dart';
 import '../../../model/challenge/challenge_model.dart';
 import '../../../widgets/widget_confirm_modal.dart';
@@ -29,6 +33,7 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     final List<DateTime> initialSuccessList =
         _setSuccessList(initialChallenges);
     final onGoingChallengeCount = _ongoingChallengeCount(initialChallenges);
+
     return ChallengesState(
       initialChallengeList: initialChallenges,
       challengeList: selectedChallenges,

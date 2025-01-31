@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--notification 설정-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <!-- 권한 설정-->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -17,7 +19,7 @@
     <uses-permission android:name="USE_FULL_SCREEN_INTENT"/>
 
     <application
-        android:label="dailystep"
+        android:label="데일리스텝"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
