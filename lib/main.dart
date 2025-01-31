@@ -15,8 +15,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SizeUtil().setSizeUnit();
   await dotenv.load(fileName: ".env");
+
+  /// firebase settings
   await Firebase.initializeApp();
-  await FirebaseApi().initNotifications();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   var hashkey =await KakaoSdk.origin;
   print('hash key  ${hashkey}');
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);

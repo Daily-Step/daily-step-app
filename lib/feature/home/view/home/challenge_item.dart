@@ -1,5 +1,6 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/mun_duration_extension.dart';
+import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/widgets/widget_card.dart';
 import 'package:flutter/material.dart';
 import '../../../../model/challenge/challenge_model.dart';
@@ -35,8 +36,7 @@ class ChallengeItem extends StatelessWidget {
               onTap: onTap,
               child: ListTile(
                 leading: WProgressIndicator(
-                  percentage: task.totalGoalCount
-                      .getProgress(task.record?.successDates.length ?? 0),
+                  percentage: task.totalGoalCount.getProgress(task.record?.successDates.length ?? 0),
                   width: 40,
                   height: 40,
                   strokeWidth: 6,
@@ -54,12 +54,12 @@ class ChallengeItem extends StatelessWidget {
                 trailing: ReorderableDragStartListener(
                   index: index,
                   child: Container(
-                      decoration: BoxDecoration(
-                          color: bgGreyColor, shape: BoxShape.circle),
+                      height: 23 * su,
+                      width: 23 * su,
+                      decoration: BoxDecoration(color: bgGreyColor, shape: BoxShape.circle),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(Icons.arrow_forward_ios_outlined,
-                            size: 12, color: Colors.white),
+                        child: Icon(Icons.arrow_forward_ios_outlined, size: 12, color: Colors.white),
                       )),
                 ),
               ),

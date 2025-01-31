@@ -153,6 +153,16 @@ class WAppFontSize {
     );
   }
 
+  /// Values (Size 1, 기본값: Regular, 기본색: gray05)
+  static TextStyle subValues({Color color = WAppColors.gray05, FontWeight fontWeight = WAppTextStyle.regular}) {
+    return TextStyle(
+      fontWeight: fontWeight,
+      fontSize: 13 * su,
+      height: 1.3,
+      color: color,
+    );
+  }
+
   /// Values (Size 11, 기본값: Regular, 기본색: black)
   static TextStyle navbar({Color color = WAppColors.black, FontWeight fontWeight = WAppTextStyle.regular}) {
     return TextStyle(
@@ -201,7 +211,7 @@ var subFontSize = 16.0 * su;
 var globalMargin = EdgeInsets.symmetric(horizontal: 20.0 * su);
 
 /// 박스 border radius
-var globalBorderRadius = BorderRadius.circular(16 * su);
+var globalBorderRadius = BorderRadius.circular(14 * su);
 
 /// 텍스트 스타일
 var subTextStyle = TextStyle(fontSize: 15 * su ,color: Colors.grey.shade500);

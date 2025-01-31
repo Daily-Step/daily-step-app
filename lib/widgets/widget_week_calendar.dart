@@ -96,10 +96,10 @@ class WWeekCalendar extends ConsumerWidget {
 
                   Color containerColor = Colors.transparent;
                   Color textColor = WAppColors.black;
-                  if(isSuccess){
+/*                  if(isSuccess){
                     containerColor = WAppColors.secondary;
                     textColor = WAppColors.white;
-                  }
+                  }*/
                   if(isToday){
                     containerColor = WAppColors.gray04;
                     textColor = WAppColors.black;
@@ -124,7 +124,7 @@ class WWeekCalendar extends ConsumerWidget {
                   );
                 },
               ),
-            )
+            ),
           ]);
         },
         error: (Object error, StackTrace stackTrace) => SizedBox(),

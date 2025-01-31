@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../common/util/size_util.dart';
 
 class WToast {
   static void show(BuildContext context,
       String message, {
         String subMessage = '',
         Duration duration = const Duration(seconds: 2),
-        double offsetY = 50.0, // 기본 Y축 위치
+        double offsetY = 42.0, // 기본 Y축 위치
         Icon? icon,
       }) {
     final overlay = Overlay.of(context);
@@ -106,10 +109,21 @@ class _ToastWidgetState extends State<_ToastWidget>
             ),
             child: Row(
               children: [
-                widget.icon ?? Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 50,
+                widget.icon ?? Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Color(0xff008A1E),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/icons/check.svg',
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      width: 22.5,
+                      height: 22.5,
+                    ),
+                  ),
                 ),
                 width10,
                 Column(
@@ -119,13 +133,13 @@ class _ToastWidgetState extends State<_ToastWidget>
                       widget.message,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.black,
-                          fontSize: 16.0,
+                          fontSize: 17.0 * su,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       widget.subMessage,
                       textAlign: TextAlign.center,
-                      style: subTextStyle,
+                      style: TextStyle(fontSize: 13 * su ,color: Colors.grey.shade500),
                     ),
                   ],
                 )

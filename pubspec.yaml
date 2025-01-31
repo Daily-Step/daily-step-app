@@ -45,6 +45,7 @@ dependencies:
   flutter_switch: ^0.3.2
   flutter_native_splash: ^2.4.4
   shimmer: ^3.0.0
+  hooks_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:
