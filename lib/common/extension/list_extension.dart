@@ -7,29 +7,39 @@ extension ListExtension<T> on List<T> {
   Iterable<R> mapIndexed<R>(R Function(T value, int index) f) {
     return asMap().entries.map((entry) => f(entry.value, entry.key));
   }
+}
 
-  // 최대 연속 성공 횟수 (DateTime 전용)
+extension ListStringDateExtension on List<String> {
   int countLongestSuccessDays() {
-    if (T != String) {
-      throw ArgumentError('This method only works with String lists');
-    }
     if (isEmpty) return 0;
 
-    List<String> dateList = cast<String>();
+    // 문자열 리스트를 DateTime 리스트로 변환 후, 정렬
+    List<DateTime> dateList = map((date) => date.toDateTime.onlyDate()).toList();
+    dateList.sort((a, b) => a.compareTo(b));
 
     int longestStreak = 0;
     int currentStreak = 1;
 
     for (int i = 1; i < dateList.length; i++) {
-      if (dateList[i].toDateTime.difference(dateList[i - 1].toDateTime).inDays == 1) {
+      // 날짜가 연속된 경우
+      if (dateList[i].difference(dateList[i - 1]).inDays == 1) {
         currentStreak++;
       } else {
+        // 연속되지 않으면 현재 streak을 최대값과 비교 후 초기화
         longestStreak = max(longestStreak, currentStreak);
         currentStreak = 1;
       }
     }
 
+    // 마지막 streak까지 고려
     longestStreak = max(longestStreak, currentStreak);
     return longestStreak;
+  }
+}
+
+// `onlyDate()` 확장 함수 추가 (시간 정보 제거)
+extension DateTimeExtension on DateTime {
+  DateTime onlyDate() {
+    return DateTime(year, month, day);
   }
 }
