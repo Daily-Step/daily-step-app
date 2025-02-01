@@ -165,6 +165,8 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
     final firstDayOfCalendar = firstDayOfMonth.subtract(
       Duration(days: firstDayOfMonth.weekday % 7),
     );
+    final today = DateTime.now();
+
     final calendarGrid = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GridView.builder(
@@ -181,17 +183,34 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
           final isSelected = date.isSameDate(widget.selectedDate);
           final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
           final isSuccess = widget.successDates.any((successDate) => successDate.isSameDate(date));
+          final isToday = date.isSameDate(today);
 
           Color containerColor = Colors.transparent;
           Color textColor = isCurrentPeriod ? WAppColors.black : WAppColors.gray05;
-          if (isSuccess) {
-            containerColor = widget.color;
-            textColor = WAppColors.white;
+
+          if (isToday) {
+            if (isSuccess) {
+              containerColor = widget.color;
+              textColor = WAppColors.white;
+            } else {
+              containerColor = Colors.transparent;
+              textColor = WAppColors.black;
+            }
           }
-          if (isSelected) {
+          // "오늘 날짜"가 아닌 경우
+          else {
+            if (isSuccess) {
+              containerColor = widget.color;
+              textColor = WAppColors.white;
+            }
+          }
+
+          // "선택된 날짜"가 오늘이 아닐 경우만 적용
+          if (isSelected && !isToday) {
             containerColor = WAppColors.black;
             textColor = WAppColors.white;
           }
+
 
           return CalendarDayContainer(
             containerColor: containerColor,
