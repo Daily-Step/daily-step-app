@@ -5,36 +5,50 @@ import '../common/util/size_util.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
 
-class WMonthModal extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
+import '../common/util/size_util.dart';
+import '../feature/home/view/home/calendar_day_container.dart';
+import '../feature/home/view/home/calendar_label.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
+import '../common/util/size_util.dart';
+import '../feature/home/view/home/calendar_day_container.dart';
+import '../feature/home/view/home/calendar_label.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
+import '../common/util/size_util.dart';
+import '../feature/home/view/home/calendar_day_container.dart';
+import '../feature/home/view/home/calendar_label.dart';
+
+class WMonthModal extends HookWidget {
   final List<DateTime> successList;
   final DateTime startDateTime;
   final DateTime endDateTime;
   final Color color;
 
-  const WMonthModal(
-      {super.key,
-      required this.successList,
-      required this.startDateTime,
-      required this.endDateTime,
-      required this.color});
-
-  @override
-  State<WMonthModal> createState() => _WMonthModalState();
-}
-
-class _WMonthModalState extends State<WMonthModal> {
-  late DateTime endMonth = widget.endDateTime.isBefore(DateTime.now())
-      ? DateTime(widget.endDateTime.year, widget.endDateTime.month, 1)
-      : DateTime.now();
-
-  late DateTime selectedMonth =
-      widget.endDateTime.isBefore(DateTime.now()) ? endMonth : DateTime.now();
-
-  late DateTime startMonth =
-      DateTime(widget.startDateTime.year, widget.startDateTime.month, 1);
+  const WMonthModal({
+    super.key,
+    required this.successList,
+    required this.startDateTime,
+    required this.endDateTime,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final startMonth = useState(DateTime(startDateTime.year, startDateTime.month, 1));
+    final endMonth = useState(DateTime(endDateTime.year, endDateTime.month + 1, 0));
+    final selectedMonth = useState(DateTime(endMonth.value.year, endMonth.value.month, 1));
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -54,11 +68,9 @@ class _WMonthModalState extends State<WMonthModal> {
                 Spacer(),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop(); // 닫기 동작
+                    Navigator.of(context).pop();
                   },
-                  child: Icon(Icons.close,
-                      size: 24.0, color: subTextColor // 아이콘 크기 설정
-                      ),
+                  child: Icon(Icons.close, size: 24.0, color: subTextColor),
                 ),
               ],
             ),
@@ -68,21 +80,22 @@ class _WMonthModalState extends State<WMonthModal> {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_left,
-                    color: selectedMonth.isSameMonth(startMonth)
-                        ? backgroundColor
-                        : subTextColor,
+                    color: selectedMonth.value.isSameMonth(startMonth.value) ? Colors.grey : Colors.black,
                   ),
                   onPressed: () {
-                    if (selectedMonth.isSameMonth(startMonth)) return;
-                    setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month - 1, 1);
-                    });
+                    if (!selectedMonth.value.isSameMonth(endMonth.value) ||
+                        selectedMonth.value.isBefore(endMonth.value)) {
+                      selectedMonth.value = DateTime(
+                        selectedMonth.value.year,
+                        selectedMonth.value.month - 1,
+                        1,
+                      );
+                    }
                   },
                 ),
                 Spacer(),
                 Text(
-                  selectedMonth.formattedMonth,
+                  selectedMonth.value.formattedMonth,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -92,27 +105,30 @@ class _WMonthModalState extends State<WMonthModal> {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.isSameMonth(endMonth)
-                        ? backgroundColor
-                        : subTextColor,
+                    color: selectedMonth.value.isSameMonth(endMonth.value) ? Colors.grey : Colors.black,
                   ),
                   onPressed: () {
-                    if (selectedMonth.isSameMonth(endMonth)) return;
-                    setState(() {
-                      selectedMonth = DateTime(
-                          selectedMonth.year, selectedMonth.month + 1, 1);
-                    });
+                    if (!selectedMonth.value.isSameMonth(endMonth.value) ||
+                        selectedMonth.value.isBefore(endMonth.value)) {
+                      selectedMonth.value = DateTime(
+                        selectedMonth.value.year,
+                        selectedMonth.value.month + 1,
+                        1,
+                      );
+                    } else {
+                      print("다음 달 이동 불가");
+                    }
                   },
                 ),
               ],
             ),
             height10,
             WMonthCalendar(
-              successDates: widget.successList,
-              firstDateOfRange: selectedMonth,
+              successDates: successList,
+              firstDateOfRange: selectedMonth.value,
               isModal: true,
               selectedDate: DateTime.now(),
-              color: widget.color,
+              color: color,
             ),
             height20,
           ],
@@ -145,8 +161,7 @@ class WMonthCalendar extends StatefulWidget {
 class _WMonthCalendarState extends State<WMonthCalendar> {
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth = DateTime(
-        widget.firstDateOfRange.year, widget.firstDateOfRange.month, 1);
+    final firstDayOfMonth = DateTime(widget.firstDateOfRange.year, widget.firstDateOfRange.month, 1);
     final firstDayOfCalendar = firstDayOfMonth.subtract(
       Duration(days: firstDayOfMonth.weekday % 7),
     );
@@ -165,12 +180,10 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
           final date = firstDayOfCalendar.add(Duration(days: index));
           final isSelected = date.isSameDate(widget.selectedDate);
           final isCurrentPeriod = date.isSameMonth(widget.firstDateOfRange);
-          final isSuccess = widget.successDates
-              .any((successDate) => successDate.isSameDate(date));
+          final isSuccess = widget.successDates.any((successDate) => successDate.isSameDate(date));
 
           Color containerColor = Colors.transparent;
-          Color textColor =
-              isCurrentPeriod ? WAppColors.black : WAppColors.gray05;
+          Color textColor = isCurrentPeriod ? WAppColors.black : WAppColors.gray05;
           if (isSuccess) {
             containerColor = widget.color;
             textColor = WAppColors.white;
