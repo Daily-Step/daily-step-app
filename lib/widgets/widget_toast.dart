@@ -84,11 +84,11 @@ class _ToastWidgetState extends State<_ToastWidget>
       left: MediaQuery
           .of(context)
           .size
-          .width * 0.07,
+          .width * 0.027,
       right: MediaQuery
           .of(context)
           .size
-          .width * 0.07,
+          .width * 0.027,
       child: FadeTransition(
         opacity: _opacity,
         child: Material(

@@ -44,38 +44,44 @@ class ChallengeDetailScreen extends ConsumerWidget {
           actions: [
             selectedChallengeState.when(
               data: (state) {
-                bool isExpired = state.selectedChallenge!.endDateTime
-                    .isBefore(DateTime.now());
-                if (isExpired) {
-                  return SizedBox(
-                    width: 48,
-                  );
-                } else {
-                  return PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert),
-                    onSelected: (String value) {
-                      if (value == '수정하기') {
-                        context.go('/main/challenge/edit/${id}');
-                      } else if (value == '삭제하기') {
-                        _showModal(context, () async {
-                          await notifier
-                              .handleAction(DeleteChallengeAction(id, context));
-                          await myNotifier.loadUserData();
-                        });
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => [
-                      PopupMenuItem(
-                        value: '수정하기',
-                        child: Text('수정하기'),
-                      ),
+                bool isExpired = state.selectedChallenge!.endDateTime.isBefore(DateTime.now());
+
+                return PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert),
+                  onSelected: (String value) {
+                    if (value == '수정하기') {
+                      context.go('/main/challenge/edit/${id}');
+                    } else if (value == '삭제하기') {
+                      _showModal(context, () async {
+                        await notifier.handleAction(DeleteChallengeAction(id, context));
+                        await myNotifier.loadUserData();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    List<PopupMenuEntry<String>> menuItems = [];
+
+                    // 만료되지 않은 경우에만 "수정하기" 버튼 추가
+                    if (!isExpired) {
+                      menuItems.add(
+                        PopupMenuItem(
+                          value: '수정하기',
+                          child: Text('수정하기'),
+                        ),
+                      );
+                    }
+
+                    // "삭제하기" 버튼은 항상 표시
+                    menuItems.add(
                       PopupMenuItem(
                         value: '삭제하기',
                         child: Text('삭제하기'),
                       ),
-                    ],
-                  );
-                }
+                    );
+
+                    return menuItems;
+                  },
+                );
               },
               error: (Object error, StackTrace stackTrace) => SizedBox(),
               loading: () => SizedBox(),
@@ -85,10 +91,8 @@ class ChallengeDetailScreen extends ConsumerWidget {
         body: selectedChallengeState.when(
           data: (ChallengesState data) {
             final selectedChallenge = data.selectedChallenge;
-            final totalGoalCount = selectedChallenge!.durationInWeeks *
-                selectedChallenge.weekGoalCount;
-            final recordLength =
-                selectedChallenge.record?.successDates.length ?? 0;
+            final totalGoalCount = selectedChallenge!.durationInWeeks * selectedChallenge.weekGoalCount;
+            final recordLength = selectedChallenge.record?.successDates.length ?? 0;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -105,23 +109,18 @@ class ChallengeDetailScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text('달성도',
-                                    style: TextStyle(color: Colors.grey)),
+                                Text('달성도', style: TextStyle(color: Colors.grey)),
                                 height40,
                                 Align(
                                   alignment: Alignment.center,
                                   child: WProgressIndicator(
-                                      percentage: selectedChallenge
-                                          .totalGoalCount
-                                          .getProgress(selectedChallenge.record
-                                                  ?.successDates.length ??
-                                              0),
+                                      percentage: selectedChallenge.totalGoalCount
+                                          .getProgress(selectedChallenge.record?.successDates.length ?? 0),
                                       width: 100,
                                       height: 100,
                                       strokeWidth: 12,
                                       fontSize: 26,
-                                      color: Color(
-                                          int.parse(selectedChallenge.color)),
+                                      color: Color(int.parse(selectedChallenge.color)),
                                       subString: '%'),
                                 ),
                               ],
@@ -133,37 +132,19 @@ class ChallengeDetailScreen extends ConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('챌린지 시작일',
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      selectedChallenge
-                                          .startDateTime.formattedDate,
-                                      style: boldTextStyle),
+                                  Text('챌린지 시작일', style: TextStyle(color: Colors.grey)),
+                                  Text(selectedChallenge.startDateTime.formattedDate, style: boldTextStyle),
                                   height10,
-                                  Text('챌린지 기간',
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      selectedChallenge.durationInWeeks
-                                              .toString() +
-                                          '주 챌린지',
-                                      style: boldTextStyle),
+                                  Text('챌린지 기간', style: TextStyle(color: Colors.grey)),
+                                  Text(selectedChallenge.durationInWeeks.toString() + '주 챌린지', style: boldTextStyle),
                                   height10,
-                                  Text('주간 실천 목표',
-                                      style: TextStyle(color: Colors.grey)),
-                                  Text(
-                                      '주 ' +
-                                          selectedChallenge.weekGoalCount
-                                              .toString() +
-                                          '회',
-                                      style: boldTextStyle),
+                                  Text('주간 실천 목표', style: TextStyle(color: Colors.grey)),
+                                  Text('주 ' + selectedChallenge.weekGoalCount.toString() + '회', style: boldTextStyle),
                                   height10,
-                                  Text('카테고리',
-                                      style: TextStyle(color: Colors.grey)),
+                                  Text('카테고리', style: TextStyle(color: Colors.grey)),
                                   Text(
                                       data.categories
-                                          .firstWhere((category) =>
-                                              category.id ==
-                                              selectedChallenge.category.id)
+                                          .firstWhere((category) => category.id == selectedChallenge.category.id)
                                           .name,
                                       style: boldTextStyle),
                                 ],
@@ -178,20 +159,13 @@ class ChallengeDetailScreen extends ConsumerWidget {
                       children: [
                         _card(
                             '달성한 날',
-                            _textWithSubText(
-                                (selectedChallenge
-                                                .record?.successDates.length ??
-                                            0)
-                                        .toString() +
-                                    '일',
+                            _textWithSubText((selectedChallenge.record?.successDates.length ?? 0).toString() + '일',
                                 ' /' + totalGoalCount.toString()),
                             'assets/icons/success.svg'),
                         _card(
                             '미달성한 날',
                             _textWithSubText(
-                                _calcFailDays(totalGoalCount, recordLength) +
-                                    '일',
-                                ' /' + totalGoalCount.toString()),
+                                _calcFailDays(totalGoalCount, recordLength) + '일', ' /' + totalGoalCount.toString()),
                             'assets/icons/fail.svg'),
                       ],
                     ),
@@ -201,72 +175,66 @@ class ChallengeDetailScreen extends ConsumerWidget {
                         _card(
                             '최대 연속 성공 횟수',
                             Text(
-                                (selectedChallenge.record?.successDates
-                                                .countLongestSuccessDays() ??
-                                            0)
-                                        .toString() +
+                                (selectedChallenge.record?.successDates.countLongestSuccessDays() ?? 0).toString() +
                                     '일',
                                 style: boldTextStyle),
                             'assets/icons/medal.svg'),
                         _card(
                             '남은 기간',
-                            Text(
-                                selectedChallenge.endDateTime
-                                        .lastDays()
-                                        .toString() +
-                                    '일',
-                                style: boldTextStyle),
+                            Text(selectedChallenge.endDateTime.lastDays().toString() + '일', style: boldTextStyle),
                             'assets/icons/calendar.svg'),
                       ],
                     ),
                     height2,
                     WCard(
-                        child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/achieved.svg',
-                              width: 18,
-                              height: 18,
-                              allowDrawingOutsideViewBox: true,
-                            ),
-                            width8,
-                            Text('달성한 날', style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
-                        IconButton(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/achieved.svg',
+                                width: 18,
+                                height: 18,
+                                allowDrawingOutsideViewBox: true,
+                              ),
+                              width8,
+                              Text('달성한 날', style: TextStyle(color: Colors.grey)),
+                            ],
+                          ),
+                          IconButton(
                             icon: Icon(Icons.calendar_today_outlined),
                             onPressed: () => showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return WMonthModal(
-                                      successList: selectedChallenge
-                                              .record?.successDates
-                                              .map((String el) => el.toDateTime)
-                                              .toList() ??
-                                          [],
-                                      startDateTime:
-                                          selectedChallenge.startDateTime,
-                                      endDateTime:
-                                          selectedChallenge.endDateTime,
-                                      color: Color(
-                                        int.parse(selectedChallenge.color),
-                                      ));
-                                }))
-                      ],
-                    )),
+                              context: context,
+                              builder: (context) {
+                                return WMonthModal(
+                                  successList: selectedChallenge.record?.successDates
+                                          .map((String el) => el.toDateTime)
+                                          .toList() ??
+                                      [],
+                                  startDateTime: selectedChallenge.startDateTime,
+                                  endDateTime: selectedChallenge.endDateTime,
+                                  color: Color(
+                                    int.parse(selectedChallenge.color),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     WCard(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('상세 내용', style: TextStyle(color: Colors.grey)),
-                        SizedBox(height: 8),
-                        Text(selectedChallenge.content),
-                      ],
-                    )),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('상세 내용', style: TextStyle(color: Colors.grey)),
+                          SizedBox(height: 8),
+                          Text(selectedChallenge.content),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
