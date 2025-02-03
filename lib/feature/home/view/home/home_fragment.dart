@@ -169,7 +169,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     Column(
                       children: [
                         height10,
-                        data.challengeList.isEmpty == 0
+                        data.challengeList.length == 0
                             ? ChallengeEmpty()
                             : Expanded(child: ChallengeList()), // ✅ Expanded로 남은 공간 채우기
                       ],
