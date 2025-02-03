@@ -1,5 +1,4 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/data/api/firebase_api.dart';
 import 'package:dailystep/widgets/widget_confirm_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +14,9 @@ import 'challenge_list.dart';
 
 const int WEEK_TOTAL_PAGE = 104;
 const int WEEK_START_PAGE = 26;
+const int numberOfColumns = 7;
+const double crossAxisSpacing = 20;
+
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});
@@ -169,9 +171,11 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     final state = ref.watch(challengeViewModelProvider);
-    final user = ref.read(myPageViewModelProvider);
-
+    final user = ref.watch(myPageViewModelProvider);
+    final calendarContainerHeight = (screenWidth - 20 - (numberOfColumns - 1) * crossAxisSpacing) / numberOfColumns;
+    final calendarLabelHeight = 17 + 4; // 라벨 높이 + 마진 높이
     return state.when(
         data: (data) {
           return Column(
@@ -211,7 +215,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                               alignment: Alignment.center,
                               child: Text(
                                 '🥰',
-                                style: TextStyle(fontSize: 17, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
                               ),
                             ),
                     ),
@@ -220,20 +225,14 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               ),
               AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                height: 66 * su,
+                height: calendarContainerHeight + calendarLabelHeight,
                 curve: Curves.easeInOut,
                 child: WWeekPageView(
                   weekPageController: weekPageController,
                   successList: data.successList,
                 ),
               ),
-                /**
-                 *  그라데이션 이전 코드
-                data.challengeList.length == 0
-                  ? ChallengeEmpty()
-                  : Expanded(
-                      child: ChallengeList(),
-                    ),*/
+              height10,
               Expanded(
                 child: Stack(
                   alignment: Alignment.bottomCenter, // 하단 배경으로 배치
@@ -260,6 +259,16 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                           ),
                         ),
                       ),
+                    ),
+
+                    /// ✅ 챌린지 리스트 (배경 위에 올라올 콘텐츠)
+                    Column(
+                      children: [
+                        height10,
+                        data.challengeList.length == 0
+                            ? ChallengeEmpty()
+                            : Expanded(child: ChallengeList()), // ✅ Expanded로 남은 공간 채우기
+                      ],
                     ),
                   ],
                 ),

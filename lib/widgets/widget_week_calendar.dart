@@ -76,17 +76,17 @@ class WWeekCalendar extends ConsumerWidget {
           return Column(children: [
             CalendarLabel(),
             SizedBox(height: 4),
-            Expanded(child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            Padding(
+              padding: calendarMargin,
               child: GridView.builder(
                 shrinkWrap: false,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
+                  crossAxisCount: numberOfColumns,
                   mainAxisSpacing: 6,
-                  crossAxisSpacing: 20,
+                  crossAxisSpacing: crossAxisSpacing,
                 ),
-                itemCount: 7,
+                itemCount: numberOfColumns,
                 itemBuilder: (context, index) {
                   final date = weekDays[index];
                   final isSelected = date.isSameDate(data.selectedDate);
@@ -96,10 +96,10 @@ class WWeekCalendar extends ConsumerWidget {
 
                   Color containerColor = Colors.transparent;
                   Color textColor = WAppColors.black;
-/*                  if(isSuccess){
+                  if(isSuccess){
                     containerColor = WAppColors.secondary;
                     textColor = WAppColors.white;
-                  }*/
+                  }
                   if(isToday){
                     containerColor = WAppColors.gray04;
                     textColor = WAppColors.black;

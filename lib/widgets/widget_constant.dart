@@ -209,6 +209,7 @@ var subFontSize = 16.0 * su;
 
 /// 좌우 마진
 var globalMargin = EdgeInsets.symmetric(horizontal: 20.0 * su);
+var calendarMargin = EdgeInsets.symmetric(horizontal: 10.0);
 
 /// 박스 border radius
 var globalBorderRadius = BorderRadius.circular(14 * su);
