@@ -4,30 +4,7 @@ import 'package:flutter/material.dart';
 import '../common/util/size_util.dart';
 import '../feature/home/view/home/calendar_day_container.dart';
 import '../feature/home/view/home/calendar_label.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/widgets/widget_constant.dart';
-import '../common/util/size_util.dart';
-import '../feature/home/view/home/calendar_day_container.dart';
-import '../feature/home/view/home/calendar_label.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/widgets/widget_constant.dart';
-import '../common/util/size_util.dart';
-import '../feature/home/view/home/calendar_day_container.dart';
-import '../feature/home/view/home/calendar_label.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:dailystep/common/extension/datetime_extension.dart';
-import 'package:dailystep/widgets/widget_constant.dart';
-import '../common/util/size_util.dart';
-import '../feature/home/view/home/calendar_day_container.dart';
-import '../feature/home/view/home/calendar_label.dart';
 
 class WMonthModal extends HookWidget {
   final List<DateTime> successList;
@@ -48,6 +25,8 @@ class WMonthModal extends HookWidget {
     final startMonth = useState(DateTime(startDateTime.year, startDateTime.month, 1));
     final endMonth = useState(DateTime(endDateTime.year, endDateTime.month + 1, 0));
     final selectedMonth = useState(DateTime(endMonth.value.year, endMonth.value.month, 1));
+    final beforeMonthButtonDisabled = selectedMonth.value.isSameMonth(startMonth.value);
+    final afterMonthButtonDisabled = selectedMonth.value.isSameMonth(endMonth.value);
 
     return Dialog(
       backgroundColor: Colors.white,
@@ -80,11 +59,10 @@ class WMonthModal extends HookWidget {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_left,
-                    color: selectedMonth.value.isSameMonth(startMonth.value) ? Colors.grey : Colors.black,
+                    color: beforeMonthButtonDisabled ? Colors.grey : Colors.black,
                   ),
                   onPressed: () {
-                    if (!selectedMonth.value.isSameMonth(endMonth.value) ||
-                        selectedMonth.value.isBefore(endMonth.value)) {
+                    if (!beforeMonthButtonDisabled) {
                       selectedMonth.value = DateTime(
                         selectedMonth.value.year,
                         selectedMonth.value.month - 1,
@@ -105,11 +83,10 @@ class WMonthModal extends HookWidget {
                 IconButton(
                   icon: Icon(
                     Icons.chevron_right,
-                    color: selectedMonth.value.isSameMonth(endMonth.value) ? Colors.grey : Colors.black,
+                    color: afterMonthButtonDisabled ? Colors.grey : Colors.black,
                   ),
                   onPressed: () {
-                    if (!selectedMonth.value.isSameMonth(endMonth.value) ||
-                        selectedMonth.value.isBefore(endMonth.value)) {
+                    if (!afterMonthButtonDisabled) {
                       selectedMonth.value = DateTime(
                         selectedMonth.value.year,
                         selectedMonth.value.month + 1,
@@ -199,7 +176,7 @@ class _WMonthCalendarState extends State<WMonthCalendar> {
           }
           // "오늘 날짜"가 아닌 경우
           else {
-            if (isSuccess) {
+            if (isSuccess && isCurrentPeriod) {
               containerColor = widget.color;
               textColor = WAppColors.white;
             }
