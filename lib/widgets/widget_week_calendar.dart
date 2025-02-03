@@ -76,10 +76,10 @@ class WWeekCalendar extends ConsumerWidget {
           return Column(children: [
             CalendarLabel(),
             SizedBox(height: 4),
-            Padding(
+            Expanded(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: GridView.builder(
-                shrinkWrap: true,
+                shrinkWrap: false,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 7,
@@ -124,6 +124,7 @@ class WWeekCalendar extends ConsumerWidget {
                   );
                 },
               ),
+            ),
             ),
           ]);
         },

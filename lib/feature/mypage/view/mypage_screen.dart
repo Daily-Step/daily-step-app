@@ -9,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,73 +32,23 @@ class MyPageScreen extends HookConsumerWidget {
       final challengeData = next.asData?.value; // next.data 대신 안전하게 접근
 
       if (challengeData != null) {
-        // ✅ 챌린지 상태가 변경되었으므로 서버에서 최신 마이페이지 데이터 다시 호출
+        // 챌린지 상태가 변경되었으므로 서버에서 최신 마이페이지 데이터 다시 호출
         notifier.loadUserData();
       }
     });
 
-    // 앱 실행 및 포그라운드 복귀 시 푸시 알림 권한 체크
     useEffect(() {
-      Future<void> checkPushPermission() async {
-        final settings = await FirebaseMessaging.instance.getNotificationSettings();
-        final isAuthorized = settings.authorizationStatus == AuthorizationStatus.authorized;
-
-        if (isAuthorized && wasPushDenied.value) {
-          _showPushEnabledDialog(context);
-        } else if (!isAuthorized) {
-          wasPushDenied.value = true;
-        }
+      Future<void> fetchUserData() async {
+        final prefs = await SharedPreferences.getInstance();
+        bool isPushEnabled = prefs.getBool('isPushNotificationEnabled') ?? false;
+        // 화면 로드시에는 단순히 상태만 업데이트합니다.
+        ref.read(myPageViewModelProvider.notifier).updatePushState(isPushEnabled);
       }
 
-      checkPushPermission();
+      fetchUserData();
       return null;
     }, []);
 
-    // 최초 한 번만 사용자 데이터 로드
-    useEffect(() {
-      notifier.loadUserDataOnce();
-      return null;
-    }, []);
-
-    // 챌린지 상태 변화 감지하여 마이페이지 데이터 갱신
-    useEffect(() {
-      if (user == null) {
-        // ✅ 처음 데이터가 없을 때 API 호출
-        notifier.loadUserData();
-        return null;
-      }
-
-      final updatedUser = user!.copyWith(
-        ongoingChallenges: user!.ongoingChallenges,
-        completedChallenges: user!.completedChallenges,
-        totalChallenges: user!.totalChallenges,
-      );
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifier.updateUserState(updatedUser);
-      });
-
-      return null;
-    }, [user]); // user 상태가 변경될 때만 실행
-
-
-
-    useEffect(() {
-      Future<void> fetchUserTokenAndData() async {
-        final userToken = await ref.read(secureStorageServiceProvider).getAccessToken();
-        debugPrint("User Token: $userToken");
-        await notifier.loadUserDataOnce();
-      }
-
-      fetchUserTokenAndData();
-
-      /// 챌린지 상태가 변경될 때마다 ViewModel 상태 업데이트
-      ref.listen(myPageViewModelProvider, (prev, next) {
-        debugPrint("챌린지 상태 변경 감지! UI 업데이트 실행");
-      });
-
-      return null;
-    }, []);
 
     // 만약 데이터가 없으면 기본 UI를 빈 화면으로 처리
     if (user == null) {
@@ -116,25 +67,6 @@ class MyPageScreen extends HookConsumerWidget {
     return _buildMyPageScreen(context, user, ref);
   }
 
-
-  /// "알림이 활성화되었습니다" 다이얼로그
-  void _showPushEnabledDialog(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('알림 활성화'),
-          content: Text('이제 새로운 소식을 받을 수 있어요.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('확인'),
-            ),
-          ],
-        ),
-      );
-    });
-  }
 
   Widget _buildMyPageScreen(BuildContext context, MyPageModel user, WidgetRef ref) {
 
@@ -214,7 +146,7 @@ class MyPageScreen extends HookConsumerWidget {
                 width: 80 * su,
                 height: 80 * su,
                 decoration: BoxDecoration(
-                  color: WAppColors.mPrimary,
+                  color: WAppColors.secondary1,
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -379,7 +311,22 @@ Widget _buildPushNotificationToggle(WidgetRef ref, BuildContext context) {
               width: 55 * su,
               child: FlutterSwitch(
                 value: isPushEnabled,
-                onToggle: (value) async => await notifier.togglePushNotification(context, value: value),
+                onToggle: (value) async {
+                  final prefs = await SharedPreferences.getInstance();
+                  bool hasAskedBefore = prefs.getBool('hasAskedNotificationPermission') ?? false;
+
+                  if (value && !hasAskedBefore) {
+                    bool userConsent = await notifier.showPermissionDialog(context);
+                    if (!userConsent) {
+                      print("❌ 유저가 거부함. 토글 원래 상태 유지");
+                      return;
+                    }
+                    await prefs.setBool('hasAskedNotificationPermission', true);
+                  }
+
+                  bool newState = await notifier.togglePushNotification(context, value: value);
+                  notifier.updatePushState(newState);
+                },
                 activeColor: Colors.black,
                 inactiveColor: Colors.grey,
               ),
