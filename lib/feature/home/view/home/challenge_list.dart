@@ -1,4 +1,5 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
+import 'package:dailystep/common/extension/list_extension.dart';
 import 'package:dailystep/common/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,18 +29,16 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
               itemCount: data.challengeList.length,
               itemBuilder: (context, index) {
                 final challenge = data.challengeList[index];
-                final List<String> successDates =
-                    challenge.record?.successDates ?? [];
-                final bool isAchieved = successDates.any(
-                    (date) => date.toDateTime.isSameDate(data.selectedDate));
-                final bool isExpired =
-                    challenge.endDateTime.isBefore(DateTime.now());
+                final List<String> successDates = challenge.record?.successDates ?? [];
+                final DateTime today = DateTime.now().onlyDate();
+                final bool isExpired = challenge.endDateTime.onlyDate().isBefore(today);
+                final bool isAchieved = successDates.any((date) => date.toDateTime.onlyDate().isSameDate(today));
+
                 return ChallengeItem(
                   task: challenge,
                   index: index,
                   onTap: () async {
-                    await notifier
-                        .handleAction(FindChallengeAction(challenge.id));
+                    await notifier.handleAction(FindChallengeAction(challenge.id));
                     context.push('/main/challenge/${challenge.id}');
                   },
                   onClickAchieveButton: () async {

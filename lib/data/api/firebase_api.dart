@@ -16,9 +16,9 @@ class FirebaseApi {
   final _localNotifications = FlutterLocalNotificationsPlugin();
 
   //function to init notification
-  Future<void> initNotifications() async {
+  Future<NotificationSettings> initNotifications() async {
     //request permission from user (will prompt user)
-    await _firebaseMessaging.requestPermission();
+    final settings = await _firebaseMessaging.requestPermission();
 
     //fetch the FCM token for this device
     final FCMToken = await _firebaseMessaging.getToken();
@@ -26,8 +26,10 @@ class FirebaseApi {
     //print the token (normally you would send this to your server)
     print('mattabu: Token: $FCMToken');
 
-    initPushNotifications();
-    initLocalNotification();
+    await initPushNotifications();
+    await initLocalNotification();
+
+    return settings;
   }
 
   Future initLocalNotification() async {

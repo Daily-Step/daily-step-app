@@ -79,7 +79,7 @@ class WWeekCalendar extends ConsumerWidget {
             Padding(
               padding: calendarMargin,
               child: GridView.builder(
-                shrinkWrap: true,
+                shrinkWrap: false,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: numberOfColumns,
@@ -124,6 +124,7 @@ class WWeekCalendar extends ConsumerWidget {
                   );
                 },
               ),
+            ),
             ),
           ]);
         },

@@ -23,10 +23,10 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   bool _isLoaded = false;
 
   MyPageViewModel(
-      this._apiClient,
-      this._secureStorageService,
-      this._fcmTokenStore,
-      ) : super(null) {
+    this._apiClient,
+    this._secureStorageService,
+    this._fcmTokenStore,
+  ) : super(null) {
     _initialize();
     _scheduleMidnightUpdate(); // 자정 업데이트 스케줄링
   }
@@ -69,14 +69,14 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   /// 유저 데이터 로드
   Future<void> loadUserData() async {
     try {
+
       final response = await _apiClient.get('member/mypage');
+      print("🔹 API 응답 데이터: ${response.data}");
+
       if (response.statusCode == 200 && response.data != null) {
-        final prefs = await SharedPreferences.getInstance();
-        final isPushEnabled = prefs.getBool('isPushNotificationEnabled') ?? false;
-        state = MyPageModel.fromJson(response.data).copyWith(isPushNotificationEnabled: isPushEnabled);;
-        print("데이트된 유저 데이터: ${state.toString()}"); // 디버깅 출력
-      } else {
-        throw Exception('데이터 로드 실패');
+        final myPageModel = MyPageModel.fromJson(response.data);
+        print("🔹 MyPageModel fromJson 결과 isPushNotificationEnabled: ${myPageModel.isPushNotificationEnabled}");
+        state = myPageModel.copyWith();
       }
     } catch (e) {
       print('사용자 데이터 로드 실패: $e');
@@ -127,39 +127,44 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   }
 
   /// 푸시 알림 활성화/비활성화
-  Future<void> togglePushNotification(BuildContext context, {required bool value}) async {
+  Future<bool> togglePushNotification(BuildContext context, {required bool value}) async {
     final currentState = state;
-    if (currentState == null) return;
+    if (currentState == null || !mounted) return false;
 
-    try {
-      /// 현재 푸시 알림 권한 상태 확인 (자동 요청 )
-      final settings = await FirebaseMessaging.instance.getNotificationSettings();
-      final isAuthorized = settings.authorizationStatus == AuthorizationStatus.authorized;
+    final prefs = await SharedPreferences.getInstance();
+    // 사용자 동의 여부를 저장할 별도의 키 사용 (예: userConsentedForPush)
+    bool userConsented = prefs.getBool('userConsentedForPush') ?? false;
+    bool isGranted = value;
 
-      if (value) {
-        if (isAuthorized) {
-          /// 이미 권한이 허용된 상태 → FCM 토큰 저장
-          await _handleFcmToken();
-        } else {
-          /// 푸시 알림이 비활성화 상태 → 설정 화면으로 이동 유도
-          _showPermissionDialog(context);
-          return;
+    if (value) {
+      // 사용자가 직접 동의한 적이 없으면 다이얼로그를 호출
+      if (!userConsented) {
+        print("showPermissionDialog 호출 전");
+        bool userConsent = await showPermissionDialog(context);
+        print("사용자 동의 결과: $userConsent");
+        if (!userConsent) {
+          // 사용자가 동의하지 않으면 토글 변경 없이 종료
+          return false;
         }
-      } else {
-        /// 푸시 알림 비활성화 → FCM 토큰 삭제
-        await _deleteFcmToken();
+        // 동의 후 플래그 업데이트
+        await prefs.setBool('userConsentedForPush', true);
       }
-
-      state = currentState.copyWith(isPushNotificationEnabled: value);
-      await _savePushNotificationState(value);
-    } catch (e) {
-      print('푸시 알림 설정 중 오류 발생: $e');
+      isGranted = true;
+      await _handleFcmToken();
+    } else {
+      await _deleteFcmToken();
+      isGranted = false;
     }
+
+    state = currentState.copyWith(isPushNotificationEnabled: isGranted);
+    await prefs.setBool('isPushNotificationEnabled', isGranted);
+    return isGranted;
   }
 
+
   /// notify 알람 다이얼로그
-  void _showPermissionDialog(BuildContext context) {
-    showDialog(
+  Future<bool> showPermissionDialog(BuildContext context) async {
+    return await showDialog<bool>(
       context: context,
       builder: (context) {
         return Dialog(
@@ -198,7 +203,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pop(context); // 다이얼로그 닫기
+                            Navigator.pop(context, false); // ❌ 거부
                             _showPushEnabledDialog(context, isEnabled: false);
                           },
                           child: Text(
@@ -209,7 +214,6 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                       ),
                     ),
                     SizedBox(width: 8),
-
                     Expanded(
                       child: Container(
                         height: 50 * su,
@@ -221,14 +225,9 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                             ),
                           ),
                           onPressed: () async {
-                            PermissionStatus status = await Permission.notification.request();
-                            Navigator.pop(context); // 다이얼로그 닫기
 
-                            if (status.isGranted) {
-                              _showPushEnabledDialog(context, isEnabled: true);
-                            } else {
-                              _showPushEnabledDialog(context, isEnabled: false);
-                            }
+                            Navigator.pop(context, true); // ✅ 동의 반환
+                            _showPushEnabledDialog(context, isEnabled: true);
                           },
                           child: Text(
                             '동의',
@@ -244,13 +243,12 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
           ),
         );
       },
-    );
+    ) ?? false; // 사용자가 아무것도 선택하지 않으면 기본값 `false` 반환
   }
+
 
   /// 알림 수신 동의 다이얼로그
   void _showPushEnabledDialog(BuildContext context, {required bool isEnabled}) {
-    if (!context.mounted) return;
-
     String title = isEnabled ? '알림 수신 동의가 완료되었습니다.' : '알림 수신 동의가 거부되었습니다.';
     String message = '앱 푸시 수신 동의는 마이 > [매일 챌린지 알림]에서 변경 가능합니다.';
 
@@ -280,13 +278,14 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   Future<void> _handleFcmToken() async {
     try {
       final fcmToken = await FirebaseMessaging.instance.getToken();
+      print('mattu ${fcmToken}');
       if (fcmToken != null) {
         await _fcmTokenStore.saveFcmToken(fcmToken);
         await _apiClient.post('fcm', data: {'token': fcmToken});
         state = state?.copyWith(isPushNotificationEnabled: true);
       }
     } catch (e) {
-      print('FCM 토큰 처리 중 오류 발생: $e');
+      print('⚠️ FCM 토큰 처리 중 오류 발생: $e');
     }
   }
 
@@ -304,20 +303,19 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   /// 푸시 알림 상태 저장
   Future<void> _savePushNotificationState(bool isEnabled) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isPushNotificationEnabled', isEnabled);
+    await prefs.setBool('hasAskedNotificationPermission', isEnabled);
   }
 
   /// 푸시 알림 상태 로드
   Future<bool> _loadPushNotificationState() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('isPushNotificationEnabled')) {
-      return prefs.getBool('isPushNotificationEnabled')!;
+    if (prefs.containsKey('hasAskedNotificationPermission')) {
+      return prefs.getBool('hasAskedNotificationPermission')!;
     }
-
 
     final settings = await FirebaseMessaging.instance.getNotificationSettings();
     final isAuthorized = settings.authorizationStatus == AuthorizationStatus.authorized;
-    await prefs.setBool('isPushNotificationEnabled', isAuthorized);
+    await prefs.setBool('hasAskedNotificationPermission', isAuthorized);
     return isAuthorized;
   }
 
@@ -329,6 +327,12 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
         totalChallenges: updatedUser.totalChallenges,
         isPushNotificationEnabled: updatedUser.isPushNotificationEnabled,
       );
+    }
+  }
+
+  void updatePushState(bool isEnabled) {
+    if (state != null) {
+      state = state!.copyWith(isPushNotificationEnabled: isEnabled);
     }
   }
 }
