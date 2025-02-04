@@ -32,7 +32,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                 final List<String> successDates = challenge.record?.successDates ?? [];
                 final DateTime today = DateTime.now().onlyDate();
                 final bool isExpired = challenge.endDateTime.onlyDate().isBefore(today);
-                final bool isAchieved = successDates.any((date) => date.toDateTime.onlyDate().isSameDate(today));
+                final bool isAchieved = successDates.any((date) => date.toDateTime.onlyDate().isSameDate(data.selectedDate));
 
                 return ChallengeItem(
                   task: challenge,
