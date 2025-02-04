@@ -208,7 +208,7 @@ var detailDataFontSize = 18.0 * su;
 var subFontSize = 16.0 * su;
 
 /// 좌우 마진
-var globalMargin = EdgeInsets.symmetric(horizontal: 20.0 * su);
+var globalMargin = EdgeInsets.symmetric(horizontal: 16.0);
 var calendarMargin = EdgeInsets.symmetric(horizontal: 10.0);
 
 /// 박스 border radius
