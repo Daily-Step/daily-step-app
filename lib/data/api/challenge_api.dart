@@ -52,7 +52,7 @@ class ChallengeApi {
         debugPrint('챌린지 수정 성공');
       }
     } catch (e) {
-      debugPrint('챌린지 수정 중 오류 발생: $e');
+      throw Exception('챌린지 수정 중 오류 발생:$e');
     }
   }
 
@@ -88,7 +88,7 @@ class ChallengeApi {
         debugPrint('챌린지 달성 취소 성공');
       }
     } catch (e) {
-      debugPrint('챌린지 달성 취소 중 오류 발생: $e');
+      throw Exception('챌린지 달성 중 오류 발생:$e');
     }
   }
 }
