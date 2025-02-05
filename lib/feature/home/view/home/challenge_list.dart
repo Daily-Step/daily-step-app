@@ -1,6 +1,7 @@
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/common/extension/list_extension.dart';
 import 'package:dailystep/common/extension/string_extension.dart';
+import 'package:dailystep/widgets/widget_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,8 +34,7 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                 final DateTime today = DateTime.now().onlyDate();
                 final bool isExpired = challenge.endDateTime.onlyDate().isBefore(today);
                 final bool isAchieved = successDates.any((date) => date.toDateTime.onlyDate().isSameDate(data.selectedDate));
-
-                return ChallengeItem(
+                final Widget item =  ChallengeItem(
                   task: challenge,
                   index: index,
                   onTap: () async {
@@ -52,6 +52,14 @@ class _ChallengeListState extends ConsumerState<ChallengeList> {
                   isAchieved: isAchieved,
                   isExpired: isExpired,
                 );
+
+                if(index == data.challengeList.length - 1){
+                  return Column(children: [
+                    item,
+                    height40
+                  ],);
+                }
+                return item;
               });
         },
         error: (Object error, StackTrace stackTrace) => SizedBox(),
