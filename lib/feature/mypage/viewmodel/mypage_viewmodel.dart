@@ -78,7 +78,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
       if (response.statusCode == 200 && response.data != null) {
         final myPageModel = MyPageModel.fromJson(response.data);
 
-        // ✅ SharedPreferences 값이 더 최신일 수 있으므로 적용
+        // SharedPreferences 값이 더 최신일 수 있으므로 적용
         state = myPageModel.copyWith(isPushNotificationEnabled: storedPushState);
       }
     } catch (e) {
@@ -104,7 +104,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
 
   /// 푸시 알림 초기화
   Future<void> _initializePushNotification({bool forceInit = false}) async {
-    if (!forceInit) return; // ✅ HomeFragment에서는 실행되지 않도록 제한
+    if (!forceInit) return;
 
     final prefs = await SharedPreferences.getInstance();
     bool? isPushEnabled = prefs.getBool('isPushNotificationEnabled');
@@ -113,7 +113,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
       final settings = await FirebaseMessaging.instance.getNotificationSettings();
       isPushEnabled = settings.authorizationStatus == AuthorizationStatus.authorized;
 
-      // ✅ 최신 기기(Android 13 이상)에서 권한 요청 추가
+      // 최신 기기(Android 13 이상)에서 권한 요청 추가
       if (!isPushEnabled) {
         if (Platform.isAndroid) {
           await requestNotificationPermission();
@@ -141,14 +141,14 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     if (Platform.isAndroid && (await Permission.notification.status.isDenied || await Permission.notification.status.isRestricted)) {
       final status = await Permission.notification.request();
       if (status.isGranted) {
-        print("✅ 알림 권한이 허용되었습니다.");
+        print(" 알림 권한이 허용되었습니다.");
       } else if (status.isPermanentlyDenied) {
-        print("🚫 사용자가 알림 권한을 영구적으로 거부했습니다. 설정에서 직접 변경해야 합니다.");
+        print(" 사용자가 알림 권한을 영구적으로 거부했습니다. 설정에서 직접 변경해야 합니다.");
       } else {
-        print("❌ 알림 권한 요청이 거부되었습니다.");
+        print(" 알림 권한 요청이 거부되었습니다.");
       }
     } else {
-      print("🔔 알림 권한이 이미 허용되어 있습니다.");
+      print(" 알림 권한이 이미 허용되어 있습니다.");
     }
   }
 
@@ -163,7 +163,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
-      print("🔄 FCM 토큰이 갱신됨: $newToken");
+      print("FCM 토큰이 갱신됨: $newToken");
       await _handleFcmToken(); // 새로운 토큰을 서버에 저장
     });
   }
@@ -178,48 +178,48 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
     bool isGranted = value;
 
     if (value) {
-      // ✅ 사용자가 직접 동의한 적이 없으면 다이얼로그 호출
+      // 사용자가 직접 동의한 적이 없으면 다이얼로그 호출
       if (!userConsented) {
         print("📢 showPermissionDialog 호출 전");
         bool userConsent = await showPermissionDialog(context);
         print("📢 사용자 동의 결과: $userConsent");
 
         if (!userConsent) {
-          return false; // ❌ 사용자가 거부하면 종료
+          return false;
         }
         await prefs.setBool('userConsentedForPush', true);
       }
 
       isGranted = true;
 
-      // ✅ 🔥 FCM 알림 권한 요청 (비동기 작업을 기다림)
+      //  FCM 알림 권한 요청 (비동기 작업을 기다림)
       NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
 
-      print("🔹 FirebaseMessaging 설정 결과: ${settings.authorizationStatus}");
+      print(" FirebaseMessaging 설정 결과: ${settings.authorizationStatus}");
 
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        print("🚫 사용자가 알림 권한을 거부했습니다.");
+        print(" 사용자가 알림 권한을 거부했습니다.");
         _showPushEnabledDialog(context, isEnabled: false);
         return false;
       }
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print("✅ FCM 알림 권한 허용됨");
+        print(" FCM 알림 권한 허용됨");
 
-        // 🔹 **FCM 토큰 요청 및 서버 등록 (순차적으로 실행)**
-        await _handleFcmToken(); // ✅ 토큰 요청 후 서버 저장
+        //  **FCM 토큰 요청 및 서버 등록 (순차적으로 실행)**
+        await _handleFcmToken(); //  토큰 요청 후 서버 저장
 
-        // ✅ SharedPreferences에도 저장
+        //  SharedPreferences에도 저장
         await prefs.setBool('isPushNotificationEnabled', true);
 
-        // ✅ MyPageViewModel 상태 업데이트
+        //  MyPageViewModel 상태 업데이트
         state = state?.copyWith(isPushNotificationEnabled: true);
       } else {
-        print("❌ FCM 알림 권한을 허용하지 않음");
+        print(" FCM 알림 권한을 허용하지 않음");
         return false;
       }
     } else {
@@ -229,8 +229,8 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
       state = state?.copyWith(isPushNotificationEnabled: false);
     }
 
-    // ✅ **⚡ 여기서 비동기 작업이 모두 끝난 후 다이얼로그 실행**
-    print("📢 _showPushEnabledDialog 호출 🚀");
+    // ** 여기서 비동기 작업이 모두 끝난 후 다이얼로그 실행**
+    print(" _showPushEnabledDialog 호출 ");
     _showPushEnabledDialog(context, isEnabled: isGranted);
 
     return isGranted;
@@ -277,7 +277,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pop(context, false); // ❌ 거부
+                            Navigator.pop(context, false);
                           },
                           child: Text(
                             '미동의',
@@ -299,7 +299,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                           ),
                           onPressed: () async {
 
-                            Navigator.pop(context, true); // ✅ 동의 반환
+                            Navigator.pop(context, true);
                           },
                           child: Text(
                             '동의',
@@ -321,7 +321,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
 
   /// 알림 수신 동의 다이얼로그
   void _showPushEnabledDialog(BuildContext context, {required bool isEnabled}) {
-    if (!context.mounted) return; // ✅ context가 유효할 때만 실행
+    if (!context.mounted) return;
 
     String title = isEnabled ? '알림 수신 동의가 완료되었습니다.' : '알림 수신 동의가 거부되었습니다.';
     String message = '앱 푸시 수신 동의는 마이 > [매일 챌린지 알림]에서 변경 가능합니다.';
@@ -352,57 +352,57 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   Future<void> _handleFcmToken() async {
     try {
       String? fcmToken = await FirebaseMessaging.instance.getToken();
-      print('🔹 현재 FCM 토큰: $fcmToken');
+      print(' 현재 FCM 토큰: $fcmToken');
 
       if (fcmToken == null) {
-        print('⚠️ FCM 토큰이 없음. 삭제 후 재발급 시도...');
+        print(' FCM 토큰이 없음. 삭제 후 재발급 시도...');
         fcmToken = await _forceRefreshFcmToken();
       }
 
       final response = await _apiClient.post('fcm', data: {'token': fcmToken});
 
       if (response.statusCode == 401 && response.data['code'] == 'AUTH_4006') {
-        print('⚠️ 서버에서 FCM 토큰이 만료되었다고 응답함. 재발급 중...');
+        print(' 서버에서 FCM 토큰이 만료되었다고 응답함. 재발급 중...');
 
-        // ✅ FCM 토큰을 강제 삭제 후 새로 발급
+        //  FCM 토큰을 강제 삭제 후 새로 발급
         fcmToken = await _forceRefreshFcmToken();
 
-        // ✅ 로그인 토큰도 갱신
+        //  로그인 토큰도 갱신
 
         if (fcmToken != null) {
-          print('🔄 새로운 FCM 토큰으로 다시 등록 중...');
+          print(' 새로운 FCM 토큰으로 다시 등록 중...');
           final retryResponse = await _apiClient.post('fcm', data: {'token': fcmToken});
 
-          // ✅ 그래도 실패하면 로그아웃 처리
+          //  그래도 실패하면 로그아웃 처리
           if (retryResponse.statusCode == 401) {
-            print('🚨 인증 실패! 로그아웃 처리');
+            print(' 인증 실패! 로그아웃 처리');
           }
         } else {
-          print('🚫 FCM 토큰 갱신 실패.');
+          print(' FCM 토큰 갱신 실패.');
         }
       }
 
-      // ✅ 토큰 저장
+      //  토큰 저장
       if (fcmToken != null) {
         await _fcmTokenStore.saveFcmToken(fcmToken);
         state = state?.copyWith(isPushNotificationEnabled: true);
       }
     } catch (e) {
-      print('⚠️ FCM 토큰 처리 중 오류 발생: $e');
+      print('⚠ FCM 토큰 처리 중 오류 발생: $e');
     }
   }
 
   /// FCM 토큰을 강제 삭제 후 재발급
   Future<String?> _forceRefreshFcmToken() async {
     try {
-      print("🔄 기존 FCM 토큰 삭제 중...");
+      print(" 기존 FCM 토큰 삭제 중...");
       await FirebaseMessaging.instance.deleteToken();
       await Future.delayed(Duration(seconds: 2)); // 딜레이 후 다시 요청
       String? newToken = await FirebaseMessaging.instance.getToken();
-      print("✅ 새 FCM 토큰 발급 완료: $newToken");
+      print(" 새 FCM 토큰 발급 완료: $newToken");
       return newToken;
     } catch (e) {
-      print('🚫 FCM 토큰 강제 삭제 후 재발급 실패: $e');
+      print(' FCM 토큰 강제 삭제 후 재발급 실패: $e');
       return null;
     }
   }
@@ -444,10 +444,10 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   }
 
   void updatePushState(bool isEnabled) async {
-    if (!mounted || state == null) return; // ✅ ViewModel이 살아있을 때만 실행
+    if (!mounted || state == null) return; //  ViewModel이 살아있을 때만 실행
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isPushNotificationEnabled', isEnabled); // ✅ 상태 저장
+    await prefs.setBool('isPushNotificationEnabled', isEnabled); //  상태 저장
 
     if (state!.isPushNotificationEnabled != isEnabled) {
       state = state!.copyWith(isPushNotificationEnabled: isEnabled);
