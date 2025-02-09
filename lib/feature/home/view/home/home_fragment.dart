@@ -3,7 +3,6 @@ import 'package:dailystep/widgets/widget_confirm_modal.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/util/size_util.dart';
 import '../../../../widgets/widget_constant.dart';
@@ -32,7 +31,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   @override
   void initState() {
     super.initState();
-    _checkNotificationPermission(); // ✅ 앱 실행 시 알림 요청 여부 확인
+    _checkNotificationPermission();
   }
 
   Future<void> _checkNotificationPermission() async {
@@ -43,10 +42,12 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
       bool? userConsent = await _showPermissionDialog(context);
 
       if (userConsent == true) {
-        await _requestNotificationPermission(); // ✅ FCM 알림 요청
+        await _requestNotificationPermission();
+        await prefs.setBool('userConsentedForPush', true);
       }
 
       await prefs.setBool('hasAskedNotificationPermission', true);
+      await prefs.setBool('isPushNotificationEnabled', true);
     }
   }
 
@@ -90,7 +91,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pop(context, false); // ✅ `await` 제거
+                            Navigator.pop(context, false);
                           },
                           child: Text(
                             '미동의',
@@ -111,7 +112,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pop(context, true); // ✅ `await` 제거
+                            Navigator.pop(context, true);
                           },
                           child: Text(
                             '동의',
@@ -139,23 +140,23 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
 
     bool isEnabled = settings.authorizationStatus == AuthorizationStatus.authorized;
 
-    // ✅ 푸시 알림 상태 SharedPreferences에 저장
+    // 푸시 알림 상태 SharedPreferences에 저장
     await prefs.setBool('isPushNotificationEnabled', isEnabled);
 
-    // ✅ MyPageViewModel에서 상태 업데이트
+    // MyPageViewModel에서 상태 업데이트
     ref.read(myPageViewModelProvider.notifier).updatePushState(isEnabled);
 
     if (isEnabled) {
-      print("✅ 알림 권한이 허용되었습니다.");
+      print("알림 권한이 허용되었습니다.");
       _showPushEnabledDialog(context, isEnabled: true);
     } else {
-      print("🚫 사용자가 알림 권한을 거부했습니다.");
+      print("사용자가 알림 권한을 거부했습니다.");
       _showPushEnabledDialog(context, isEnabled: false);
     }
   }
 
   void _showPushEnabledDialog(BuildContext context, {required bool isEnabled}) {
-    if (!context.mounted) return; // ✅ context가 유효할 때만 실행
+    if (!context.mounted) return;
 
     String title = isEnabled ? '알림 수신 동의가 완료되었습니다.' : '알림 수신 동의가 거부되었습니다.';
     String message = '앱 푸시 수신 동의는 마이 > [매일 챌린지 알림]에서 변경 가능합니다.';
@@ -253,9 +254,9 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               height10,
               Expanded(
                 child: Stack(
-                  alignment: Alignment.bottomCenter, // ✅ 하단 배경으로 배치
+                  alignment: Alignment.bottomCenter,
                   children: [
-                    /// ✅ 챌린지 리스트 (배경 위에 올라올 콘텐츠)
+                    ///  챌린지 리스트 (배경 위에 올라올 콘텐츠)
                     Padding(
                       padding: globalMargin,
                       child: Column(
@@ -263,11 +264,11 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                           height10,
                           data.challengeList.isEmpty
                               ? ChallengeEmpty()
-                              : Expanded(child: ChallengeList()), // ✅ Expanded로 남은 공간 채우기
+                              : Expanded(child: ChallengeList()), //  Expanded로 남은 공간 채우기
                         ],
                       ),
                     ),
-                    /// ✅ 배경 Gradient Container
+                    ///  배경 Gradient Container
                     Positioned(
                       child: Container(
                         height: 60 * su,
