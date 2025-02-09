@@ -24,9 +24,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     print('Delaying for 2 seconds');
     await Future.delayed(const Duration(seconds: 2)); // 스플래시 화면 지연
 
+    if (!mounted) return; // 위젯이 언마운트되었으면 중단
+
     // SecureStorage에서 Access Token 확인
     final secureStorage = ref.read(secureStorageServiceProvider);
     final savedToken = await secureStorage.getAccessToken();
+
+    if (!mounted) return; // 위젯이 다시 언마운트되었는지 확인
 
     if (savedToken != null) {
       print('유효한 저장된 토큰이 있습니다. Navigating to /main/home');
@@ -58,3 +62,4 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
+
