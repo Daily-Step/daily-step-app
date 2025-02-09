@@ -20,8 +20,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  var hashkey =await KakaoSdk.origin;
-  print('hash key  ${hashkey}');
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
   SystemChrome.setSystemUIOverlayStyle(

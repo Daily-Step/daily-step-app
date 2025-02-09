@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:dailystep/common/util/size_util.dart';
 import 'package:dailystep/feature/home/viewmodel/challenge_viewmodel.dart';
 import 'package:dailystep/feature/mypage/model/mypage_model.dart';
 import 'package:dailystep/widgets/widget_constant.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,11 +11,8 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../config/secure_storage/secure_storage_provider.dart';
-import '../../../widgets/widget_constant.dart';
 import '../viewmodel/mypage_viewmodel.dart';
 
 class MyPageScreen extends HookConsumerWidget {
@@ -22,27 +20,35 @@ class MyPageScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.read(myPageViewModelProvider.notifier);
     final user = ref.watch(myPageViewModelProvider);
-    final wasPushDenied = useState(false);
+    final notifier = ref.watch(myPageViewModelProvider.notifier);
 
-    final challengeState = ref.watch(challengeViewModelProvider);
+    useEffect(() {
+      Future.microtask(() async {
+        await notifier.loadUserData(); // 첫 로딩 시 API 호출
+      });
+      return null;
+    }, []);
 
+    // ✅ challengeViewModelProvider의 변경 사항 감지 후 API 호출
     ref.listen(challengeViewModelProvider, (prev, next) {
-      final challengeData = next.asData?.value; // next.data 대신 안전하게 접근
+      final prevChallengeData = prev?.asData?.value;
+      final nextChallengeData = next.asData?.value;
 
-      if (challengeData != null) {
-        // 챌린지 상태가 변경되었으므로 서버에서 최신 마이페이지 데이터 다시 호출
-        notifier.loadUserData();
+      if (prevChallengeData != nextChallengeData && nextChallengeData != null) {
+        notifier.loadUserData(); // 상태 변경 시 API 호출
       }
     });
 
     useEffect(() {
       Future<void> fetchUserData() async {
         final prefs = await SharedPreferences.getInstance();
-        bool isPushEnabled = prefs.getBool('isPushNotificationEnabled') ?? false;
-        // 화면 로드시에는 단순히 상태만 업데이트합니다.
-        ref.read(myPageViewModelProvider.notifier).updatePushState(isPushEnabled);
+        final storedPushState = prefs.getBool('isPushNotificationEnabled') ?? false;
+
+        // ✅ 상태 변경이 필요할 때만 업데이트
+        if (ref.read(myPageViewModelProvider)?.isPushNotificationEnabled != storedPushState) {
+          ref.read(myPageViewModelProvider.notifier).updatePushState(storedPushState);
+        }
       }
 
       fetchUserData();

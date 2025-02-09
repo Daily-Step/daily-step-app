@@ -18,6 +18,25 @@ class ChallengeApi {
     }
   }
 
+  Future<String?> fetchProfileImage() async {
+    try {
+      final response = await _apiClient.get('/member/profile/img');
+
+      if (response.statusCode == 200 && response.data != null) {
+        final profileImg = response.data['data'];
+
+        if (profileImg is String && profileImg.isNotEmpty) {
+          return profileImg;
+        } else {
+          return null;
+        }
+      }
+    } catch (e) {
+      print('⚠️ 프로필 이미지 가져오기 실패: $e');
+    }
+    return null; // 오류 발생 시 null 반환
+  }
+
   Future<dynamic> getChallenges(String queryDate) async {
     final requestData = {'queryDate': queryDate};
     try {

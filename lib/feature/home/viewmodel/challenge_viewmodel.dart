@@ -20,6 +20,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
   ChallengeApi _challengeApi = ChallengeApi();
   final _secureStorageService = SecureStorageService();
 
+  String? profileImageUrl;
+
   @override
   Future<ChallengesState> build() async {
     DateTime today = DateTime.now();
@@ -31,6 +33,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
         _setSuccessList(initialChallenges);
     final onGoingChallengeCount = _ongoingChallengeCount(initialChallenges);
 
+    profileImageUrl = await _fetchProfileImage();
+
     return ChallengesState(
       initialChallengeList: initialChallenges,
       challengeList: selectedChallenges,
@@ -41,7 +45,12 @@ class ChallengeViewModel extends _$ChallengeViewModel {
       selectedDate: today,
       categories: categories,
       onGoingChallengeCount: onGoingChallengeCount,
+      profileImageUrl: profileImageUrl,
     );
+  }
+
+  Future<String?> _fetchProfileImage() async {
+    return await _challengeApi.fetchProfileImage();
   }
 
   Future<void> handleAction(ChallengeListAction action) async {
@@ -327,6 +336,8 @@ class ChallengesState {
   ///챌린지 달성 개수
   final int onGoingChallengeCount;
 
+  final String? profileImageUrl;
+
   const ChallengesState({
     required this.initialChallengeList,
     required this.challengeList,
@@ -337,6 +348,7 @@ class ChallengesState {
     required this.selectedDate,
     required this.categories,
     required this.onGoingChallengeCount,
+    this.profileImageUrl,
   });
 
   ChallengesState copyWith({
@@ -350,6 +362,7 @@ class ChallengesState {
     DateTime? selectedDate,
     List<CategoryModel>? categories,
     int? onGoingChallengeCount,
+    String? profileImageUrl,
   }) {
     return ChallengesState(
       initialChallengeList: initialChallengeList != null
@@ -368,6 +381,7 @@ class ChallengesState {
       categories: categories ?? this.categories,
       onGoingChallengeCount:
           onGoingChallengeCount ?? this.onGoingChallengeCount,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
     );
   }
 }
