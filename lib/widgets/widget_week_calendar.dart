@@ -96,10 +96,10 @@ class WWeekCalendar extends ConsumerWidget {
 
                   Color containerColor = Colors.transparent;
                   Color textColor = WAppColors.black;
-                  if(isSuccess){
-                    containerColor = WAppColors.secondary;
-                    textColor = WAppColors.white;
-                  }
+                  // if(isSuccess){
+                  //   containerColor = WAppColors.secondary;
+                  //   textColor = WAppColors.white;
+                  // }
                   if(isToday){
                     containerColor = WAppColors.gray04;
                     textColor = WAppColors.black;

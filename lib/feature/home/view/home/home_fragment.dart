@@ -32,7 +32,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   @override
   void initState() {
     super.initState();
-    _checkNotificationPermission(); // 앱 실행 시 알림 요청 여부 확인
+    _checkNotificationPermission(); // ✅ 앱 실행 시 알림 요청 여부 확인
   }
 
   Future<void> _checkNotificationPermission() async {
@@ -227,7 +227,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                               width: 80 * su,
                               height: 80 * su,
                               decoration: BoxDecoration(
-                                color: WAppColors.secondary1,
+                                color: WAppColors.mPrimary,
                                 shape: BoxShape.circle,
                               ),
                               alignment: Alignment.center,
@@ -253,19 +253,21 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               height10,
               Expanded(
                 child: Stack(
-                  alignment: Alignment.bottomCenter, // 하단 배경으로 배치
+                  alignment: Alignment.bottomCenter, // ✅ 하단 배경으로 배치
                   children: [
-                    /// 챌린지 리스트 (배경 위에 올라올 콘텐츠)
-                    Column(
-                      children: [
-                        height10,
-                        data.challengeList.isEmpty == 0
-                            ? ChallengeEmpty()
-                            : Expanded(child: ChallengeList()), // Expanded로 남은 공간 채우기
-                      ],
+                    /// ✅ 챌린지 리스트 (배경 위에 올라올 콘텐츠)
+                    Padding(
+                      padding: globalMargin,
+                      child: Column(
+                        children: [
+                          height10,
+                          data.challengeList.isEmpty
+                              ? ChallengeEmpty()
+                              : Expanded(child: ChallengeList()), // ✅ Expanded로 남은 공간 채우기
+                        ],
+                      ),
                     ),
-
-                    /// 배경 Gradient Container
+                    /// ✅ 배경 Gradient Container
                     Positioned(
                       child: Container(
                         height: 60 * su,
@@ -277,16 +279,6 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                           ),
                         ),
                       ),
-                    ),
-
-                    /// ✅ 챌린지 리스트 (배경 위에 올라올 콘텐츠)
-                    Column(
-                      children: [
-                        height10,
-                        data.challengeList.length == 0
-                            ? ChallengeEmpty()
-                            : Expanded(child: ChallengeList()), // ✅ Expanded로 남은 공간 채우기
-                      ],
                     ),
                   ],
                 ),
