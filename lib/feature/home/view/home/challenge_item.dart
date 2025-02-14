@@ -67,10 +67,10 @@ class ChallengeItem extends StatelessWidget {
             ElevatedButton(
               onPressed: onClickAchieveButton,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isAchieved
-                    ? primaryColor
-                    : isExpired
-                        ? subTextColor
+                backgroundColor: isExpired
+                    ? subTextColor
+                    : isAchieved
+                        ? primaryColor
                         : Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: globalBorderRadius,
@@ -78,10 +78,10 @@ class ChallengeItem extends StatelessWidget {
                 minimumSize: Size(double.infinity, 40),
               ),
               child: Text(
-                isAchieved
-                    ? '챌린지 달성 완료!'
-                    : isExpired
-                        ? '만료된 챌린지'
+                isExpired
+                    ? '만료된 챌린지'
+                    : isAchieved
+                        ? '챌린지 달성 완료!'
                         : '챌린지 달성',
                 style: TextStyle(color: Colors.white),
               ),
