@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dailystep/common/extension/datetime_extension.dart';
 import 'package:dailystep/widgets/widget_confirm_modal.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,6 +57,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   Future<bool?> _showPermissionDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
@@ -66,13 +70,13 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '\'데일리스텝\'에서 알림을 보내고자 합니다.',
+                  '목표 달성을 위해 알림을 켜주세요!',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24 * su, color: Colors.black, fontWeight: FontWeight.w800, height: 1.5),
                 ),
                 SizedBox(height: 8 * su),
                 Text(
-                  '푸시 알림을 통해 고객님의 챌린지 알림, 이벤트와 업데이트 소식 등을 전송하려고 합니다.\n앱 푸시에 수신 동의 하시겠습니까?',
+                  '챌린지 시작 알림, 매일 리마인드 알림, 미완료 챌린지 알림과 \n 업데이트 소식 등을 전송해 드립니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 13 * su, color: Colors.black54),
                 ),
@@ -94,7 +98,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                             Navigator.pop(context, false);
                           },
                           child: Text(
-                            '미동의',
+                            '취소',
                             style: TextStyle(color: WAppColors.gray05),
                           ),
                         ),
@@ -115,7 +119,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                             Navigator.pop(context, true);
                           },
                           child: Text(
-                            '동의',
+                            '확인',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -131,56 +135,41 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
     );
   }
 
-
   Future<void> _requestNotificationPermission() async {
     print("🔹 FCM 알림 권한 요청 시작");
 
-    final settings = await FirebaseMessaging.instance.requestPermission();
     final prefs = await SharedPreferences.getInstance();
+    bool isEnabled = false;
+    String? fcmToken;
 
-    bool isEnabled = settings.authorizationStatus == AuthorizationStatus.authorized;
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      int sdkVersion = androidInfo.version.sdkInt;
 
-    // 푸시 알림 상태 SharedPreferences에 저장
-    await prefs.setBool('isPushNotificationEnabled', isEnabled);
+      if (sdkVersion >= 33) {
+        // Android 13 이상에서는 requestPermission() 호출
+        final settings = await FirebaseMessaging.instance.requestPermission();
+        isEnabled = settings.authorizationStatus == AuthorizationStatus.authorized;
+      } else {
+        // Android 12 이하는 기본적으로 알림이 허용되므로 true 설정
+        isEnabled = true;
+      }
+    }
 
-    // MyPageViewModel에서 상태 업데이트
+    // 🔥 FCM 토큰 가져오기 (푸시 허용된 경우만)
+    if (isEnabled) {
+      fcmToken = await FirebaseMessaging.instance.getToken();
+      print("🔑 FCM 토큰: $fcmToken");
+    }
+
+    // 푸시 알림 상태 저장 & 업데이트
     ref.read(myPageViewModelProvider.notifier).updatePushState(isEnabled);
 
     if (isEnabled) {
-      print("알림 권한이 허용되었습니다.");
-      _showPushEnabledDialog(context, isEnabled: true);
+      print("✅ 알림 권한이 허용되었습니다.");
     } else {
-      print("사용자가 알림 권한을 거부했습니다.");
-      _showPushEnabledDialog(context, isEnabled: false);
+      print("❌ 사용자가 알림 권한을 거부했습니다.");
     }
-  }
-
-  void _showPushEnabledDialog(BuildContext context, {required bool isEnabled}) {
-    if (!context.mounted) return;
-
-    String title = isEnabled ? '알림 수신 동의가 완료되었습니다.' : '알림 수신 동의가 거부되었습니다.';
-    String message = '앱 푸시 수신 동의는 마이 > [매일 챌린지 알림]에서 변경 가능합니다.';
-
-    showConfirmModal(
-      context: context,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          height20,
-          Text(title, textAlign: TextAlign.center, style: WAppFontSize.titleL()),
-          height10,
-          Text(message, textAlign: TextAlign.center, style: WAppFontSize.values()),
-          height20,
-        ],
-      ),
-      confirmText: '닫기',
-      onClickConfirm: () {
-        if (context.mounted && Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
-      },
-      isCancelButton: false,
-    );
   }
 
   @override
@@ -244,7 +233,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
               ),
               AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                height: calendarContainerHeight + calendarLabelHeight,
+                height: 70 * su,
                 curve: Curves.easeInOut,
                 child: WWeekPageView(
                   weekPageController: weekPageController,
@@ -271,7 +260,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     ///  배경 Gradient Container
                     Positioned(
                       child: Container(
-                        height: 60 * su,
+                        height: 60 * su, // 기존보다 부드러운 효과를 위해 40~60 정도로 설정 가능
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment(0.00, -1.00),

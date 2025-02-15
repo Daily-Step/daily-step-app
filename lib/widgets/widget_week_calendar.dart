@@ -76,55 +76,58 @@ class WWeekCalendar extends ConsumerWidget {
           return Column(children: [
             CalendarLabel(),
             SizedBox(height: 4),
-            Padding(
-              padding: calendarMargin,
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: numberOfColumns,
-                  mainAxisSpacing: 6,
-                  crossAxisSpacing: crossAxisSpacing,
+            Container(
+              child: Padding(
+                padding: calendarMargin,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: numberOfColumns,
+                    mainAxisSpacing: 6,
+                    crossAxisSpacing: crossAxisSpacing,
+                  ),
+                  itemCount: numberOfColumns,
+                  itemBuilder: (context, index) {
+                    final date = weekDays[index];
+                    final isSelected = date.isSameDate(data.selectedDate);
+                    final isToday = date.isSameDate(DateTime.now());
+                    final isSuccess = successDates
+                        .any((successDate) => successDate.isSameDate(date));
+
+                    Color containerColor = Colors.transparent;
+                    Color textColor = WAppColors.black;
+                    // if(isSuccess){
+                    //   containerColor = WAppColors.secondary;
+                    //   textColor = WAppColors.white;
+                    // }
+                    if(isToday){
+                      containerColor = WAppColors.gray04;
+                      textColor = WAppColors.black;
+                    }
+                    if(isSelected){
+                      containerColor = WAppColors.black;
+                      textColor = WAppColors.white;
+                    }
+
+                    return InkWell(
+                      onTap: () {
+                        notifier.handleAction(ChangeSelectedDateAction(
+                          selectedDate: date,
+                        ));
+                      },
+                      child: CalendarDayContainer(
+                        containerColor: containerColor,
+                        textColor: textColor,
+                        date: date,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    );
+                  },
                 ),
-                itemCount: numberOfColumns,
-                itemBuilder: (context, index) {
-                  final date = weekDays[index];
-                  final isSelected = date.isSameDate(data.selectedDate);
-                  final isToday = date.isSameDate(DateTime.now());
-                  final isSuccess = successDates
-                      .any((successDate) => successDate.isSameDate(date));
-
-                  Color containerColor = Colors.transparent;
-                  Color textColor = WAppColors.black;
-                  // if(isSuccess){
-                  //   containerColor = WAppColors.secondary;
-                  //   textColor = WAppColors.white;
-                  // }
-                  if(isToday){
-                    containerColor = WAppColors.gray04;
-                    textColor = WAppColors.black;
-                  }
-                  if(isSelected){
-                    containerColor = WAppColors.black;
-                    textColor = WAppColors.white;
-                  }
-
-                  return InkWell(
-                    onTap: () {
-                      notifier.handleAction(ChangeSelectedDateAction(
-                        selectedDate: date,
-                      ));
-                    },
-                    child: CalendarDayContainer(
-                      containerColor: containerColor,
-                      textColor: textColor,
-                      date: date,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  );
-                },
               ),
             ),
+
           ]);
         },
         error: (Object error, StackTrace stackTrace) => SizedBox(),
