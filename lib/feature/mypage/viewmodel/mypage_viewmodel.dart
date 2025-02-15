@@ -203,7 +203,6 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
 
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
         print(" 사용자가 알림 권한을 거부했습니다.");
-        _showPushEnabledDialog(context, isEnabled: false);
         return false;
       }
 
@@ -229,9 +228,6 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
       state = state?.copyWith(isPushNotificationEnabled: false);
     }
 
-    // ** 여기서 비동기 작업이 모두 끝난 후 다이얼로그 실행**
-    print(" _showPushEnabledDialog 호출 ");
-    _showPushEnabledDialog(context, isEnabled: isGranted);
 
     return isGranted;
   }
@@ -240,6 +236,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   Future<bool> showPermissionDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
@@ -252,13 +249,13 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '\'데일리스텝\'에서 알림을 보내고자 합니다.',
+                  '목표 달성을 위해 알림을 켜주세요!',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24 * su, color: Colors.black, fontWeight: FontWeight.w800, height: 1.5),
                 ),
                 SizedBox(height: 8 * su), // 간격 추가
                 Text(
-                  '푸시 알림을 통해 고객님의 챌린지 알림, 이벤트와 업데이트 소식 등을 전송하려고 합니다.\n앱 푸시에 수신 동의 하시겠습니까?',
+                  '챌린지 시작 알림, 매일 리마인드 알림, 미완료 챌린지 알림과 \n 업데이트 소식 등을 전송해 드립니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 13 * su, color: Colors.black54),
                 ),
@@ -280,7 +277,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                             Navigator.pop(context, false);
                           },
                           child: Text(
-                            '미동의',
+                            '취소',
                             style: TextStyle(color: WAppColors.gray05),
                           ),
                         ),
@@ -302,7 +299,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
                             Navigator.pop(context, true);
                           },
                           child: Text(
-                            '동의',
+                            '확인',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -319,35 +316,6 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   }
 
 
-  /// 알림 수신 동의 다이얼로그
-  void _showPushEnabledDialog(BuildContext context, {required bool isEnabled}) {
-    if (!context.mounted) return;
-
-    String title = isEnabled ? '알림 수신 동의가 완료되었습니다.' : '알림 수신 동의가 거부되었습니다.';
-    String message = '앱 푸시 수신 동의는 마이 > [매일 챌린지 알림]에서 변경 가능합니다.';
-
-    showConfirmModal(
-      context: context,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          height20,
-          Text(title, textAlign: TextAlign.center, style: WAppFontSize.titleL()),
-          height10,
-          Text(message, textAlign: TextAlign.center, style: WAppFontSize.values()),
-          height20,
-        ],
-      ),
-      confirmText: '닫기',
-      onClickConfirm: () {
-        if (context.mounted && Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
-      },
-      isCancelButton: false,
-    );
-  }
-
   /// FCM 토큰 처리
   Future<void> _handleFcmToken() async {
     try {
@@ -360,6 +328,7 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
       }
 
       final response = await _apiClient.post('fcm', data: {'token': fcmToken});
+      print("서버 요청 데이터: ${response.requestOptions.data}");
 
       if (response.statusCode == 401 && response.data['code'] == 'AUTH_4006') {
         print(' 서버에서 FCM 토큰이 만료되었다고 응답함. 재발급 중...');
@@ -444,13 +413,18 @@ class MyPageViewModel extends StateNotifier<MyPageModel?> with EventMixin<MyPage
   }
 
   void updatePushState(bool isEnabled) async {
-    if (!mounted || state == null) return; //  ViewModel이 살아있을 때만 실행
+    if (!mounted || state == null) return; // ViewModel이 살아있을 때만 실행
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isPushNotificationEnabled', isEnabled); //  상태 저장
+    await prefs.setBool('isPushNotificationEnabled', isEnabled); // 상태 저장
 
     if (state!.isPushNotificationEnabled != isEnabled) {
       state = state!.copyWith(isPushNotificationEnabled: isEnabled);
+    }
+
+    // 🔥 푸시가 활성화된 경우 FCM 토큰 처리
+    if (isEnabled) {
+      await _handleFcmToken();
     }
   }
 }
