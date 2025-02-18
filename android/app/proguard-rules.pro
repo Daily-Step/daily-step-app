@@ -1,3 +1,6 @@
+# Kakao SDK
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+
 # Firebase Core
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
