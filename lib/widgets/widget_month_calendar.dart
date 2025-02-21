@@ -24,7 +24,7 @@ class WMonthModal extends HookWidget {
   Widget build(BuildContext context) {
     final startMonth = useState(DateTime(startDateTime.year, startDateTime.month, 1));
     final endMonth = useState(DateTime(endDateTime.year, endDateTime.month + 1, 0));
-    final selectedMonth = useState(DateTime(endMonth.value.year, endMonth.value.month, 1));
+    final selectedMonth = useState(DateTime(startDateTime.year, startDateTime.month, 1));
     final beforeMonthButtonDisabled = selectedMonth.value.isSameMonth(startMonth.value);
     final afterMonthButtonDisabled = selectedMonth.value.isSameMonth(endMonth.value);
 
