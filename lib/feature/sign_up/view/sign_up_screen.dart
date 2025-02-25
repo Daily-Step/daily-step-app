@@ -18,8 +18,9 @@ import 'sex_fragment.dart';
 
 class SignUpScreen extends ConsumerWidget {
   final DailyStepAuth auth;
+  final String? accessToken;
 
-  const SignUpScreen({super.key, required this.auth});
+  const SignUpScreen({super.key, required this.auth, this.accessToken});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,6 +28,13 @@ class SignUpScreen extends ConsumerWidget {
     final signUpViewModel = ref.read(signUpProvider.notifier);
 
     final TextEditingController controller = TextEditingController(text: signUpState.nickName ?? '');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (accessToken != null && signUpState.accessToken == null) {
+        print('📢 회원가입 화면에서 받은 accessToken: $accessToken');
+        signUpViewModel.setAccessToken(accessToken!);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -131,7 +139,7 @@ class SignUpScreen extends ConsumerWidget {
 
                     if (accessToken != null) {
                       await signUpViewModel.saveUserInfo(accessToken, context); // 데이터 서버로 전송
-                      auth.signUp(context); // /main/home 경로로 이동
+                      auth.completeSignUp(context); // /main/home 경로로 이동
                     } else {
                       print("AccessToken이 없습니다.");
                     }

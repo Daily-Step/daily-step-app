@@ -8,7 +8,7 @@ import '../../sign_up/viewmodel/sign_up_provider.dart';
 import '../state/login_state.dart';
 
 final loginViewModelProvider = StateNotifierProvider<LoginViewModel, LoginState>(
-      (ref) => LoginViewModel(ref),
+  (ref) => LoginViewModel(ref),
 );
 
 final isLoggedInProvider = StateProvider<bool>((ref) => false); // 기본값 false
@@ -19,15 +19,16 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   LoginViewModel(this._ref) : super(LoginState());
 
-  Future<void> handleLogin(BuildContext context) async {
+  Future<String?> handleLogin(BuildContext context) async {
     await _ref.read(secureStorageServiceProvider).deleteTokens();
     try {
       final accessToken = await _getAccessTokenFromStorageOrKakao();
 
       if (accessToken == null) {
         state = state.copyWith(isLoading: false, errorMessage: '카카오 로그인 실패');
-        return;
+        return null;
       }
+
 
       // 서버에서 로그인 시도
       final signUpSuccess = await _attemptSignUp(accessToken, context);
@@ -35,9 +36,11 @@ class LoginViewModel extends StateNotifier<LoginState> {
       if (signUpSuccess) {
         // 회원가입 성공 시 로그인 처리
         _onSignUpSuccess(context, accessToken);
+        return accessToken;
       } else {
         // 회원가입 실패 시 처리
-        _onSignUpFailure(context);
+        _onSignUpFailure(context, accessToken);
+        return accessToken;
       }
     } catch (e) {
       print('로그인 중 오류 발생: $e');
@@ -55,7 +58,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
   }
 
   Future<bool> _attemptSignUp(String accessToken, BuildContext context) async {
-    final responseData = await _signUpToServer(accessToken); // 로그인 서버 호출
+    final responseData = await _signUpToServer(accessToken, context); // 로그인 서버 호출
 
     if (responseData != null) {
       final newAccessToken = responseData['accessToken'] ?? '';
@@ -71,17 +74,19 @@ class LoginViewModel extends StateNotifier<LoginState> {
       }
     } else {
       print('로그인 실패: 응답이 없습니다.');
+      _onSignUpFailure(context, accessToken);
     }
     return false;
   }
 
-
   /// 서버에 로그인 요청 보내기
-  Future<Map<String, dynamic>?> _signUpToServer(String accessToken) async {
+  Future<Map<String, dynamic>?> _signUpToServer(String accessToken, BuildContext context) async {
     print('login to server');
     try {
       final requestData = {'accessToken': accessToken};
-      final response = await ApiClient().post('/auth/login/kakao', data: requestData);
+      final response = await ApiClient().post('/auth/login/kakao', data: requestData, headers: {
+        "Content-Type": "application/json"
+      });
 
       if (response.statusCode == 200) {
         if (response.data is Map<String, dynamic>) {
@@ -89,13 +94,18 @@ class LoginViewModel extends StateNotifier<LoginState> {
         } else {
           print('응답 데이터 형식이 아닙니다. 데이터: ${response.data}');
         }
+      } else if (response.statusCode == 404) {
+        print('회원 정보 없음 (400), 회원가입으로 이동');
+        _onSignUpFailure(context, accessToken);
+        return null; // 회원가입이 필요하므로 로그인 실패 처리
       } else {
         print('로그인 실패, 상태 코드: ${response.statusCode}');
       }
     } catch (e) {
       print('서버 로그인 요청 실패: $e');
+      _onSignUpFailure(context, accessToken);
     }
-    return null;  // 로그인 실패 시 null 반환
+    return null; // 로그인 실패 시 null 반환
   }
 
   /// 로그인 성공 후 처리
@@ -107,21 +117,24 @@ class LoginViewModel extends StateNotifier<LoginState> {
   }
 
   /// 로그인 실패 후 회원가입 화면으로 이동
-  void _onSignUpFailure(BuildContext context) async {
+  void _onSignUpFailure(BuildContext context, String accessToken) async {
     state = state.copyWith(isLoading: false);
 
-    final accessToken = await _getAccessTokenFromStorageOrKakao();
-
-    if (accessToken == null) {
-      print('액세스 토큰을 가져올 수 없습니다.');
+    if (accessToken == null || accessToken.isEmpty) {
+      print('❌ 회원가입 이동 실패: accessToken이 없음');
       return;
     }
 
-    print("현재 state.accessToken: $accessToken");
+    print("🚀 회원가입 페이지로 이동 준비 중, accessToken: $accessToken");
 
-    // 로그인 실패 시 회원가입 처리
-    _ref.read(signUpProvider.notifier).saveUserInfo(accessToken, context);
-    context.go('/signUp');
+    if (context.mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        print("🚀 회원가입 페이지로 이동!");
+        context.go('/signUp', extra: accessToken);
+      });
+    } else {
+      print("❌ context가 dispose됨! 이동 실패");
+    }
   }
 
 /*
@@ -201,7 +214,6 @@ class LoginViewModel extends StateNotifier<LoginState> {
   }
 */
 
-
   /// 로그아웃 처리
   void logout() async {
     // Secure Storage에서 액세스 토큰과 리프레시 토큰 삭제
@@ -212,4 +224,3 @@ class LoginViewModel extends StateNotifier<LoginState> {
     print('로그아웃 성공, 모든 토큰 삭제됨');
   }
 }
-

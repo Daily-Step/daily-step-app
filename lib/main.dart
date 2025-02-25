@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'config/app.dart';
+import 'config/route/go_router.dart';
 import 'data/api/api_client.dart';
 
 Future<void> main() async {
@@ -57,4 +58,17 @@ void initializeNotification() async {
     badge: true,
     sound: true,
   );
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("🔔 푸시 알림 클릭됨! 홈 화면으로 이동");
+    navigateToPage('/main/home');
+  });
+
+  // 앱이 종료된 상태에서 푸시 알림을 클릭했을 때
+  FirebaseMessaging.instance.getInitialMessage().then((message) {
+    if (message != null) {
+      print("🔔 앱 종료 후 푸시 알림 클릭됨! 홈 화면으로 이동");
+      navigateToPage('/main/home');
+    }
+  });
 }

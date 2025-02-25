@@ -58,12 +58,19 @@ GoRouter router(bool isLoggedIn) {
       ),
       GoRoute(
         path: '/signUp',
-        pageBuilder: (BuildContext context, GoRouterState state) => FadeTransitionPage(
-          key: state.pageKey,
-          child: SignUpScreen(
-            auth: auth,
-          ),
-        ),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          // ✅ extra 값이 정상적으로 전달되는지 로그 추가
+          final accessToken = state.extra as String?;
+          print("📢 회원가입 화면에서 받은 accessToken: $accessToken");
+
+          return FadeTransitionPage(
+            key: state.pageKey,
+            child: SignUpScreen(
+              auth: auth,
+              accessToken: accessToken, // ✅ accessToken 전달
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '/main/home',

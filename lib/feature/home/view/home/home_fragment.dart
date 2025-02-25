@@ -217,7 +217,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                               width: 80 * su,
                               height: 80 * su,
                               decoration: BoxDecoration(
-                                color: WAppColors.mPrimary,
+                                color: WAppColors.secondary1,
                                 shape: BoxShape.circle,
                               ),
                               alignment: Alignment.center,

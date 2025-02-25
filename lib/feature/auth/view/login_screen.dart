@@ -46,19 +46,28 @@ class LoginScreen extends ConsumerWidget {
                   padding: EdgeInsets.only(right: 16.0 * su, left: 16.0 * su),
                   child: ElevatedButton(
                     onPressed: () async {
-                      //await ref.read(secureStorageServiceProvider).deleteTokens();
-
                       final savedToken = await ref.read(secureStorageServiceProvider).getAccessToken();
 
                       if (savedToken != null) {
                         print('유효한 저장된 토큰이 있습니다. 서버 요청을 건너뜁니다.');
-                        auth.signIn(context); // DailyStepAuth 상태 업데이트
+                        auth.signUp(); // DailyStepAuth 상태 업데이트
+                        context.go('/main/home');
                         return;
                       }
 
-                      await viewModel.handleLogin(context);
-                      if (viewModel.state.isLoggedIn) {
-                        auth.signIn(context); // DailyStepAuth 상태 동기화
+                      final accessToken = await viewModel.handleLogin(context); // ✅ accessToken 받아오기
+
+
+                      if (accessToken != null) {
+                        if (viewModel.state.isLoggedIn) {
+                          print("✅ 로그인 성공, 홈으로 이동");
+                          auth.signIn(context);
+                        } else {
+                          print("🚀 회원가입 페이지로 이동! accessToken: $accessToken");
+                          context.go('/signUp', extra: accessToken);
+                        }
+                      } else {
+                        print("❌ 로그인 실패, 회원가입으로 이동할 accessToken 없음");
                       }
                     },
                     style: ElevatedButton.styleFrom(
