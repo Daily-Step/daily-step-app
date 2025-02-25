@@ -12,6 +12,7 @@ import 'package:nav/nav.dart';
 import '../common/util/size_util.dart';
 import '../widgets/widget_confirm_modal.dart';
 import 'home/viewmodel/challenge_viewmodel.dart';
+import 'mypage/viewmodel/mypage_viewmodel.dart';
 
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
@@ -62,6 +63,7 @@ class MainScreenState extends ConsumerState<MainScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(challengeViewModelProvider);
+    final userState = ref.watch(myPageViewModelProvider);
     return Material(
       child: PopScope(
         canPop: isRootPage,
@@ -78,7 +80,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                 data: (data) => FloatingActionButton(
                     onPressed: () {
                       ///진행중인 챌리지가 5개 이하인 경우에만 추가 가능
-                      if(data.initialChallengeList.length < 5){
+                      if(userState!.totalChallenges < 5){
                         context.go('/main/challenge/new');
                       } else {
                         showConfirmModal(
