@@ -1,3 +1,3 @@
 import 'package:dio/dio.dart';
-
-final dioSet = Dio(BaseOptions(baseUrl: 'https://dailystep.shop/api/v1/'));
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+final dioSet = Dio(BaseOptions(baseUrl: dotenv.env['BASE_URL']!));
